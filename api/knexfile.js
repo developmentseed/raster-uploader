@@ -1,6 +1,6 @@
 export default {
     client: 'postgresql',
-    connection: process.env.POSTGRES || 'postgres://postgres@localhost:5432/cpal',
+    connection: process.env.POSTGRES || 'postgres://postgres@localhost:5432/uploader',
     pool: {
         min: 2,
         max: 10
