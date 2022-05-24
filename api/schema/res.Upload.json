@@ -1,0 +1,32 @@
+{
+    "type": "object",
+    "required": [
+        "id",
+        "uid",
+        "created",
+        "updated",
+        "size",
+        "status"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "uid": {
+            "type": "integer"
+        },
+        "created": {
+            "$ref": "./util/created.json"
+        },
+        "updated": {
+            "$ref": "./util/updated.json"
+        },
+        "size": {
+            "type": ["null", "integer"]
+        },
+        "status": {
+            "$ref": "./util/status.json"
+        }
+    }
+}

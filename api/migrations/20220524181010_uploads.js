@@ -1,4 +1,4 @@
-exports.up = function(knex) {
+function up(knex) {
     return knex.schema.raw(`
         CREATE TABLE uploads (
             id          BIGSERIAL PRIMARY KEY,
@@ -11,8 +11,13 @@ exports.up = function(knex) {
     `);
 }
 
-exports.down = function(knex) {
+function down(knex) {
     return knex.schema.raw(`
         DROP TABLE uploads;
     `);
+}
+
+export {
+    up,
+    down
 }
