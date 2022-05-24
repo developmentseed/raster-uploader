@@ -2,7 +2,7 @@ FROM ubuntu:20.04
 
 EXPOSE 5000
 
-ENV HOME=/home/cpal
+ENV HOME=/home/uploader
 WORKDIR $HOME
 
 RUN apt-get update \

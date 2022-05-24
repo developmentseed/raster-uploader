@@ -12,8 +12,8 @@ services:
         environment:
             - POSTGRES=postgres://docker:docker@postgis:5432/gis
         volumes:
-            - './api/:/home/cpal/api'
-            - '/home/cpal/api/node_modules'
+            - './api/:/home/uploader/api'
+            - '/home/uploader/api/node_modules'
 
     postgis:
         platform: linux/amd64
