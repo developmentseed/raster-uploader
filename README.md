@@ -4,6 +4,10 @@
 
 ## Installation
 
+```sh
+npm install
+```
+
 ## Deployment
 
 Deployment to AWS is handled via AWS Cloudformation. The template can be found in the `./cloudformation`

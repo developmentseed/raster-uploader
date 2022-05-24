@@ -1,0 +1,8 @@
+{
+    "profile": "impact",
+    "artifacts": {
+        "docker": [
+            "raster-uploader:{{gitsha}}"
+        ]
+    }
+}

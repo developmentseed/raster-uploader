@@ -1,4 +1,3 @@
-
 const cf = require('@mapbox/cloudfriend');
 const alarms = require('@openaddresses/batch-alarms');
 
@@ -25,7 +24,7 @@ module.exports = cf.merge(
     vpc,
     secret,
     alarms({
-        prefix: 'CPAL',
+        prefix: 'RasterUpload',
         apache: cf.stackName,
         email: 'ingalls@developmentseed.org',
         cluster: cf.ref('ECSCluster'),
