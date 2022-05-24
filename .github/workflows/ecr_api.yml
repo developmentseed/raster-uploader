@@ -17,7 +17,7 @@ jobs:
         if: github.event.pull_request.draft == false
         steps:
             - name: Print
-              run: echo ${{github.event}}
+              run: echo ${{JSON.stringify(github.event)}}
 
             - uses: actions/checkout@v2
               with:
