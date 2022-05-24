@@ -7,6 +7,9 @@ on:
             - synchronize
             - reopened
             - ready_for_review
+    push:
+        branches:
+            - main
 
 jobs:
     build:
@@ -32,7 +35,7 @@ jobs:
               uses: aws-actions/amazon-ecr-login@v1
 
             - name: Docker Tag API
-              run: docker tag api ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/cpal-blight-infra:${{github.event.pull_request.head.sha}}
+              run: docker tag api ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/raster-uploader:${{github.event.pull_request.head.sha}}
 
             - name: Docker Push API
-              run: docker push ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/cpal-blight-infra:${{github.event.pull_request.head.sha}}
+              run: docker push ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/raster-uploader:${{github.event.pull_request.head.sha}}
