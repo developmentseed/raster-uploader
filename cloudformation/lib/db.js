@@ -26,11 +26,11 @@ const stack = {
             Properties: {
                 Engine: 'postgres',
                 EnablePerformanceInsights: true,
-                DBName: 'cpal',
+                DBName: 'uploader',
                 DBInstanceIdentifier: cf.stackName,
                 KmsKeyId: cf.ref('KMS'),
                 EngineVersion: '14.2',
-                MasterUsername: 'cpal',
+                MasterUsername: 'uploader',
                 MasterUserPassword: cf.ref('DatabasePassword'),
                 AllocatedStorage: 10,
                 MaxAllocatedStorage: 100,
@@ -72,14 +72,14 @@ const stack = {
         DB: {
             Description: 'Postgres Connection String',
             Value: cf.join([
-                'postgresql://cpal',
+                'postgresql://uploader',
                 ':',
                 cf.ref('DatabasePassword'),
                 '@',
                 cf.getAtt('DBInstanceVPC', 'Endpoint.Address'),
                 ':',
                 cf.getAtt('DBInstanceVPC', 'Endpoint.Port'),
-                '/cpal'
+                '/uploader'
             ])
         }
     }

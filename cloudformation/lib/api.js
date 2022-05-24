@@ -172,18 +172,24 @@ const stack = {
                 TaskRoleArn: cf.getAtt('TaskRole', 'Arn'),
                 ContainerDefinitions: [{
                     Name: 'api',
-                    Image: cf.join([cf.accountId, '.dkr.ecr.', cf.region, '.amazonaws.com/cpal:', cf.ref('GitSha')]),
+                    Image: cf.join([cf.accountId, '.dkr.ecr.', cf.region, '.amazonaws.com/raster-uploader:', cf.ref('GitSha')]),
                     PortMappings: [{
                         ContainerPort: 8000
                     }],
                     Environment: [
-                        { Name: 'POSTGRES_PASSWORD', Value: cf.ref('DatabasePassword') },
-                        { Name: 'POSTGRES_PASS', Value: cf.ref('DatabasePassword') },
-                        { Name: 'POSTGRES_USER', Value: 'cpal' },
-                        { Name: 'POSTGRES_DB', Value: 'cpal' },
-                        { Name: 'POSTGRES_DBNAME', Value: 'cpal' },
-                        { Name: 'POSTGRES_HOST', Value: cf.getAtt('DBInstanceVPC', 'Endpoint.Address') },
-                        { Name: 'POSTGRES_PORT', Value: cf.getAtt('DBInstanceVPC', 'Endpoint.Port') },
+                        {
+                            Name: 'Postgres',
+                            Value: cf.join([
+                                'postgresql://uploader',
+                                ':',
+                                cf.ref('DatabasePassword'),
+                                '@',
+                                cf.getAtt('DBInstanceVPC', 'Endpoint.Address'),
+                                ':',
+                                cf.getAtt('DBInstanceVPC', 'Endpoint.Port'),
+                                '/uploader'
+                            ])
+                        },
                         { Name: 'SecretARN', Value: cf.ref('APISecrets') },
                         { Name: 'StackName', Value: cf.stackName },
                         { Name: 'AWS_DEFAULT_REGION', Value: cf.region }
@@ -243,7 +249,7 @@ const stack = {
     },
     Outputs: {
         ELB: {
-            Description: 'MeryCorps API URL',
+            Description: 'Raster Uploader API URL',
             Value: cf.join(['http://', cf.getAtt('ELB', 'DNSName')])
         }
     }
