@@ -1,6 +1,8 @@
 import { Err } from '@openaddresses/batch-schema';
+import busboy from 'busboy'
 import Upload from '../lib/upload.js';
 import Auth from '../lib/auth.js';
+import S3 from '../lib/s3.js';
 
 export default async function router(schema, config) {
     /**
@@ -23,6 +25,7 @@ export default async function router(schema, config) {
         try {
             await Auth.is_auth(req);
 
+            req.query.uid = req.user.id;
             const list = await Upload.list(config.pool, req.query);
 
             res.json(list);
@@ -43,11 +46,48 @@ export default async function router(schema, config) {
      *
      * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
      */
-    await schema.post('/user', {
-        res: 'res.User.json'
+    await schema.post('/upload', {
+        res: 'res.Upload.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
+
+            const upload = Upload.generate(config.pool, {
+                uid: req.user.id
+            });
+
+            if (req.headers['content-type']) {
+                req.headers['content-type'] = req.headers['content-type'].split(',')[0];
+            }
+
+            let bb;
+            try {
+                bb = busboy({
+                    headers: req.headers,
+                    limits: {
+                        files: 1
+                    }
+                });
+            } catch (err) {
+                return Err.respond(err, res);
+            }
+
+            const files = [];
+
+            bb.on('file', (fieldname, file, blob) => {
+                files.push(S3.put(blob.filename, file));
+            }).on('error', (err) => {
+                Err.respond(res, err);
+            }).on('close', async () => {
+                try {
+                    await Promise.all(files);
+                    return res.json(upload.serialize());
+                } catch (err) {
+                    Err.respond(res, err);
+                }
+            });
+
+            return req.pipe(bb);
         } catch (err) {
             return Err.respond(err, res);
         }
