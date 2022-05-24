@@ -221,15 +221,17 @@ export default class Flight {
      * @param {Boolean} [admin=false] Should the created user be an admin
      */
     user(test, username, admin = false) {
-        test.test('Create Token', async (t) => {
+        test.test(`Create Token: ${username}`, async (t) => {
             const res = await fetch(new URL('/api/user', this.base), {
-                json: true,
                 method: 'POST',
-                body: {
-                    username: username,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username,
                     password: 'testing123',
                     email: `${username}@example.com`
-                }
+                })
             });
 
             const new_user = new FlightResponse(res, await res.json());
@@ -247,7 +249,6 @@ export default class Flight {
             }
 
             const new_login = await fetch(new URL('/api/login', this.base), {
-                url: 'http://localhost:2001/api/login',
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
