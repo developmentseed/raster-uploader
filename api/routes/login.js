@@ -1,5 +1,5 @@
 import { Err } from '@openaddresses/batch-schema';
-import User from '../lib/user.js';
+import Auth from '../lib/auth.js';
 import Login from '../lib/login.js';
 import Email from '../lib/email.js';
 
@@ -22,7 +22,7 @@ export default async function router(schema, config) {
         res: 'res.Login.json'
     }, async (req, res) => {
         try {
-            await User.is_auth(req);
+            await Auth.is_auth(req);
 
             res.json({
                 id: req.user.id,

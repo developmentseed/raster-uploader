@@ -1,6 +1,6 @@
 import { Err } from '@openaddresses/batch-schema';
 import UserToken from '../lib/token.js';
-import User from '../lib/user.js';
+import Auth from '../lib/auth.js';
 
 export default async function router(schema, config) {
 
@@ -22,7 +22,7 @@ export default async function router(schema, config) {
         res: 'res.ListTokens.json'
     }, async (req, res) => {
         try {
-            await User.is_auth(req);
+            await Auth.is_auth(req);
 
             req.query.uid = req.user.id;
             return res.json(await UserToken.list(config.pool, req.query));
@@ -49,7 +49,7 @@ export default async function router(schema, config) {
         res: 'res.CreateToken.json'
     }, async (req, res) => {
         try {
-            await User.is_auth(req);
+            await Auth.is_auth(req);
 
             req.body.uid = req.user.id;
             return res.json((await UserToken.generate(config.pool, req.body)).serialize(true));
@@ -75,7 +75,7 @@ export default async function router(schema, config) {
         res: 'res.Token.json'
     }, async (req, res) => {
         try {
-            await User.is_auth(req);
+            await Auth.is_auth(req);
 
             let token = await UserToken.from(config.pool, req.params.token_id);
             if (token.uid !== req.user.id) throw new Err(401, null, 'Cannot get a token you did not create');
@@ -105,7 +105,7 @@ export default async function router(schema, config) {
         res: 'res.Standard.json'
     }, async (req, res) => {
         try {
-            await User.is_auth(req);
+            await Auth.is_auth(req);
 
             const token = await UserToken.from(config.pool, req.params.token_id);
             if (token.uid !== req.user.id) throw new Err(401, null, 'Cannot delete a token you did not create');

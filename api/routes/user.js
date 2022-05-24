@@ -1,5 +1,6 @@
 import { Err } from '@openaddresses/batch-schema';
 import User from '../lib/user.js';
+import Auth from '../lib/auth.js';
 import Login from '../lib/login.js';
 import Email from '../lib/email.js';
 
@@ -24,7 +25,7 @@ export default async function router(schema, config) {
         res: 'res.ListUsers.json'
     }, async (req, res) => {
         try {
-            await User.is_auth(req);
+            await Auth.is_auth(req);
 
             const list = await User.list(config.pool, req.query);
 
@@ -118,7 +119,7 @@ export default async function router(schema, config) {
         res: 'res.User.json'
     }, async (req, res) => {
         try {
-            await User.is_auth(req);
+            await Auth.is_auth(req);
 
             if (req.user.access !== 'admin' && req.user.id !== req.params.uid) {
                 throw new Err(401, null, 'You can only edit your own user account');
