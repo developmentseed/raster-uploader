@@ -1,0 +1,67 @@
+{
+    "GET /schema": {
+        "body": false,
+        "query": true,
+        "res": true
+    },
+    "GET /login": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "POST /login": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "POST /login/verify": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "POST /login/forgot": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "POST /login/reset": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "GET /token": {
+        "body": false,
+        "query": true,
+        "res": true
+    },
+    "POST /token": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "GET /token/:token_id": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "DELETE /token/:token_id": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "GET /user": {
+        "body": false,
+        "query": true,
+        "res": true
+    },
+    "POST /user": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "PATCH /user/:uid": {
+        "body": true,
+        "query": false,
+        "res": true
+    }
+}

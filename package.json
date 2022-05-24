@@ -1,0 +1,27 @@
+{
+    "name": "@developmentseed/raster-uploader",
+    "private": true,
+    "version": "1.0.0",
+    "author": "ingalls <nick@ingalls.ca>",
+    "description": "Imagery In, COGS out!",
+    "scripts": {
+        "test": "echo 'no tests'",
+        "lint": "eslint cloudformation/**.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/developmentseed/raster-uploader.git"
+    },
+    "bugs": {
+        "url": "https://github.com/developmentseed/raster-uploader/issues"
+    },
+    "homepage": "https://github.com/developmentseed/raster-uploadet#readme",
+    "devDependencies": {
+        "eslint": "^8.15.0",
+        "eslint-plugin-node": "^11.1.0"
+    },
+    "dependencies": {
+        "@mapbox/cloudfriend": "^5.1.1",
+        "@openaddresses/batch-alarms": "^2.1.3"
+    }
+}

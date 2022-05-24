@@ -1,0 +1,26 @@
+{
+    "type": "object",
+    "required": [
+        "id",
+        "name",
+        "created"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer",
+            "description": "Token ID"
+        },
+        "name": {
+            "type": "string",
+            "description": "Human Readable name of the API Token"
+        },
+        "created": {
+            "$ref": "./util/created.json"
+        },
+        "token": {
+            "type": "string",
+            "description": "Token returned when initially created"
+        }
+    }
+}

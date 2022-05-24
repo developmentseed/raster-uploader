@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+    api:
+        platform: linux/amd64
+        build: ./api/
+        restart: always
+        links:
+            - postgis
+        ports:
+            - "5000:5000"
+        environment:
+            - POSTGRES=postgres://docker:docker@postgis:5432/gis
+        volumes:
+            - './api/:/home/cpal/api'
+            - '/home/cpal/api/node_modules'
+
+    postgis:
+        platform: linux/amd64
+        image: kartoza/postgis:13.0
+        restart: 'always'
+        ports:
+            - 5433:5432
+        environment:
+            - ALLOW_IP_RANGE=0.0.0.0/0
+            - POSTGRES_DB=gis
+            - POSTGRES_USER=docker
+            - POSTGRES_PASS=docker
+            - POSTGRES_MULTIPLE_EXTENSIONS="postgis","uuid-ossp"
+            - DATADIR=/opt/postgres/data
+        volumes:
+            - ./postgis-data:/opt/postgres/data

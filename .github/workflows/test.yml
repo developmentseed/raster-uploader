@@ -1,0 +1,37 @@
+name: Test
+
+on:
+    pull_request:
+        types:
+            - opened
+            - synchronize
+            - reopened
+            - ready_for_review
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        if: github.event.pull_request.draft == false
+        timeout-minutes: 30
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+
+            - name: Docker Pull
+              run: docker-compose pull
+
+            - name: Docker Build
+              run: docker-compose up --build -d postgis
+
+            - name: Docker API Build
+              run: docker build -t api api/
+
+            - name: Docker API Test Run
+              run: docker run --network cpal-blight-infra_default -e "POSTGRES=postgres://docker:docker@postgis:5432/gis" api npm test
+
+            - name: Docker API Lint Run
+              run: docker run --network cpal-blight-infra_default -e "POSTGRES=postgres://docker:docker@postgis:5432/gis" api npm run lint
+
+            - name: Docker Cleanup
+              run: docker-compose kill
