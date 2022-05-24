@@ -34,6 +34,9 @@ jobs:
               id: login-ecr
               uses: aws-actions/amazon-ecr-login@v1
 
+            - name: Print
+              run: echo ${{github.event.type}}
+
             - name: Docker Tag API
               if: github.event.type == 'PullRequestevent'
               run: docker tag api ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/raster-uploader:${{github.event.pull_request.head.sha}}
