@@ -1,5 +1,5 @@
 {
-    "name": "@developmentseed/raster-uploader/api",
+    "name": "@developmentseed/raster-uploader-api",
     "type": "module",
     "private": true,
     "version": "1.0.0",

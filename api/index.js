@@ -1,6 +1,6 @@
 import fs from 'fs';
-import jwt from 'jsonwebtoken';
 import cors from 'cors';
+import jwt from 'jsonwebtoken';
 import morgan from 'morgan';
 import express from 'express';
 import minify from 'express-minify';
@@ -174,7 +174,7 @@ async function server(args, config) {
                 });
             }
 
-            if (authorization[1].split('.')[0] === 'rl') {
+            if (authorization[1].split('.')[0] === 'uploader') {
                 try {
                     req.user = await Token.validate(config.pool, authorization[1]);
                 } catch (err) {
@@ -183,7 +183,6 @@ async function server(args, config) {
             } else {
                 try {
                     const decoded = jwt.verify(authorization[1], config.SigningSecret);
-
                     req.user = await User.from(config.pool, decoded.u);
                 } catch (err) {
                     return Err.respond(new Err(401, err, 'Invalid Token'), res);
@@ -191,12 +190,7 @@ async function server(args, config) {
             }
         } else if (req.query.token) {
             try {
-                const decoded = jwt.verify(req.query.token, config.SigningSecret);
-                if (decoded.t === 'i') {
-                    req.user = 'internal';
-                } else {
-                    req.token = await User.from(config.pool, decoded.u);
-                }
+                req.token = Token.validate(config.pool, req.query.token);
             } catch (err) {
                 return Err.respond(new Err(401, err, 'Invalid Token'), res);
             }

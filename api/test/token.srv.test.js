@@ -127,7 +127,7 @@ test('POST: api/token', async (t) => {
             body: {
                 name: 'Default Token'
             },
-            method: 'POST',
+            method: 'POST'
         }, t);
 
         t.ok(res.body.created);
@@ -152,7 +152,7 @@ test('DELETE: api/token/1 - delete a token you didn\'t create', async (t) => {
             auth: {
                 bearer: flight.token.ingalls_sub
             },
-            method: 'DELETE',
+            method: 'DELETE'
         }, false);
 
         t.equals(res.status, 401, 'http: 401');
@@ -178,7 +178,7 @@ test('GET: api/login - test token (bad)', async (t) => {
             body: {
                 name: 'Default Token 2'
             },
-            method: 'POST',
+            method: 'POST'
         }, t);
 
         const res = await flight.fetch('/api/login', {
@@ -210,7 +210,7 @@ test('GET: api/login - test token', async (t) => {
             body: {
                 name: 'Default Token 3'
             },
-            method: 'POST',
+            method: 'POST'
         }, t);
 
         const res = await flight.fetch('/api/login', {
@@ -219,7 +219,7 @@ test('GET: api/login - test token', async (t) => {
             }
         }, t);
 
-        t.deepEquals(res.body, {
+        t.deepEquals(await res.body, {
             id: 2,
             username: 'ingalls_sub',
             access: 'user',
@@ -238,7 +238,7 @@ test('DELETE: api/token/2', async (t) => {
             auth: {
                 bearer: flight.token.ingalls_sub
             },
-            method: 'DELETE',
+            method: 'DELETE'
         }, t);
 
         t.deepEquals(res.body, {
