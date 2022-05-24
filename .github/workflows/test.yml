@@ -28,10 +28,10 @@ jobs:
               run: docker build -t api api/
 
             - name: Docker API Test Run
-              run: docker run --network cpal-blight-infra_default -e "POSTGRES=postgres://docker:docker@postgis:5432/gis" api npm test
+              run: docker run --network raster-uploader_default -e "POSTGRES=postgres://docker:docker@postgis:5432/gis" api npm test
 
             - name: Docker API Lint Run
-              run: docker run --network cpal-blight-infra_default -e "POSTGRES=postgres://docker:docker@postgis:5432/gis" api npm run lint
+              run: docker run --network raster-uploader_default -e "POSTGRES=postgres://docker:docker@postgis:5432/gis" api npm run lint
 
             - name: Docker Cleanup
               run: docker-compose kill

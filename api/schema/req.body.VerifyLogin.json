@@ -1,9 +1,9 @@
 {
     "type": "object",
-    "additionalParameters": false,
     "required": [
         "token"
     ],
+    "additionalProperties": false,
     "properties": {
         "token": {
             "type": "string",

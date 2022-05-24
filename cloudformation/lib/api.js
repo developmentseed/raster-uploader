@@ -178,7 +178,7 @@ const stack = {
                     }],
                     Environment: [
                         {
-                            Name: 'Postgres',
+                            Name: 'POSTGRES',
                             Value: cf.join([
                                 'postgresql://uploader',
                                 ':',
