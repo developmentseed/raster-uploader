@@ -18,7 +18,7 @@ export default class Email {
         this.mailGenerator = new Mailgen({
             theme: 'default',
             product: {
-                name: 'CPAL',
+                name: 'Raster Uploader',
                 link: config.url
             }
         });
@@ -36,7 +36,7 @@ export default class Email {
         const email = {
             body: {
                 name: user.email,
-                intro: 'CPAL Email Confirmation',
+                intro: 'Raster Uploader Email Confirmation',
                 action: {
                     instructions: `Hello ${user.username}, to finish creating your account, please click here:`,
                     button: {
@@ -50,7 +50,7 @@ export default class Email {
         };
 
         try {
-            return await this.send(user.email, 'CPAL Email Verification', this.mailGenerator.generate(email));
+            return await this.send(user.email, 'Raster Uploader Email Verification', this.mailGenerator.generate(email));
         } catch (err) {
             throw new Err(500, err, 'Internal User Confirmation Error');
         }
@@ -60,7 +60,7 @@ export default class Email {
         const email = {
             body: {
                 name: user.email,
-                intro: 'CPAL Password Reset',
+                intro: 'Raster Uploader Password Reset',
                 action: {
                     instructions: `Hello ${user.username}, to reset your password, please click here:`,
                     button: {
@@ -74,7 +74,7 @@ export default class Email {
         };
 
         try {
-            return await this.send(user.email, 'CPAL Password Reset', this.mailGenerator.generate(email));
+            return await this.send(user.email, 'Raster Uploader Password Reset', this.mailGenerator.generate(email));
         } catch (err) {
             throw new Err(500, err, 'Internal User Forgot Error');
         }

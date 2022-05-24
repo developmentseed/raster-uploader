@@ -53,7 +53,7 @@ async function server(args, config) {
     if (args.postgres) {
         postgres = args.postgres;
     } else if (!postgres) {
-        postgres = 'postgres://postgres@localhost:5432/cpal';
+        postgres = 'postgres://postgres@localhost:5432/uploader';
     }
 
     let pool = false;
@@ -174,7 +174,7 @@ async function server(args, config) {
                 });
             }
 
-            if (authorization[1].split('.')[0] === 'cpal') {
+            if (authorization[1].split('.')[0] === 'rl') {
                 try {
                     req.user = await Token.validate(config.pool, authorization[1]);
                 } catch (err) {
