@@ -2,7 +2,8 @@
     "profile": "impact",
     "artifacts": {
         "docker": [
-            "raster-uploader:{{gitsha}}"
+            "raster-uploader:{{gitsha}}",
+            "raster-uploader:task-{{gitsha}}"
         ]
     }
 }

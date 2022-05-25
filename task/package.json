@@ -1,0 +1,31 @@
+{
+    "name": "@developmentseed/raster-uploader-task",
+    "type": "module",
+    "private": true,
+    "version": "1.0.0",
+    "author": "ingalls <nick@ingalls.ca>",
+    "description": "Raster Uploader Task",
+    "main": "index.js",
+    "scripts": {
+        "test": "tape test/**.test.js",
+        "lint": "eslint index.js lib/**.js test/**.js",
+        "task": "node index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/developmentseed/raster-uploader.git"
+    },
+    "bugs": {
+        "url": "https://github.com/developmentseed/raster-uploader/issues"
+    },
+    "homepage": "https://github.com/developmentseed/raster-uploader#readme",
+    "dependencies": {
+        "aws-sdk": "^2.1137.0",
+        "minimist": "^1.2.6"
+    },
+    "devDependencies": {
+        "tape": "^5.5.3",
+        "eslint": "^8.15.0",
+        "eslint-plugin-node": "^11.1.0"
+    }
+}

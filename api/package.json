@@ -4,7 +4,7 @@
     "private": true,
     "version": "1.0.0",
     "author": "ingalls <nick@ingalls.ca>",
-    "description": "CPAL Urban Blight Project API and Infrastructure - API",
+    "description": "Raster Uploader API",
     "main": "index.js",
     "scripts": {
         "test": "tape test/**.test.js",
