@@ -2,26 +2,30 @@ const cf = require('@mapbox/cloudfriend');
 const alarms = require('@openaddresses/batch-alarms');
 
 const db = require('./lib/db.js');
+const s3 = require('./lib/s3.js');
 const api = require('./lib/api.js');
 const kms = require('./lib/kms.js');
 const vpc = require('./lib/vpc.js');
+const etl = require('./lib/etl.js');
 const secret = require('./lib/secret.js');
 
-const Parameters = {
-    GitSha: {
-        Type: 'String',
-        Description: 'GitSha to Deploy'
+const base = {
+    Parameters: {
+        GitSha: {
+            Type: 'String',
+            Description: 'GitSha to Deploy'
+        }
     }
 };
 
 module.exports = cf.merge(
-    {
-        Parameters
-    },
+    base,
+    s3,
     db,
     api,
     kms,
     vpc,
+    etl,
     secret,
     alarms({
         prefix: 'RasterUpload',
