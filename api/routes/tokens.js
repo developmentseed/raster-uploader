@@ -52,7 +52,7 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             req.body.uid = req.auth.id;
-            const token = await UserToken.generate(config.pool, req.body)
+            const token = await UserToken.generate(config.pool, req.body);
 
             return res.json(token.serialize(true));
         } catch (err) {
