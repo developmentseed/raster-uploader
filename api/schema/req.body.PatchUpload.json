@@ -1,0 +1,12 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "size": {
+            "type": ["null", "integer"]
+        },
+        "status": {
+            "$ref": "./util/status.json"
+        }
+    }
+}

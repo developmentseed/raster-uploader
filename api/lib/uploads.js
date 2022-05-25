@@ -32,10 +32,14 @@ export default class Uploads extends Generic {
                 SELECT
                     count(*) OVER() AS count,
                     id,
+                    uid,
                     created,
+                    updated,
+                    size,
+                    status,
                     name
                 FROM
-                    users_tokens
+                    uploads
                 WHERE
                     name ~ ${query.filter}
                     AND (${query.uid}::BIGINT IS NULL OR uid = ${query.uid})

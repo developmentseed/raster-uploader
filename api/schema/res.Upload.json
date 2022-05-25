@@ -6,7 +6,8 @@
         "created",
         "updated",
         "size",
-        "status"
+        "status",
+        "name"
     ],
     "additionalProperties": false,
     "properties": {
@@ -27,6 +28,9 @@
         },
         "status": {
             "$ref": "./util/status.json"
+        },
+        "name": {
+            "type": "string"
         }
     }
 }

@@ -6,7 +6,8 @@ function up(knex) {
             created     TIMESTAMP NOT NULL DEFAULT Now(),
             updated     TIMESTAMP NOT NULL DEFAULT Now(),
             size        BIGINT,
-            status      TEXT NOT NULL DEFAULT 'Pending'
+            status      TEXT NOT NULL DEFAULT 'Pending',
+            name        TEXT
         );
     `);
 }
