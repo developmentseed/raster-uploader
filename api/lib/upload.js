@@ -6,7 +6,7 @@ import { sql } from 'slonik';
 /**
  * @class
  */
-export default class Uploads extends Generic {
+export default class Upload extends Generic {
     static _table = 'uploads';
     static _patch = JSON.parse(fs.readFileSync(new URL('../schema/req.body.PatchUpload.json', import.meta.url)));
     static _res = JSON.parse(fs.readFileSync(new URL('../schema/res.Upload.json', import.meta.url)));
