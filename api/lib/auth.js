@@ -13,7 +13,7 @@ export default class Auth {
     static async is_auth(req, token = false) {
         if (token && req.token) req.auth = req.token;
 
-        if (!req.auth || !req.auth.access || !['session', 'token', 'secret'].includes(req.auth.type)) {
+        if (!req.auth || !req.auth.access || !['session', 'token'].includes(req.auth.type)) {
             throw new Err(403, null, 'Authentication Required');
         }
 

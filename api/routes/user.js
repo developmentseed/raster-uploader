@@ -121,12 +121,12 @@ export default async function router(schema, config) {
         try {
             await Auth.is_auth(req);
 
-            if (req.user.access !== 'admin' && req.user.id !== req.params.uid) {
+            if (req.auth.access !== 'admin' && req.auth.id !== req.params.uid) {
                 throw new Err(401, null, 'You can only edit your own user account');
             }
 
             // Only admins can change access or set validated
-            if (req.user.access !== 'admin') {
+            if (req.auth.access !== 'admin') {
                 delete req.body.access;
                 delete req.body.validated;
             }

@@ -176,14 +176,16 @@ async function server(args, config) {
 
             if (authorization[1].split('.')[0] === 'uploader') {
                 try {
-                    req.user = await Token.validate(config.pool, authorization[1]);
+                    req.auth = await Token.validate(config.pool, authorization[1]);
+                    req.auth.type = 'token';
                 } catch (err) {
                     return Err.respond(err, res);
                 }
             } else {
                 try {
                     const decoded = jwt.verify(authorization[1], config.SigningSecret);
-                    req.user = await User.from(config.pool, decoded.u);
+                    req.auth = await User.from(config.pool, decoded.u);
+                    req.auth.type = 'session';
                 } catch (err) {
                     return Err.respond(new Err(401, err, 'Invalid Token'), res);
                 }
@@ -191,6 +193,7 @@ async function server(args, config) {
         } else if (req.query.token) {
             try {
                 req.token = Token.validate(config.pool, req.query.token);
+                req.token.type = 'token';
             } catch (err) {
                 return Err.respond(new Err(401, err, 'Invalid Token'), res);
             }

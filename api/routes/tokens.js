@@ -24,7 +24,7 @@ export default async function router(schema, config) {
         try {
             await Auth.is_auth(req);
 
-            req.query.uid = req.user.id;
+            req.query.uid = req.auth.id;
             return res.json(await UserToken.list(config.pool, req.query));
         } catch (err) {
             return Err.respond(err, res);
@@ -51,8 +51,10 @@ export default async function router(schema, config) {
         try {
             await Auth.is_auth(req);
 
-            req.body.uid = req.user.id;
-            return res.json((await UserToken.generate(config.pool, req.body)).serialize(true));
+            req.body.uid = req.auth.id;
+            const token = await UserToken.generate(config.pool, req.body)
+
+            return res.json(token.serialize(true));
         } catch (err) {
             return Err.respond(err, res);
         }
@@ -78,7 +80,7 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             let token = await UserToken.from(config.pool, req.params.token_id);
-            if (token.uid !== req.user.id) throw new Err(401, null, 'Cannot get a token you did not create');
+            if (token.uid !== req.auth.id) throw new Err(401, null, 'Cannot get a token you did not create');
 
             token = token.serialize();
             delete token.token;
@@ -108,7 +110,7 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const token = await UserToken.from(config.pool, req.params.token_id);
-            if (token.uid !== req.user.id) throw new Err(401, null, 'Cannot delete a token you did not create');
+            if (token.uid !== req.auth.id) throw new Err(401, null, 'Cannot delete a token you did not create');
 
             await token.delete(config.pool);
 

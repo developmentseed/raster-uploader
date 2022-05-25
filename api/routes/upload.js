@@ -25,7 +25,7 @@ export default async function router(schema, config) {
         try {
             await Auth.is_auth(req);
 
-            req.query.uid = req.user.id;
+            req.query.uid = req.auth.id;
             const list = await Upload.list(config.pool, req.query);
 
             res.json(list);
@@ -57,7 +57,7 @@ export default async function router(schema, config) {
 
             const upload = await Upload.from(config.pool, req.params.upload);
 
-            if (req.user.access !== 'admin' && req.user.id !== upload.uid) {
+            if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 
@@ -86,7 +86,7 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = Upload.generate(config.pool, {
-                uid: req.user.id
+                uid: req.auth.id
             });
 
             if (req.headers['content-type']) {
@@ -151,7 +151,7 @@ export default async function router(schema, config) {
 
             const upload = await Upload.from(config.pool, req.params.upload);
 
-            if (req.user.access !== 'admin' && req.user.id !== upload.uid) {
+            if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 
@@ -184,7 +184,7 @@ export default async function router(schema, config) {
 
             const upload = await Upload.from(config.pool, req.params.upload);
 
-            if (req.user.access !== 'admin' && req.user.id !== upload.uid) {
+            if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 

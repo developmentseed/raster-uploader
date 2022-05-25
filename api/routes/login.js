@@ -25,11 +25,11 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             res.json({
-                id: req.user.id,
-                username: req.user.username,
-                email: req.user.email,
-                access: req.user.access,
-                validated: req.user.validated
+                id: req.auth.id,
+                username: req.auth.username,
+                email: req.auth.email,
+                access: req.auth.access,
+                validated: req.auth.validated
             });
         } catch (err) {
             return Err.respond(err, res);
@@ -54,17 +54,17 @@ export default async function router(schema, config) {
         res: 'res.Login.json'
     }, async (req, res) => {
         try {
-            req.user = await Login.attempt(config.pool, {
+            req.auth = await Login.attempt(config.pool, {
                 username: req.body.username,
                 password: req.body.password
             }, config.SigningSecret);
 
             return res.json({
-                id: req.user.id,
-                username: req.user.username,
-                email: req.user.email,
-                access: req.user.access,
-                token: req.user.token
+                id: req.auth.id,
+                username: req.auth.username,
+                email: req.auth.email,
+                access: req.auth.access,
+                token: req.auth.token
             });
         } catch (err) {
             return Err.respond(err, res);
