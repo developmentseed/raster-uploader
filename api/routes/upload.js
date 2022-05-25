@@ -1,5 +1,5 @@
 import { Err } from '@openaddresses/batch-schema';
-import busboy from 'busboy'
+import busboy from 'busboy';
 import Upload from '../lib/upload.js';
 import Auth from '../lib/auth.js';
 import S3 from '../lib/s3.js';
@@ -29,6 +29,39 @@ export default async function router(schema, config) {
             const list = await Upload.list(config.pool, req.query);
 
             res.json(list);
+        } catch (err) {
+            return Err.respond(err, res);
+        }
+    });
+
+    /**
+     * @api {get} /api/upload/:upload Get Upload
+     * @apiVersion 1.0.0
+     * @apiName GetUpload
+     * @apiGroup Upload
+     * @apiPermission user
+     *
+     * @apiDescription
+     *     Get a single upload
+     *
+     * @apiParam {Number} :upload The ID of the upload
+     *
+     * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
+     */
+    await schema.get('/upload/:upload', {
+        ':upload': 'integer',
+        res: 'res.Upload.json'
+    }, async (req, res) => {
+        try {
+            await Auth.is_auth(req);
+
+            const upload = await Upload.from(config.pool, req.params.upload);
+
+            if (req.user.access !== 'admin' && req.user.id !== upload.uid) {
+                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
+            }
+
+            res.json(upload.serialize());
         } catch (err) {
             return Err.respond(err, res);
         }
@@ -115,6 +148,14 @@ export default async function router(schema, config) {
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
+
+            const upload = await Upload.from(config.pool, req.params.upload);
+
+            if (req.user.access !== 'admin' && req.user.id !== upload.uid) {
+                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
+            }
+
+            return res.json(upload.serialize());
         } catch (err) {
             return Err.respond(err, res);
         }
@@ -140,6 +181,19 @@ export default async function router(schema, config) {
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
+
+            const upload = await Upload.from(config.pool, req.params.upload);
+
+            if (req.user.access !== 'admin' && req.user.id !== upload.uid) {
+                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
+            }
+
+            await upload.delete();
+
+            return res.json({
+                status: 200,
+                message: 'Deleted Upload'
+            });
         } catch (err) {
             return Err.respond(err, res);
         }
