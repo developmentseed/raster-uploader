@@ -49,6 +49,31 @@
         "query": false,
         "res": true
     },
+    "GET /upload": {
+        "body": false,
+        "query": true,
+        "res": true
+    },
+    "GET /upload/:upload": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "POST /upload": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "PATCH /upload/:upload": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "DELETE /upload/:upload": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
     "GET /user": {
         "body": false,
         "query": true,

@@ -83,8 +83,8 @@ export default class Token extends Generic {
      * @param {String} token Token to validate
      */
     static async validate(pool, token) {
-        if (token.split('.').length !== 2 || token.split('.')[0] !== 'cpal' || token.length !== 68) {
-            throw new Err(401, null, 'Invalid token');
+        if (token.split('.').length !== 2 || token.split('.')[0] !== 'uploader' || token.length !== 73) {
+            throw new Err(401, null, 'Invalid Token');
         }
 
         let pgres;
@@ -106,7 +106,7 @@ export default class Token extends Generic {
         }
 
         if (!pgres.rows.length) {
-            throw new Err(401, null, 'Invalid token');
+            throw new Err(401, null, 'Invalid Token');
         } else if (pgres.rows.length > 1) {
             throw new Err(401, null, 'Token collision');
         }
@@ -138,7 +138,7 @@ export default class Token extends Generic {
                     uid,
                     name
                 ) VALUES (
-                    ${'cpal.' + (await randomBytes(32)).toString('hex')},
+                    ${'uploader.' + (await randomBytes(32)).toString('hex')},
                     NOW(),
                     ${params.uid},
                     ${params.name}

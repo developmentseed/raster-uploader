@@ -1,0 +1,49 @@
+{
+    "type": "object",
+    "required": [
+        "total",
+        "uploads"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "total": {
+            "type": "integer",
+            "description": "Total number of uploads"
+        },
+        "tokens": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "created",
+                    "updated",
+                    "size",
+                    "status",
+                    "name"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "created": {
+                        "$ref": "./util/created.json"
+                    },
+                    "updated": {
+                        "$ref": "./util/updated.json"
+                    },
+                    "size": {
+                        "type": ["null", "integer"]
+                    },
+                    "status": {
+                        "$ref": "./util/status.json"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

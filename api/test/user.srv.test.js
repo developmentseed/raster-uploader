@@ -11,7 +11,7 @@ flight.takeoff(test, {
 test('GET: api/user (no auth)', async (t) => {
     try {
         const res = await flight.fetch('/api/user', {}, false);
-        t.equals(res.status, 401, 'http: 401');
+        t.equals(res.status, 403, 'http: 403');
     } catch (err) {
         t.error(err, 'no error');
     }
@@ -156,10 +156,10 @@ test('GET: api/login - no session', async (t) => {
     try {
         const res = await flight.fetch('/api/login', {}, false);
 
-        t.equals(res.status, 401, 'http: 401');
+        t.equals(res.status, 403, 'http: 403');
 
         t.deepEquals(res.body, {
-            status: 401,
+            status: 403,
             message: 'Authentication Required',
             messages: []
         }, 'user');
@@ -179,10 +179,10 @@ test('GET: api/login - not bearer', async (t) => {
             }
         }, false);
 
-        t.equals(res.status, 401, 'http: 401');
+        t.equals(res.status, 403, 'http: 403');
 
         t.deepEquals(res.body, {
-            status: 401,
+            status: 403,
             message: 'Authentication Required',
             messages: []
         }, 'user');
@@ -202,10 +202,10 @@ test('GET: api/login - empty token', async (t) => {
             }
         }, false);
 
-        t.equals(res.status, 401, 'http: 401');
+        t.equals(res.status, 403, 'http: 403');
 
         t.deepEquals(res.body, {
-            status: 401,
+            status: 403,
             message: 'Authentication Required',
             messages: []
         }, 'user');
