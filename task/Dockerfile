@@ -1,23 +1,14 @@
-FROM ubuntu:20.04
-
-EXPOSE 5000
+FROM alpine:3.16
 
 ENV HOME=/home/uploader
 WORKDIR $HOME
 
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata \
-    && apt-get install -y curl python python3 build-essential
-
-RUN export NODEV='18.2.0' \
-    && curl "https://nodejs.org/dist/v${NODEV}/node-v${NODEV}-linux-x64.tar.gz" | tar -xzv \
-    && cp ./node-v${NODEV}-linux-x64/bin/node /usr/bin/ \
-    && ./node-v${NODEV}-linux-x64/bin/npm install -g npm
+RUN apk add python3 py3-pip
 
 COPY ./ $HOME/task
 WORKDIR $HOME/task
 
-RUN npm install
+RUN pip install -r requirements.txt
 
-CMD npm run task
+CMD python task.py
 
