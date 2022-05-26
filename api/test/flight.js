@@ -254,7 +254,7 @@ export default class Flight {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: username,
+                    username,
                     password: 'testing123'
                 })
             });

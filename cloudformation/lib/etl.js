@@ -77,7 +77,7 @@ const stack = {
                     JobRoleArn: cf.getAtt('JobRole', 'Arn'),
                     ReadonlyRootFilesystem: false,
                     Vcpus: 2,
-                    Image: cf.join([cf.ref('AWS::AccountId'), '.dkr.ecr.', cf.ref('AWS::Region'), '.amazonaws.com/raster-uploader:etl-', cf.ref('GitSha')])
+                    Image: cf.join([cf.ref('AWS::AccountId'), '.dkr.ecr.', cf.ref('AWS::Region'), '.amazonaws.com/raster-uploader:task-', cf.ref('GitSha')])
                 }
             }
         },
