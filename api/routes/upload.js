@@ -85,15 +85,15 @@ export default async function router(schema, config) {
         try {
             await Auth.is_auth(req);
 
-            const upload = Upload.generate(config.pool, {
-                uid: req.auth.id
-            });
-
             if (req.headers['content-type']) {
                 req.headers['content-type'] = req.headers['content-type'].split(',')[0];
             } else {
                 throw new Err(400, null, 'Missing Content-Type Header');
             }
+
+            const upload = await Upload.generate(config.pool, {
+                uid: req.auth.id
+            });
 
             let bb;
             try {
@@ -110,7 +110,7 @@ export default async function router(schema, config) {
             const files = [];
 
             bb.on('file', (fieldname, file, blob) => {
-                files.push(S3.put(blob.filename, file));
+                files.push(S3.put(`${upload.id}/${fieldname}`, file));
             }).on('error', (err) => {
                 Err.respond(res, err);
             }).on('close', async () => {

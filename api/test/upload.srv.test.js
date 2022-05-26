@@ -1,7 +1,9 @@
 import test from 'tape';
 import Flight from './flight.js';
 import AWS from '@mapbox/mock-aws-sdk-js';
+import fs from 'fs';
 import fsp from 'fs/promises';
+import { pipeline } from 'stream/promises';
 
 const flight = new Flight();
 
@@ -72,8 +74,8 @@ test('POST: api/upload - Missing Content-Type', async (t) => {
 test('POST: api/upload', async (t) => {
     try {
         AWS.stub('S3', 'upload', async function(params) {
-            assert.equal(params.Bucket, 'test');
-            assert.equal(!!params.Key.includes('test/upload/'), true);
+            t.equal(params.Bucket, 'test');
+            t.equal(params.Key, '1/package.json');
 
             await pipeline(
                 params.Body,
@@ -84,7 +86,7 @@ test('POST: api/upload', async (t) => {
         });
 
         const body = new FormData();
-        body.append('file', new Blob(await fsp.readFile(new URL('../package.json', import.meta.url))));
+        body.append('package.json', new Blob(await fsp.readFile(new URL('../package.json', import.meta.url))));
 
         const res = await flight.fetch('/api/upload', {
             method: 'POST',
@@ -92,9 +94,16 @@ test('POST: api/upload', async (t) => {
                 bearer: flight.token.ingalls
             },
             body
-        }, false);
+        }, t);
 
+        delete res.body.created;
+        delete res.body.updated;
         t.deepEquals(res.body, {
+            id: 1,
+            uid: 1,
+            size: null,
+            status: 'Pending',
+            name: null
         });
     } catch (err) {
         t.error(err, 'no error');
