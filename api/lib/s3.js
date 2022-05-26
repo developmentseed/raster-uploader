@@ -1,8 +1,6 @@
 import AWS from 'aws-sdk';
 import { Err } from '@openaddresses/batch-schema';
 
-const s3 = new AWS.S3({ region: process.env.AWS_DEFAULT_REGION });
-
 /**
  * @class
  */
@@ -15,13 +13,14 @@ export default class S3 {
         try {
             if (!process.env.ASSET_BUCKET) throw new Err(400, null, 'ASSET_BUCKET not set');
 
+            const s3 = new AWS.S3({ region: process.env.AWS_DEFAULT_REGION });
             await s3.upload({
                 Bucket: process.env.ASSET_BUCKET,
                 Key: key,
                 Body: stream
             }).promise();
         } catch (err) {
-            throw new Err(500, err, 'Failed to upload file');
+            throw new Err(500, new Error(err), 'Failed to upload file');
         }
     }
 
@@ -29,6 +28,7 @@ export default class S3 {
         try {
             if (!process.env.ASSET_BUCKET) throw new Err(400, null, 'ASSET_BUCKET not set');
 
+            const s3 = new AWS.S3({ region: process.env.AWS_DEFAULT_REGION });
             await s3.headObject({
                 Bucket: process.env.ASSET_BUCKET,
                 Key: key
@@ -37,7 +37,7 @@ export default class S3 {
         } catch (err) {
             if (err.code === 'NotFound') return false;
 
-            throw new Err(500, err, 'Failed to determine existance');
+            throw new Err(500, new Error(err), 'Failed to determine existance');
         }
     }
 
@@ -45,6 +45,7 @@ export default class S3 {
         try {
             if (!process.env.ASSET_BUCKET) throw new Err(400, null, 'ASSET_BUCKET not set');
 
+            const s3 = new AWS.S3({ region: process.env.AWS_DEFAULT_REGION });
             const list = await s3.listObjectsV2({
                 Bucket: process.env.ASSET_BUCKET,
                 Prefix: fragment
@@ -52,7 +53,7 @@ export default class S3 {
 
             return list.Contents;
         } catch (err) {
-            throw new Err(500, err, 'Failed to list files');
+            throw new Err(500, new Error(err), 'Failed to list files');
         }
     }
 
@@ -60,16 +61,18 @@ export default class S3 {
         if (!process.env.ASSET_BUCKET) return;
 
         try {
+            const s3 = new AWS.S3({ region: process.env.AWS_DEFAULT_REGION });
             await s3.deleteObject({
                 Bucket: process.env.ASSET_BUCKET,
                 Key: key
             }).promise();
         } catch (err) {
-            throw new Err(500, err, 'Failed to delete file');
+            throw new Err(500, new Error(err), 'Failed to delete file');
         }
     }
 
     stream(res, name) {
+        const s3 = new AWS.S3({ region: process.env.AWS_DEFAULT_REGION });
         const s3request = s3.getObject(this.params);
         const s3stream = s3request.createReadStream();
 

@@ -91,6 +91,8 @@ export default async function router(schema, config) {
 
             if (req.headers['content-type']) {
                 req.headers['content-type'] = req.headers['content-type'].split(',')[0];
+            } else {
+                throw new Err(400, null, 'Missing Content-Type Header');
             }
 
             let bb;
@@ -116,7 +118,7 @@ export default async function router(schema, config) {
                     await Promise.all(files);
                     return res.json(upload.serialize());
                 } catch (err) {
-                    Err.respond(res, err);
+                    Err.respond(err, res);
                 }
             });
 
