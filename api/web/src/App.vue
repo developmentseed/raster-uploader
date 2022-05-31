@@ -73,11 +73,6 @@ export default {
                 name: false,
                 access: false
             },
-            meta: {
-                version: 1,
-                environment: 'docker',
-                security: false
-            },
             loading: {
                 user: true,
                 meta: true
