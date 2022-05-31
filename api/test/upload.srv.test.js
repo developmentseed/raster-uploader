@@ -113,4 +113,23 @@ test('POST: api/upload', async (t) => {
     t.end();
 });
 
+test('GET: api/upload', async (t) => {
+    try {
+        const res = await flight.fetch('/api/upload', {
+            auth: {
+                bearer: flight.token.ingalls
+            }
+        }, t);
+
+        t.deepEquals(res.body, {
+            total: 0,
+            uploads: []
+        });
+    } catch (err) {
+        t.error(err, 'no error');
+    }
+
+    t.end();
+});
+
 flight.landing(test);

@@ -215,10 +215,10 @@ async function server(args, config) {
     schema.error();
 
     return new Promise((resolve, reject) => {
-        const srv = app.listen(5000, (err) => {
+        const srv = app.listen(4999, (err) => {
             if (err) return reject(err);
 
-            if (!config.silent) console.log('ok - http://localhost:5000');
+            if (!config.silent) console.log('ok - http://localhost:4999');
             return resolve([srv, config]);
         });
     });

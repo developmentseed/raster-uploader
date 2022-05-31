@@ -91,6 +91,7 @@ export default async function router(schema, config) {
                 throw new Err(400, null, 'Missing Content-Type Header');
             }
 
+            console.error(Upload);
             const upload = await Upload.generate(config.pool, {
                 uid: req.auth.id
             });
@@ -107,15 +108,23 @@ export default async function router(schema, config) {
                 return Err.respond(err, res);
             }
 
+            let fieldname;
             const files = [];
 
             bb.on('file', (fieldname, file, blob) => {
+                fieldname = fieldname;
                 files.push(S3.put(`${upload.id}/${fieldname}`, file));
+
             }).on('error', (err) => {
-                Err.respond(res, err);
+                Err.respond(err, res);
             }).on('close', async () => {
                 try {
                     await Promise.all(files);
+
+                    await upload.commit(config.pool, {}, {
+                        name: fieldname
+                    });
+
                     return res.json(upload.serialize());
                 } catch (err) {
                     Err.respond(err, res);
