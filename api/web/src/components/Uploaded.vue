@@ -11,7 +11,8 @@
                     <span v-text='upload.id'></span>
                 </h2>
             </div>
-            <div class='round mb60 col col--12'>
+            <div class='border border--gray-light round mb60 col col--12'>
+                IMAGE UPLOAD
             </div>
         </template>
     </div>
@@ -40,7 +41,7 @@ export default {
         getUpload: async function() {
             try {
                 this.loading.upload = true;
-                this.upload = await window.std(`/api/upload/${this.$route.uploadid}`);
+                this.upload = await window.std(`/api/upload/${this.$route.params.uploadid}`);
                 this.loading.upload = false;
             } catch (err) {
                 this.$emit('err', err);
