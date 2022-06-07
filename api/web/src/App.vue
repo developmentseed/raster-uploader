@@ -73,6 +73,9 @@ export default {
                 name: false,
                 access: false
             },
+            meta: {
+
+            },
             loading: {
                 user: true,
                 meta: true
@@ -86,7 +89,8 @@ export default {
         refresh: async function(token) {
             if (token) localStorage.token = token;
 
-            await this.getMeta();
+            //await this.getMeta();
+            this.loading.meta = false; //temp
             await this.getUser();
         },
         external: function(url) {
@@ -116,6 +120,11 @@ export default {
                 this.user = await window.std('/api/login', {}, false);
                 this.loading.user = false;
             } catch (err) {
+                this.loading.user = false;
+
+                if (err.message === 'Authentication Required') {
+                    return this.$router.push('/login');
+                }
                 console.error(err);
             }
         }
