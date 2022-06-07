@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { Err } from '@openaddresses/batch-schema';
 import Generic from '@openaddresses/batch-generic';
 import { sql } from 'slonik';
@@ -5,10 +6,10 @@ import { sql } from 'slonik';
 /**
  * @class
  */
-class Meta extends Generic {
+export default class Meta extends Generic {
     static _table = 'meta';
-    static _patch = require('../schema/req.body.PatchMeta.json');
-    static _res = require('../schema/res.Meta.json');
+    static _patch = JSON.parse(fs.readFileSync(new URL('../schema/req.body.PatchMeta.json', import.meta.url)));
+    static _res = JSON.parse(fs.readFileSync(new URL('../schema/res.Meta.json', import.meta.url)));
 
     /**
      * List & Filter Meta
@@ -117,5 +118,3 @@ class Meta extends Generic {
         }
     }
 }
-
-module.exports = Meta;

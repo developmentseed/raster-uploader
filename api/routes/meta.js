@@ -1,9 +1,9 @@
 import { Err } from '@openaddresses/batch-schema';
 import Auth from '../lib/auth.js';
 import Meta from '../lib/meta.js';
-import Settings from '../lib/settings';
+import Settings from '../lib/settings.js';
 
-async function router(schema, config) {
+export default async function router(schema, config) {
 
     /**
      * @api {get} /api/meta List Meta
@@ -118,5 +118,3 @@ async function router(schema, config) {
         }
     });
 }
-
-module.exports = router;
