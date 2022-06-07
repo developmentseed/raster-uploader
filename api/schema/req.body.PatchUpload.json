@@ -7,6 +7,9 @@
         },
         "status": {
             "$ref": "./util/status.json"
+        },
+        "name": {
+            "type": "string"
         }
     }
 }
