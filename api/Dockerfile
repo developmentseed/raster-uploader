@@ -7,7 +7,7 @@ WORKDIR $HOME
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata \
-    && apt-get install -y curl python python3 build-essential
+    && apt-get install -y nginx curl python python3 build-essential
 
 RUN export NODEV='18.2.0' \
     && curl "https://nodejs.org/dist/v${NODEV}/node-v${NODEV}-linux-x64.tar.gz" | tar -xzv \
@@ -17,8 +17,15 @@ RUN export NODEV='18.2.0' \
 COPY ./ $HOME/api
 WORKDIR $HOME/api
 
+RUN cp ./nginx.conf /etc/nginx/sites-enabled/default
+
 RUN npm install \
     && npm run doc
 
-CMD npm run start
+RUN cd web \
+    && npm install \
+    && NODE_OPTIONS=--openssl-legacy-provider npm run prod \
+    && cd ..
 
+CMD service nginx restart \
+    && npm run start

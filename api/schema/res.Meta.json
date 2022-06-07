@@ -1,13 +1,24 @@
 {
     "type": "object",
     "required": [
-        "version"
+        "key",
+        "value",
+        "created",
+        "updated"
     ],
     "additionalProperties": false,
     "properties": {
-        "version": {
-            "type": "string",
-            "description": "The version of the API"
+        "key": {
+            "type": "string"
+        },
+        "value": {
+            "$ref": "./util/any.json"
+        },
+        "created": {
+            "$ref": "./util/created.json"
+        },
+        "updated": {
+            "$ref": "./util/updated.json"
         }
     }
 }

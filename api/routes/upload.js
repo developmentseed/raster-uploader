@@ -85,13 +85,15 @@ export default async function router(schema, config) {
         try {
             await Auth.is_auth(req);
 
-            const upload = Upload.generate(config.pool, {
-                uid: req.auth.id
-            });
-
             if (req.headers['content-type']) {
                 req.headers['content-type'] = req.headers['content-type'].split(',')[0];
+            } else {
+                throw new Err(400, null, 'Missing Content-Type Header');
             }
+
+            const upload = await Upload.generate(config.pool, {
+                uid: req.auth.id
+            });
 
             let bb;
             try {
@@ -105,18 +107,34 @@ export default async function router(schema, config) {
                 return Err.respond(err, res);
             }
 
+            let meta = {
+                path: '',
+                name: '',
+                size: 0
+            };
             const files = [];
 
             bb.on('file', (fieldname, file, blob) => {
-                files.push(S3.put(blob.filename, file));
+                meta.name = blob.filename;
+                meta.path = `uploads/${upload.id}/${blob.filename}`;
+                files.push(S3.put(meta.path, file));
+
             }).on('error', (err) => {
-                Err.respond(res, err);
+                Err.respond(err, res);
             }).on('close', async () => {
                 try {
                     await Promise.all(files);
+                    const head = await S3.head(meta.path);
+                    meta.size = head.ContentLength;
+
+                    await upload.commit(config.pool, {}, {
+                        name: meta.name,
+                        size: meta.size
+                    });
+
                     return res.json(upload.serialize());
                 } catch (err) {
-                    Err.respond(res, err);
+                    Err.respond(err, res);
                 }
             });
 
@@ -188,7 +206,11 @@ export default async function router(schema, config) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 
-            await upload.delete();
+            await upload.delete(config.pool);
+
+            S3.del(`uploads/${upload.id}/`, {
+                recurse: true
+            });
 
             return res.json({
                 status: 200,
