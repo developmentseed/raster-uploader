@@ -91,7 +91,6 @@ export default async function router(schema, config) {
                 throw new Err(400, null, 'Missing Content-Type Header');
             }
 
-            console.error(Upload);
             const upload = await Upload.generate(config.pool, {
                 uid: req.auth.id
             });

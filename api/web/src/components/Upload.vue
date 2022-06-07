@@ -8,13 +8,17 @@
             </h2>
         </div>
         <div class='round mb60 col col--12'>
-            <UploadFile/>
+            <UploadFile
+                :single='false'
+                :url='base'
+                :headers='headers'
+                @err='$emit("err", $event)'
+            />
         </div>
     </div>
 </template>
 
 <script>
-import Loading from './util/Loading.vue';
 import UploadFile from './util/Upload.vue';
 
 export default {
@@ -22,12 +26,15 @@ export default {
     props: ['meta'],
     data: function() {
         return {
+            base: new URL('/api/upload', window.location.origin),
+            headers: {
+                Authorization: `Bearer ${localStorage.token}`
+            }
         }
     },
     methods: {
     },
     components: {
-        Loading,
         UploadFile
     }
 }
