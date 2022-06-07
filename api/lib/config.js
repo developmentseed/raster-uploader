@@ -22,7 +22,7 @@ export default class Config {
                 this.StackName = 'test';
                 this.SigningSecret = '123';
 
-                process.env.ASSET_BUCKET='test'
+                process.env.ASSET_BUCKET = 'test';
             } else {
                 this.StackName = process.env.StackName;
 
