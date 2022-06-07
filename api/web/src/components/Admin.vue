@@ -15,10 +15,6 @@
             <AdminUser
                 @err='$emit("err", $event)'
             />
-
-            <AdminStacks
-                @err='$emit("err", $event)'
-            />
         </template>
         <template v-else>
             <div class='flex flex--center-main w-full'>
@@ -33,7 +29,6 @@
 
 <script>
 import AdminUser from './admin/AdminUser.vue'
-import AdminStacks from './admin/AdminStacks.vue'
 import AdminMeta from './admin/AdminMeta.vue'
 
 export default {
@@ -41,8 +36,7 @@ export default {
     props: ['user'],
     components: {
         AdminUser,
-        AdminMeta,
-        AdminStacks
+        AdminMeta
     }
 }
 </script>

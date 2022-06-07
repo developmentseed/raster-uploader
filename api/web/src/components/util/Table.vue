@@ -24,7 +24,7 @@
  *   { name: "", size: "1-12" }
  */
 export default {
-    name: 'Table',
+    name: 'TableUtil',
     props: ['headers', 'data'],
     data: function() {
         return {

@@ -53,7 +53,6 @@
                                     <svg v-if='upload.access === "private"' class='fl icon color-gray h24 w24'><use xlink:href='#icon-lock'/></svg>
 
                                     <h3 class='txt-h4 fl' v-text='upload.name'></h3>
-                                    <svg @click.prevent.stop='$router.push({ name: "editupload", params: { uploadid: upload.id } })' class='fl my6 mx6 icon cursor-pointer color-gray-light color-gray-on-hover'><use href='#icon-pencil'/></svg>
                                 </div>
                                 <div class='col col--12'>
                                     <h3 class='txt-xs' v-text='upload.source'></h3>
