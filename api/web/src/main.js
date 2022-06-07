@@ -18,6 +18,7 @@ import Register from './components/Register.vue';
 import Reset from './components/Reset.vue';
 import Profile from './components/Profile.vue';
 import Admin from './components/Admin.vue';
+import Upload from './components/Upload.vue';
 
 const router = new VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),
@@ -30,6 +31,8 @@ const router = new VueRouter.createRouter({
         { path: '/login/reset', name: 'reset', component: Reset },
         { path: '/login/register', name: 'register', component: Register },
 
+        { path: '/upload', name: 'newupload', component: Upload },
+        { path: '/upload/:uploadid', name: 'editupload', component: Upload },
 
         { path: '/profile', name: 'profile', component: Profile },
 
