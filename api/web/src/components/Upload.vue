@@ -1,6 +1,15 @@
 <template>
     <div class='col col--12 grid pt12'>
-        <UploadFile/>
+        <div class='col col--12 clearfix py6'>
+            <h2 class='fl cursor-default'>
+                <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/")'>Uploads</span>
+                &gt;
+                <span>New Upload</span>
+            </h2>
+        </div>
+        <div class='round mb60 col col--12'>
+            <UploadFile/>
+        </div>
     </div>
 </template>
 
