@@ -107,21 +107,29 @@ export default async function router(schema, config) {
                 return Err.respond(err, res);
             }
 
-            let fieldname;
+            let meta = {
+                path: '',
+                name: '',
+                size: 0
+            };
             const files = [];
 
             bb.on('file', (fieldname, file, blob) => {
-                fieldname = fieldname;
-                files.push(S3.put(`${upload.id}/${fieldname}`, file));
+                meta.name = blob.filename;
+                meta.path = `uploads/${upload.id}/${blob.filename}`;
+                files.push(S3.put(meta.path, file));
 
             }).on('error', (err) => {
                 Err.respond(err, res);
             }).on('close', async () => {
                 try {
                     await Promise.all(files);
+                    const head = await S3.head(meta.path);
+                    meta.size = head.ContentLength;
 
                     await upload.commit(config.pool, {}, {
-                        name: fieldname
+                        name: meta.name,
+                        size: meta.size
                     });
 
                     return res.json(upload.serialize());

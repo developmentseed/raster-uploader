@@ -9,6 +9,22 @@ export default class S3 {
         this.params = params;
     }
 
+    static async head(key) {
+        try {
+            if (!process.env.ASSET_BUCKET) throw new Err(400, null, 'ASSET_BUCKET not set');
+
+            const s3 = new AWS.S3({ region: process.env.AWS_DEFAULT_REGION });
+            const head = await s3.headObject({
+                Bucket: process.env.ASSET_BUCKET,
+                Key: key
+            }).promise();
+
+            return head;
+        } catch (err) {
+            throw new Err(500, new Error(err), 'Failed to head file');
+        }
+    }
+
     static async put(key, stream) {
         try {
             if (!process.env.ASSET_BUCKET) throw new Err(400, null, 'ASSET_BUCKET not set');
