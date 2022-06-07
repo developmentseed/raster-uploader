@@ -198,7 +198,7 @@ export default async function router(schema, config) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 
-            await upload.delete();
+            await upload.delete(config.pool);
 
             return res.json({
                 status: 200,
