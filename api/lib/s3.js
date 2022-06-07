@@ -57,6 +57,11 @@ export default class S3 {
         }
     }
 
+    /**
+     * List a key or prefix
+     *
+     * @param {string}  key             Key or Prefix to delete
+     */
     static async list(fragment) {
         try {
             if (!process.env.ASSET_BUCKET) throw new Err(400, null, 'ASSET_BUCKET not set');
@@ -73,17 +78,43 @@ export default class S3 {
         }
     }
 
-    static async del(key) {
+    /**
+     * Delete a key or prefix
+     *
+     * @param {string}  key             Key or Prefix to delete
+     * @param {object}  opts            Options
+     * @param {boolean} [opts.recurse]      Recursive Delete on key
+     */
+    static async del(key, opts={}) {
         if (!process.env.ASSET_BUCKET) return;
+        const s3 = new AWS.S3({ region: process.env.AWS_DEFAULT_REGION });
 
-        try {
-            const s3 = new AWS.S3({ region: process.env.AWS_DEFAULT_REGION });
-            await s3.deleteObject({
-                Bucket: process.env.ASSET_BUCKET,
-                Key: key
-            }).promise();
-        } catch (err) {
-            throw new Err(500, new Error(err), 'Failed to delete file');
+        if (!opts.recurse) {
+            try {
+                await s3.deleteObject({
+                    Bucket: process.env.ASSET_BUCKET,
+                    Key: key
+                }).promise();
+            } catch (err) {
+                throw new Err(500, new Error(err), 'Failed to delete file');
+            }
+        } else {
+            try {
+                const list = await this.list(key);
+
+                await s3.deleteObjects({
+                    Bucket: process.env.ASSET_BUCKET,
+                    Delete: {
+                        Objects: list.map((l) => {
+                            return {
+                                Key: l.Key
+                            }
+                        })
+                    }
+                }).promise();
+            } catch (err) {
+                throw new Err(500, new Error(err), 'Failed to delete files');
+            }
         }
     }
 

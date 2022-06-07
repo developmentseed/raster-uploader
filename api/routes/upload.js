@@ -208,6 +208,10 @@ export default async function router(schema, config) {
 
             await upload.delete(config.pool);
 
+            S3.del(`uploads/${upload.id}/`, {
+                recurse: true
+            });
+
             return res.json({
                 status: 200,
                 message: 'Deleted Upload'
