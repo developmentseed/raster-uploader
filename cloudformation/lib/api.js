@@ -197,6 +197,7 @@ const stack = {
                             ])
                         },
                         { Name: 'SecretARN', Value: cf.ref('APISecrets') },
+                        { Name: 'ASSET_BUCKET', Value: cf.ref('Bucket') },
                         { Name: 'SigningSecret', Value: cf.ref('SigningSecret') },
                         { Name: 'StackName', Value: cf.stackName },
                         { Name: 'AWS_DEFAULT_REGION', Value: cf.region }
