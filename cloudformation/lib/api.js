@@ -2,6 +2,12 @@
 const cf = require('@mapbox/cloudfriend');
 
 const stack = {
+    Parameters: {
+        SigningSecret: {
+            Type: 'String',
+            Description: 'API Token Signing Secret'
+        }
+    },
     Resources: {
         Logs: {
             Type: 'AWS::Logs::LogGroup',
@@ -191,6 +197,7 @@ const stack = {
                             ])
                         },
                         { Name: 'SecretARN', Value: cf.ref('APISecrets') },
+                        { Name: 'SigningSecret', Value: cf.ref('SigningSecret') },
                         { Name: 'StackName', Value: cf.stackName },
                         { Name: 'AWS_DEFAULT_REGION', Value: cf.region }
                     ],
