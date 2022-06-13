@@ -60,7 +60,7 @@ export default class S3 {
     /**
      * List a key or prefix
      *
-     * @param {string}  key             Key or Prefix to delete
+     * @param {string}  fragment             Key or Prefix to delete
      */
     static async list(fragment) {
         try {

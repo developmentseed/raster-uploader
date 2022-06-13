@@ -65,8 +65,8 @@ const stack = {
             Properties: {
                 HealthCheckEnabled: true,
                 HealthCheckIntervalSeconds: 30,
-                HealthCheckPath: '/healthcheck',
-                Port: 8000,
+                HealthCheckPath: '/api',
+                Port: 5000,
                 Protocol: 'HTTP',
                 TargetType: 'ip',
                 VpcId: cf.ref('VPC'),
@@ -180,7 +180,7 @@ const stack = {
                     Name: 'api',
                     Image: cf.join([cf.accountId, '.dkr.ecr.', cf.region, '.amazonaws.com/raster-uploader:', cf.ref('GitSha')]),
                     PortMappings: [{
-                        ContainerPort: 8000
+                        ContainerPort: 5000
                     }],
                     Environment: [
                         {
@@ -236,7 +236,7 @@ const stack = {
                 },
                 LoadBalancers: [{
                     ContainerName: 'api',
-                    ContainerPort: 8000,
+                    ContainerPort: 5000,
                     TargetGroupArn: cf.ref('TargetGroup')
                 }]
             }
@@ -249,8 +249,8 @@ const stack = {
                 SecurityGroupIngress: [{
                     CidrIp: '0.0.0.0/0',
                     IpProtocol: 'tcp',
-                    FromPort: 8000,
-                    ToPort: 8000
+                    FromPort: 5000,
+                    ToPort: 5000
                 }]
             }
         }
