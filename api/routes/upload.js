@@ -107,7 +107,7 @@ export default async function router(schema, config) {
                 return Err.respond(err, res);
             }
 
-            let meta = {
+            const meta = {
                 path: '',
                 name: '',
                 size: 0

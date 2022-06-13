@@ -6,7 +6,9 @@
     },
     "globals": {
         "Map": true,
-        "Promise": true
+        "Promise": true,
+        "FormData": true,
+        "Blob": true
     },
     "parserOptions": {
         "ecmaVersion": 13,

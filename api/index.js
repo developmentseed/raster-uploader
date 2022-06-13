@@ -77,6 +77,7 @@ async function server(args, config) {
 
             await pool.query(sql`SELECT NOW()`);
         } catch (err) {
+            console.error(err);
             pool = false;
 
             if (retry === 0) {
@@ -124,26 +125,14 @@ async function server(args, config) {
      */
     app.get('/api', (req, res) => {
         return res.json({
-            version: pkg.version
-        });
-    });
-
-    /**
-     * @api {get} /health Server Healthcheck
-     * @apiVersion 1.0.0
-     * @apiName Health
-     * @apiGroup Server
-     * @apiPermission public
-     *
-     * @apiDescription
-     *     AWS ELB Healthcheck for the server
-     *
-     * @apiSchema {jsonschema=./schema/res.Health.json} apiSuccess
-     */
-    app.get('/health', (req, res) => {
-        return res.json({
-            healthy: true,
-            message: ':-)'
+            version: pkg.version,
+            limits: {
+                extensions: [
+                    'zip',  // Archive  - https://en.wikipedia.org/wiki/ZIP_(file_format)
+                    'nc',   // NetCDF   - https://en.wikipedia.org/wiki/NetCDF
+                    'tiff'  // Tiff
+                ]
+            }
         });
     });
 
