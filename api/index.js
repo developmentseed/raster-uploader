@@ -128,7 +128,7 @@ async function server(args, config) {
             limits: {
                 extensions: [
                     'zip',  // Archive  - https://en.wikipedia.org/wiki/ZIP_(file_format)
-                    'nc'    // NetCDF   - https://en.wikipedia.org/wiki/NetCDF
+                    'nc',   // NetCDF   - https://en.wikipedia.org/wiki/NetCDF
                     'tiff'  // Tiff
                 ]
             }
