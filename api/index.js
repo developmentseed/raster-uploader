@@ -124,7 +124,14 @@ async function server(args, config) {
      */
     app.get('/api', (req, res) => {
         return res.json({
-            version: pkg.version
+            version: pkg.version,
+            limits: {
+                extensions: [
+                    'zip',  // Archive  - https://en.wikipedia.org/wiki/ZIP_(file_format)
+                    'nc'    // NetCDF   - https://en.wikipedia.org/wiki/NetCDF
+                    'tiff'  // Tiff
+                ]
+            }
         });
     });
 
