@@ -30,7 +30,11 @@ function up(knex) {
 }
 
 function down(knex) {
-    return knex.schema.raw(``);
+    return knex.schema.raw(`
+        DROP TABLE users;
+        DROP TABLE users_reset;
+        DROP TABLE users_tokens;
+    `);
 }
 
 export {

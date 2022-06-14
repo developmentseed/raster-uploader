@@ -10,7 +10,7 @@ function up(knex) {
     `);
 }
 
-function download(knex) {
+function down(knex) {
     return knex.schema.raw(`
         DROP TABLE upload_steps;
     `);

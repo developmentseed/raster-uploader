@@ -2,7 +2,7 @@ function up(knex) {
     return knex.schema.raw(``);
 }
 
-function download(knex) {
+function down(knex) {
     return knex.schema.raw(``);
 }
 
