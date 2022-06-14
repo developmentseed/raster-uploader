@@ -1,0 +1,28 @@
+{
+    "type": "object",
+    "required": [
+        "id",
+        "upload_id",
+        "created",
+        "parent",
+        "step"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "upload_id": {
+            "type": "integer"
+        },
+        "created": {
+            "$ref": "./util/created.json"
+        },
+        "parent": {
+            "type": "integer"
+        },
+        "step": {
+            "type": "object"
+        }
+    }
+}
