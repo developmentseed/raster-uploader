@@ -1,0 +1,45 @@
+{
+    "type": "object",
+    "required": [
+        "total",
+        "upload_steps"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "total": {
+            "type": "integer",
+            "description": "Total number of upload steps"
+        },
+        "upload_steps": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "created",
+                    "upload_id",
+                    "parent",
+                    "step"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "created": {
+                        "$ref": "./util/created.json"
+                    },
+                    "upload_id": {
+                        "type": "integer"
+                    },
+                    "parent": {
+                        "type": "integer"
+                    },
+                    "step": {
+                        "type": "object"
+                    }
+                }
+            }
+        }
+    }
+}
