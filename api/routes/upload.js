@@ -68,7 +68,7 @@ export default async function router(schema, config) {
     });
 
     /**
-     * @api {post} /api/user Create Upload
+     * @api {post} /api/upload Create Upload
      * @apiVersion 1.0.0
      * @apiName CreateUpload
      * @apiGroup Upload

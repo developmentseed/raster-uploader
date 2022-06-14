@@ -97,7 +97,7 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Create a new upload step
      *
-     * @apiSchema {jsonschema=../schema/res.Step.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
      */
     await schema.post('/upload/:upload/step', {
         ':upload': 'integer',
