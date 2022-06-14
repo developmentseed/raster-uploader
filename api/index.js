@@ -194,12 +194,13 @@ async function server(args, config) {
     });
 
     await schema.api();
-    // Load dynamic routes directory
-    for (const r of fs.readdirSync(String(new URL('./routes/', import.meta.url)).replace('file://', ''))) {
-        if (!config.silent) console.error(`ok - loaded routes/${r}`);
-        await (await import('./routes/' + r)).default(schema, config);
-    }
-
+    await schema.load(
+        String(new URL('./routes/', import.meta.url)).replace('file://', ''),
+        config,
+        {
+            silent: !!config.silent
+        }
+    );
     schema.not_found();
     schema.error();
 
