@@ -51,7 +51,7 @@ export default class Upload extends Generic {
                     ${query.limit * query.page}
             `);
 
-            return this.deserialize(pgres.rows);
+            return this.deserialize_list(pgres);
         } catch (err) {
             throw new Err(500, err, 'Failed to list uploads');
         }
