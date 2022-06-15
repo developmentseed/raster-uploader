@@ -107,6 +107,12 @@ const stack = {
                         },{
                             Effect: 'Allow',
                             Action: [
+                                's3:*'
+                            ],
+                            Resource: [cf.join(['arn:aws:s3:::', cf.ref('Bucket'), '/*'])]
+                        },{
+                            Effect: 'Allow',
+                            Action: [
                                 'secretsmanager:Describe*',
                                 'secretsmanager:Get*',
                                 'secretsmanager:List*'
@@ -204,7 +210,7 @@ const stack = {
                         },
                         { Name: 'SecretARN', Value: cf.ref('APISecrets') },
                         { Name: 'ASSET_BUCKET', Value: cf.ref('Bucket') },
-                        { NamE: 'QUEUE', Value: cf.getAtt('Queue', 'Arn') },
+                        { Name: 'QUEUE', Value: cf.ref('Queue') },
                         { Name: 'SigningSecret', Value: cf.ref('SigningSecret') },
                         { Name: 'StackName', Value: cf.stackName },
                         { Name: 'AWS_DEFAULT_REGION', Value: cf.region }

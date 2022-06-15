@@ -2,7 +2,7 @@ import os
 import boto3
 import requests
 
-s3 = boto3.resource("s3")
+s3 = boto3.client("s3")
 
 def handler(event):
     try:
@@ -13,12 +13,17 @@ def handler(event):
         print(e)
         return e
 
+    s3files = s3.list_objects_v2(
+        Bucket=os.environ.get("BUCKET"),
+        Delimiter='/',
+        Prefix=f'uploads/{event.get("upload")}/'
+    )
 
-    res = dict({
-        "s3": f's3://{event["bucket"]}/{f}'
-    })
+    print(s3files.get('Contents', []))
 
-    return res
+    return {
+
+    }
 
 if __name__ == "__main__":
     os.environ['BUCKET'] = 'raster-uploader-prod-853558080719-us-east-1'
