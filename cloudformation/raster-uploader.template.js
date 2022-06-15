@@ -8,6 +8,7 @@ const kms = require('./lib/kms.js');
 const vpc = require('./lib/vpc.js');
 const etl = require('./lib/etl.js');
 const sqs = require('./lib/sqs.js');
+const lambda = require('./lib/lambda.js');
 const secret = require('./lib/secret.js');
 
 const base = {
@@ -28,6 +29,7 @@ module.exports = cf.merge(
     vpc,
     etl,
     sqs,
+    lambda,
     secret,
     alarms({
         prefix: 'RasterUpload',
