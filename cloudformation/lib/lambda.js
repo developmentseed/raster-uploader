@@ -75,12 +75,6 @@ for (const task of fs.readdirSync(path.resolve(__dirname, '../../tasks'))) {
                     BUCKET: cf.ref('Bucket'),
                     API: cf.join(['http://', cf.getAtt('ELB', 'DNSName')])
                 }
-            },
-            VpcConfig: {
-                SubnetIds: [
-                    cf.ref('SubA'),
-                    cf.ref('SubB')
-                ]
             }
         }
     };

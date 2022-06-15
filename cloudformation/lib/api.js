@@ -112,15 +112,21 @@ const stack = {
                                 'secretsmanager:List*'
                             ],
                             Resource: [cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '/*' ])]
-                        }, {
+                        },{
                             Effect: 'Allow',
                             Action: [
-                                'logs:DescribeLogGroups',
-                                'logs:DescribeLogStreams',
-                                'logs:FilterLogEvents',
-                                'logs:GetLogEvents'
+                                'sqs:ChangeMessageVisibility',
+                                'sqs:DeleteMessage',
+                                'sqs:GetQueueAttributes',
+                                'sqs:GetQueueUrl',
+                                'sqs:ListDeadLetterSourceQueues',
+                                'sqs:PurgeQueue',
+                                'sqs:SendMessage'
                             ],
-                            Resource: cf.join(['arn:aws:logs:', cf.region, ':', cf.accountId, ':log-group:*'])
+                            Resource: [
+                                cf.getAtt('Queue', 'Arn'),
+                                cf.getAtt('DeadQueue', 'Arn')
+                            ]
                         }]
                     }
                 }]
@@ -198,6 +204,7 @@ const stack = {
                         },
                         { Name: 'SecretARN', Value: cf.ref('APISecrets') },
                         { Name: 'ASSET_BUCKET', Value: cf.ref('Bucket') },
+                        { NamE: 'QUEUE', Value: cf.getAtt('Queue', 'Arn') },
                         { Name: 'SigningSecret', Value: cf.ref('SigningSecret') },
                         { Name: 'StackName', Value: cf.stackName },
                         { Name: 'AWS_DEFAULT_REGION', Value: cf.region }
