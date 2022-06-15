@@ -218,7 +218,7 @@ export default async function router(schema, config) {
 
             await upload.delete(config.pool);
 
-            S3.del(`uploads/${upload.id}/`, {
+            await S3.del(`uploads/${upload.id}/`, {
                 recurse: true
             });
 
