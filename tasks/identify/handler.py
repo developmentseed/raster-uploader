@@ -57,7 +57,22 @@ def nc(pth, config):
     if config.get('group') is None and len(src.groups) == 1:
         config['group'] = list(src.groups.keys())[0]
     elif config.get('group') is None and len(src.groups) > 1:
-        print('TODO: Update list of groups to pick from')
+        selections = []
+        for var in data.groups:
+            selections.append({
+                'name': var
+            })
+
+        return step({
+            'upload': config.get('upload'),
+            'type': 'selection',
+            'step': {
+                'title': 'Select a NetCDF Group',
+                'selections': selections,
+                'variable': 'group',
+                'config': config
+            }
+        }, config.get('token'))
 
     if config.get('group'):
         data = src.groups[config.get('group')]
@@ -68,7 +83,6 @@ def nc(pth, config):
         selections = []
         for var in data.variables:
             selections.append({
-                'title': 'Please select a variable',
                 'name': var
             })
 
@@ -76,6 +90,7 @@ def nc(pth, config):
             'upload': config.get('upload'),
             'type': 'selection',
             'step': {
+                'title': 'Select a NetCDF Variable',
                 'selections': selections,
                 'variable': 'variable',
                 'config': config
