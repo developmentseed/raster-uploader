@@ -36,7 +36,7 @@
                 <div class='align-center'>Upload Complete</div>
                 <div class='col col--12 clearfix pt12'>
                     <template v-if='single'>
-                        <button @click='$emit("ok")' class='btn round btn--stroke fr btn--gray'>OK</button>
+                        <button @click='$emit("ok", done)' class='btn round btn--stroke fr btn--gray'>OK</button>
                     </template>
                     <template v-else>
                         <button @click='refresh' class='btn round btn--stroke fr btn--gray'>
@@ -79,6 +79,7 @@ export default {
         return {
             name: '',
             progress: 0,
+            done: null
         }
     },
     methods: {
@@ -116,7 +117,8 @@ export default {
 
                 this.progress = 101;
 
-                this.$emit('done', JSON.parse(xhr.responseText));
+                this.done = JSON.parse(xhr.responseText);
+                this.$emit('done', this.done);
             });
 
             formData.append('file', file)

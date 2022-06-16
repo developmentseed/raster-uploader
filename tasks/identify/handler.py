@@ -1,6 +1,8 @@
 import os
 import boto3
 import requests
+import numpy as np
+from netCDF4 import Dataset
 
 s3 = boto3.client("s3")
 
@@ -19,16 +21,133 @@ def handler(event):
         Prefix=f'uploads/{event.get("upload")}/'
     )
 
-    print(s3files.get('Contents', []))
+    s3files = s3files.get('Contents', [])
 
-    return {
+    if len(s3files) == 0:
+        print('Error: No uploaded file!');
+        return
 
-    }
+    s3file = None
+    s3ext = None
+    for ext in meta['limits']['extensions']:
+        if s3files[0]['Key'].endswith(ext):
+            s3file = s3files[0]['Key']
+            s3ext = ext
+            break;
+
+    if s3file is None:
+        print('ERROR: No supported formats!')
+        return
+
+    pth = f'/tmp/{os.path.basename(s3file)}'
+    #with open(pth, 'wb') as f:
+    #    s3.download_fileobj(os.environ.get('BUCKET'), s3file, f)
+
+    if s3ext == "nc":
+        nc(pth, {})
+    elif s3ext == "nc":
+        print('NetCDF')
+        #nc(pth)
+    else:
+        print('ERROR: No processing pipeline')
+        return
+
+def nc(pth, config):
+    #variable_name = config['variable_name']
+    #x_variable, y_variable = config.get('x_variable'), config.get('y_variable')
+    src = Dataset(pth, "r")
+
+    if len(src.groups) == 0:
+        variable = src[variable_name][:]
+        nodata_value = variable.fill_value
+    elif len(src.groups) == 1:
+        return
+        variable = np.transpose(variable[0])
+        print(variable)
+    else:
+        print('TODO: Update list of groups to pick from')
+        variable = src.groups[group][variable_name]
+        nodata_value = variable._FillValue
+        return
+
+    # This implies a global spatial extent, which is not always the case
+    src_height, src_width = variable.shape[0], variable.shape[1]
+    if x_variable and y_variable:
+        xmin = src[x_variable][:].min()
+        xmax = src[x_variable][:].max()
+        ymin = src[y_variable][:].min()
+        ymax = src[y_variable][:].max()
+    else:
+        xmin, ymin, xmax, ymax = [-180, -90, 180, 90]
+
+    src_crs = config.get('src_crs')
+
+    if src_crs:
+        src_crs = CRS.from_proj4(src_crs)
+    else:
+        src_crs = CRS.from_epsg(4326)
+
+    dst_crs = CRS.from_epsg(4326)
+
+    # calculate dst transform
+    dst_transform, dst_width, dst_height = calculate_default_transform(
+        src_crs, dst_crs, src_width, src_height, left=xmin, bottom=ymin, right=xmax, top=ymax
+    )
+
+    # https://github.com/NASA-IMPACT/cloud-optimized-data-pipelines/blob/rwegener2-envi-to-cog/docker/omno2-to-cog/OMNO2d.003/handler.py
+    affine_transformation = config.get('affine_transformation')
+    if affine_transformation:
+        xres = (xmax - xmin) / float(src_width)
+        yres = (ymax - ymin) / float(src_height)
+        geotransform = eval(affine_transformation)
+        dst_transform = Affine.from_gdal(*geotransform)
+
+    # Save output as COG
+    output_profile = dict(
+        driver="GTiff",
+        dtype=variable.dtype,
+        count=1,
+        crs=src_crs,
+        transform=dst_transform,
+        height=dst_height,
+        width=dst_width,
+        nodata=nodata_value,
+        tiled=True,
+        compress="deflate",
+        blockxsize=128,
+        blockysize=128,
+        overview_level=5
+    )
+
+    print("profile h/w: ", output_profile["height"], output_profile["width"])
+    outfilename = f'{filename}.tif'
+
+    with MemoryFile() as memfile:
+        with memfile.open(**output_profile) as mem:
+            data = variable.astype(np.float32)
+            mem.write(data, indexes=1)
+        cog_translate(
+            memfile,
+            outfilename,
+            output_profile,
+            config=dict(GDAL_NUM_THREADS="ALL_CPUS", GDAL_TIFF_OVR_BLOCKSIZE="128"),
+        )
+    return outfilename
+
+def step(step):
+    try:
+        meta_res = requests.post(f"{os.environ.get('API')}/api/upload/{step.upload}/step")
+        meta_res.raise_for_status()
+        meta = meta_res.json()
+    except Exception as e:
+        print(e)
+        return e
 
 if __name__ == "__main__":
     os.environ['BUCKET'] = 'raster-uploader-prod-853558080719-us-east-1'
     os.environ['API'] = 'http://raster-uploader-prod-1759918000.us-east-1.elb.amazonaws.com'
 
     handler({
-        'upload': '1'
+        'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
+        'upload': 7
     })
