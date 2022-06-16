@@ -6,7 +6,8 @@
         "created",
         "parent",
         "step",
-        "type"
+        "type",
+        "closed"
     ],
     "additionalProperties": false,
     "properties": {
@@ -27,6 +28,9 @@
         },
         "type": {
             "type": "string"
+        },
+        "closed": {
+            "type": "integer"
         }
     }
 }

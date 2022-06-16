@@ -25,7 +25,10 @@
                         <Loading desc='Loading Upload Steps'/>
                     </template>
                     <template v-else-if='step.type === "selection"'>
-                        <StepSelection :step='step'/>
+                        <StepSelection
+                            :step='step'
+                            @step='step = $event'
+                        />
                     </template>
                     <template v-else>
                         Unknown Step

@@ -151,11 +151,17 @@ export default async function router(schema, config) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 
-            const step = UploadStep.from(config.pool, req.params.step);
+            const step = await UploadStep.from(config.pool, req.params.step);
 
             if (step.upload_id !== upload.id) {
                 throw new Err(401, null, 'Upload Step does not belong to upload');
             }
+
+            if (step.closed) {
+                throw new Err(401, null, 'Cannot edit a closed step');
+            }
+
+            if (req.body.step) req.body.step = Object.assign(step.step, req.body.step);
 
             await step.commit(config.pool, null, req.body);
 
@@ -194,7 +200,7 @@ export default async function router(schema, config) {
             }
 
             // TODO Ensure no children steps are present
-            const step = UploadStep.from(config.pool, req.params.step);
+            const step = await UploadStep.from(config.pool, req.params.step);
 
             if (step.upload_id !== upload.id) {
                 throw new Err(401, null, 'Upload Step does not belong to upload');

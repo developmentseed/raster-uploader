@@ -36,7 +36,8 @@ export default class UploadStep extends Generic {
                     upload_id,
                     created,
                     step,
-                    type
+                    type,
+                    closed
                 FROM
                     upload_steps
                 WHERE

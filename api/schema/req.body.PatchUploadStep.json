@@ -4,6 +4,9 @@
     "properties": {
         "step": {
             "type": "object"
+        },
+        "closed": {
+            "type": "boolean"
         }
     }
 }
