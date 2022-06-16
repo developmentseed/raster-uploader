@@ -1,7 +1,7 @@
 <template>
     <div class='col col--12 grid pt12'>
         <template v-if='loading.upload'>
-            <Loading/>
+            <Loading desc='Loading Upload'/>
         </template>
         <template v-else>
             <div class='col col--12 clearfix py6'>
@@ -20,9 +20,12 @@
             <div class='border border--gray-light round mb60 col col--12'>
                 IMAGE UPLOAD
 
-                <div :key='step.id' v-for='step in steps' class='col col--12'>
-                    <template v-if='step.type === "selection"'>
-                        Select from a list
+                <div :key='step.id' v-for='step in steps.upload_steps' class='col col--12'>
+                    <template v-if='loading.steps'>
+                        <Loading desc='Loading Upload Steps'/>
+                    </template>
+                    <template v-else-if='step.type === "selection"'>
+                        <StepSelection :step='step'/>
                     </template>
                     <template v-else>
                         Unknown Step
@@ -46,6 +49,10 @@ export default {
                 upload: true,
                 steps: true
             },
+            steps: {
+                total: 0,
+                upload_steps: []
+            },
             upload: {
                 id: false
             }
@@ -53,6 +60,7 @@ export default {
     },
     mounted: async function() {
         await this.getUpload();
+        await this.getUploadSteps();
     },
     methods: {
         getUpload: async function() {
@@ -67,7 +75,7 @@ export default {
         getUploadSteps: async function() {
             try {
                 this.loading.steps = true;
-                this.upload = await window.std(`/api/upload/${this.$route.params.uploadid}/step`);
+                this.steps = await window.std(`/api/upload/${this.$route.params.uploadid}/step`);
                 this.loading.steps = false;
             } catch (err) {
                 this.$emit('err', err);

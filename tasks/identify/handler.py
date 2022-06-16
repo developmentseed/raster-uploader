@@ -68,6 +68,7 @@ def nc(pth, config):
         selections = []
         for var in data.variables:
             selections.append({
+                'title': 'Please select a variable',
                 'name': var
             })
 
