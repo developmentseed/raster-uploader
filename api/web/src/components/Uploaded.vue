@@ -34,6 +34,10 @@
                         Unknown Step
                     </template>
                 </div>
+
+                <div v-if='poll' class='col col--12'>
+                    <Loading desc='Polling for next steps'/>
+                </div>
             </div>
         </template>
     </div>
@@ -52,6 +56,7 @@ export default {
                 upload: true,
                 steps: true
             },
+            poll: true,
             steps: {
                 total: 0,
                 upload_steps: []
@@ -80,6 +85,10 @@ export default {
                 this.loading.steps = true;
                 this.steps = await window.std(`/api/upload/${this.$route.params.uploadid}/step`);
                 this.loading.steps = false;
+
+                this.poll = this.steps.upload_steps.some((step) => {
+                    return step.closed;
+                });
             } catch (err) {
                 this.$emit('err', err);
             }
