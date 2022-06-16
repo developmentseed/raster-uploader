@@ -19,6 +19,15 @@
             </div>
             <div class='border border--gray-light round mb60 col col--12'>
                 IMAGE UPLOAD
+
+                <div :key='step.id' v-for='step in steps' class='col col--12'>
+                    <template v-if='step.type === "selection"'>
+                        Select from a list
+                    </template>
+                    <template v-else>
+                        Unknown Step
+                    </template>
+                </div>
             </div>
         </template>
     </div>
@@ -26,6 +35,7 @@
 
 <script>
 import Loading from './util/Loading.vue';
+import StepSelection from './steps/Selection.vue';
 
 export default {
     name: 'Uploaded',
@@ -33,7 +43,8 @@ export default {
     data: function() {
         return {
             loading: {
-                upload: true
+                upload: true,
+                steps: true
             },
             upload: {
                 id: false
@@ -53,6 +64,15 @@ export default {
                 this.$emit('err', err);
             }
         },
+        getUploadSteps: async function() {
+            try {
+                this.loading.steps = true;
+                this.upload = await window.std(`/api/upload/${this.$route.params.uploadid}/step`);
+                this.loading.steps = false;
+            } catch (err) {
+                this.$emit('err', err);
+            }
+        },
         deleteUpload: async function() {
             try {
                 this.loading.upload = true;
@@ -68,7 +88,8 @@ export default {
         }
     },
     components: {
-        Loading
+        Loading,
+        StepSelection
     }
 }
 </script>
