@@ -165,6 +165,13 @@ export default async function router(schema, config) {
 
             await step.commit(config.pool, null, req.body);
 
+            if (req.body.closed === false) {
+                await sqs.sendMessage({
+                    QueueUrl: process.env.QUEUE,
+                    MessageBody: JSON.stringify(step.compile())
+                }).promise();
+            }
+
             return res.json(step.serialize());
         } catch (err) {
             return Err.respond(err, res);

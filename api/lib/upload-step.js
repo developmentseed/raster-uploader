@@ -56,4 +56,14 @@ export default class UploadStep extends Generic {
         }
     }
 
+    /**
+     * Return a new config object with the step object applied
+     */
+    compile() {
+        if (this.type === 'selection') {
+            this.step.config[this.step.variable] = this.step.selection;
+        } else {
+            return this.step.config;
+        }
+    }
 }

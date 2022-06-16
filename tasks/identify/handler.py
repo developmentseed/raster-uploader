@@ -165,8 +165,7 @@ def step(step, token):
             }
         )
 
-        #step_res.raise_for_status()
-        print(step_res.json())
+        step_res.raise_for_status()
     except Exception as e:
         print(e)
         return e
