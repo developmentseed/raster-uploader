@@ -44,10 +44,7 @@ def handler(event):
     #    s3.download_fileobj(os.environ.get('BUCKET'), s3file, f)
 
     if s3ext == "nc":
-        nc(pth, {})
-    elif s3ext == "nc":
-        print('NetCDF')
-        #nc(pth)
+        nc(pth, event)
     else:
         print('ERROR: No processing pipeline')
         return
@@ -57,18 +54,37 @@ def nc(pth, config):
     #x_variable, y_variable = config.get('x_variable'), config.get('y_variable')
     src = Dataset(pth, "r")
 
-    if len(src.groups) == 0:
-        variable = src[variable_name][:]
-        nodata_value = variable.fill_value
-    elif len(src.groups) == 1:
-        return
-        variable = np.transpose(variable[0])
-        print(variable)
-    else:
+    if config.get('group') is None and len(src.groups) == 1:
+        config['group'] = list(src.groups.keys())[0]
+    elif config.get('group') is None and len(src.groups) > 1:
         print('TODO: Update list of groups to pick from')
-        variable = src.groups[group][variable_name]
-        nodata_value = variable._FillValue
-        return
+
+    if config.get('group'):
+        data = src.groups[config.get('group')]
+    else:
+        data = src
+
+    if config.get('variable') is None:
+        selections = []
+        for var in data.variables:
+            selections.append({
+                'name': var
+            })
+
+        return step({
+            'upload': config.get('upload'),
+            'type': 'selection',
+            'step': {
+                'selections': selections,
+                'config': config
+            }
+        }, config.get('token'))
+
+
+    variable = src[variable_name][:]
+    nodata_value = variable.fill_value
+    # IDEMP SPECIFIC
+    variable = np.transpose(variable[0])
 
     # This implies a global spatial extent, which is not always the case
     src_height, src_width = variable.shape[0], variable.shape[1]
@@ -134,18 +150,29 @@ def nc(pth, config):
         )
     return outfilename
 
-def step(step):
+def step(step, token):
     try:
-        meta_res = requests.post(f"{os.environ.get('API')}/api/upload/{step.upload}/step")
-        meta_res.raise_for_status()
-        meta = meta_res.json()
+        step_res = requests.post(
+            f"{os.environ.get('API')}/api/upload/{step.get('upload')}/step",
+            headers={
+                'Authorization': f'bearer {token}'
+            },
+            json={
+                'type': step.get('type'),
+                'step': step.get('step')
+            }
+        )
+
+        #step_res.raise_for_status()
+        print(step_res.json())
     except Exception as e:
         print(e)
         return e
 
 if __name__ == "__main__":
     os.environ['BUCKET'] = 'raster-uploader-prod-853558080719-us-east-1'
-    os.environ['API'] = 'http://raster-uploader-prod-1759918000.us-east-1.elb.amazonaws.com'
+    os.environ['API'] = 'http://localhost:4999'
+    #os.environ['API'] = 'http://raster-uploader-prod-1759918000.us-east-1.elb.amazonaws.com'
 
     handler({
         'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
