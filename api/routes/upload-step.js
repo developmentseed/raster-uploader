@@ -33,7 +33,7 @@ export default async function router(schema, config) {
             }
 
             req.query.uid = req.auth.id;
-            const list = await UploadStep.list(config.pool, req.query);
+            const list = await UploadStep.list(config.pool, req.params.upload, req.query);
 
             res.json(list);
         } catch (err) {
