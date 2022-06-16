@@ -53,7 +53,7 @@ export default {
 
             try {
                 this.loading.submit = true;
-                await window.std(`/api/upload/${this.$route.params.uploadid}/step/${step.id}`, {
+                await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}`, {
                     method: 'PATCH',
                     body: {
                         step: {
@@ -62,7 +62,6 @@ export default {
                     }
                 });
                 this.loading.submit = false;
-                this.disabled = true;
             } catch (err) {
                 this.$emit('err', err);
             }

@@ -146,7 +146,7 @@ export default async function router(schema, config) {
         try {
             await Auth.is_auth(req);
 
-            const upload = await UploadStep.from(config.pool, req.params.upload);
+            const upload = await Upload.from(config.pool, req.params.upload);
             if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
