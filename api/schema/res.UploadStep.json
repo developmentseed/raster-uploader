@@ -5,7 +5,8 @@
         "upload_id",
         "created",
         "parent",
-        "step"
+        "step",
+        "type"
     ],
     "additionalProperties": false,
     "properties": {
@@ -23,6 +24,9 @@
         },
         "step": {
             "type": "object"
+        },
+        "type": {
+            "type": "string"
         }
     }
 }
