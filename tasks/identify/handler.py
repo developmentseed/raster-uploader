@@ -77,6 +77,7 @@ def nc(pth, config):
             'type': 'selection',
             'step': {
                 'selections': selections,
+                'variable': 'variable',
                 'config': config
             }
         }, config.get('token'))
