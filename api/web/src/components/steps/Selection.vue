@@ -9,7 +9,7 @@
             "cursor-pointer": !disabled
         }'>
             <div class='w-full py6 px6' :class='{
-                "bg-gray-light": sel === sel.name
+                "bg-gray-light": selection === sel.name
             }'>
                 <span class='txt-h4 round' v-text='sel.name'/>
             </div>
@@ -22,7 +22,8 @@
 export default {
     name: 'StepSelection',
     props: {
-        step: Object
+        step: Object,
+        disabled: Boolean
     },
     data: function() {
         return {
