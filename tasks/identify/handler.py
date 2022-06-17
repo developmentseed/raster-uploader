@@ -84,7 +84,7 @@ def nc(pth, config):
         return step({
             'upload': config.get('upload'),
             'type': 'selection',
-            'config': config
+            'config': config,
             'step': {
                 'title': 'Select a NetCDF Group',
                 'selections': selections,

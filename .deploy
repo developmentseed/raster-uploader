@@ -1,12 +1,10 @@
 {
     "profile": "impact",
     "artifacts": {
-        "lambda": [
-            "assets-853558080719-us-east-1/titiler/{{gitsha}}.zip"
-        ],
         "docker": [
             "raster-uploader:{{gitsha}}",
-            "raster-uploader:task-identify-{{gitsha}}"
+            "raster-uploader:task-identify-{{gitsha}}",
+            "raster-uploader:task-titiler-{{gitsha}}"
         ]
     }
 }
