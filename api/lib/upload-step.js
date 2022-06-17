@@ -43,7 +43,7 @@ export default class UploadStep extends Generic {
                 WHERE
                     upload_id = ${upload_id}
                 ORDER BY
-                    id DESC
+                    id ASC
                 LIMIT
                     ${query.limit}
                 OFFSET

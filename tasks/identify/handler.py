@@ -3,6 +3,10 @@ import boto3
 import requests
 import numpy as np
 from netCDF4 import Dataset
+from rasterio.crs import CRS
+from rasterio.warp import calculate_default_transform
+from rasterio.io import MemoryFile
+from rio_cogeo.cogeo import cog_translate
 
 s3 = boto3.client("s3")
 
@@ -44,10 +48,25 @@ def handler(event):
     #    s3.download_fileobj(os.environ.get('BUCKET'), s3file, f)
 
     if s3ext == "nc":
-        nc(pth, event)
+        pth = nc(pth, event)
     else:
         print('ERROR: No processing pipeline')
         return
+
+    final = step({
+        'upload': event.get('upload'),
+        'type': 'cog',
+        'step': {
+            'config': event
+        }
+    }, event.get('token'))
+
+    s3.upload_file(
+        pth,
+        os.environ.get('BUCKET'),
+        f'uploads/{event.get("upload")}/step/{final.get("id")}/final.tif'
+    )
+
 
 def nc(pth, config):
     #variable_name = config['variable_name']
@@ -98,10 +117,13 @@ def nc(pth, config):
         }, config.get('token'))
 
 
-    variable = src[variable_name][:]
+    variable = data[config.get('variable')][:]
     nodata_value = variable.fill_value
     # IDEMP SPECIFIC
     variable = np.transpose(variable[0])
+    x_variable = None
+    y_variable = None
+    #---
 
     # This implies a global spatial extent, which is not always the case
     src_height, src_width = variable.shape[0], variable.shape[1]
@@ -153,7 +175,7 @@ def nc(pth, config):
     )
 
     print("profile h/w: ", output_profile["height"], output_profile["width"])
-    outfilename = f'{filename}.tif'
+    outfilename = f'{os.path.splitext(pth)[0]}.tif'
 
     with MemoryFile() as memfile:
         with memfile.open(**output_profile) as mem:
@@ -181,6 +203,8 @@ def step(step, token):
         )
 
         step_res.raise_for_status()
+
+        return step_res.json()
     except Exception as e:
         print(e)
         return e
@@ -192,5 +216,6 @@ if __name__ == "__main__":
 
     handler({
         'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
+        'variable': 'precipitationCal',
         'upload': 7
     })
