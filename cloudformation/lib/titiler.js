@@ -117,7 +117,7 @@ const stack = {
         },
     },
     Outputs: {
-        Endpoint: {
+        TiTilerEndpoint: {
             Value: cf.join(['https://', cf.ref('TiTilerAPI'), '.execute-api.', cf.region, cf.ref('AWS::URLSuffix'), '/'])
         }
     },
