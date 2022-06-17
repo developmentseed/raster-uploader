@@ -30,6 +30,12 @@
                             @step='step = $event'
                         />
                     </template>
+                    <template v-else-if='step.type === "cog"'>
+                        <StepCog
+                            :step='step'
+                            @step='step = $event'
+                        />
+                    </template>
                     <template v-else>
                         Unknown Step
                     </template>
@@ -46,6 +52,7 @@
 <script>
 import Loading from './util/Loading.vue';
 import StepSelection from './steps/Selection.vue';
+import StepCog from './steps/Cog.vue';
 
 export default {
     name: 'Uploaded',
@@ -109,7 +116,8 @@ export default {
     },
     components: {
         Loading,
-        StepSelection
+        StepSelection,
+        StepCog
     }
 }
 </script>
