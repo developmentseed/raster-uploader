@@ -39,7 +39,7 @@ export default {
                 this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
                 this.map.on('load', () => {
-                    this.getMeta();
+                    //this.getMeta();
                 });
             } catch (err) {
                 this.$emit('err', err);
@@ -50,7 +50,7 @@ export default {
                 this.meta = await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}`);
             } catch (err) {
                 this.$emit('err', err);
-            t
+            }
         }
     }
 }
