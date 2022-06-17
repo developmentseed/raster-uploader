@@ -53,9 +53,9 @@
                     </template>
                 </div>
 
-                <div v-if='poll' class='col col--12'>
-                    <Loading desc='Polling for next steps'/>
-                </div>
+                <template v-if='poll'>
+                    <StepLoading/>
+                </template>
             </div>
         </template>
     </div>
@@ -64,6 +64,7 @@
 <script>
 import Loading from './util/Loading.vue';
 import StepSelection from './steps/Selection.vue';
+import StepLoading from './steps/Loading.vue';
 import StepCog from './steps/Cog.vue';
 
 export default {
@@ -133,6 +134,7 @@ export default {
     components: {
         Loading,
         StepSelection,
+        StepLoading,
         StepCog
     }
 }
