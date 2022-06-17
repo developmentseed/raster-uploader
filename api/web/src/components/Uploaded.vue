@@ -18,7 +18,17 @@
                 </div>
             </div>
             <div class='border border--gray-light round mb60 col col--12'>
-                IMAGE UPLOAD
+                <div class='col col--12 mt12'>
+                    <svg class='icon fl ml12 mt3 mr12'><use xlink:href='#icon-info'/></svg>
+                    Uploaded: <span v-text='upload.name'/>
+
+                    <div
+                        class='fr bg-gray-faint color-gray inline-block px6 py3 round txt-xs txt-bold'
+                        style='margin-right: 58px;'
+                    >
+                        <span v-text='new Date(upload.created).toISOString()'/>
+                    </div>
+                </div>
 
                 <div :key='step.id' v-for='step in steps.upload_steps' class='col col--12'>
                     <template v-if='loading.steps'>
@@ -93,9 +103,13 @@ export default {
                 this.steps = await window.std(`/api/upload/${this.$route.params.uploadid}/step`);
                 this.loading.steps = false;
 
-                this.poll = this.steps.upload_steps.some((step) => {
-                    return step.closed;
-                });
+                if (this.steps.total === 0) {
+                    this.poll = true;
+                } else {
+                    this.poll = this.steps.upload_steps.some((step) => {
+                        return step.closed;
+                    });
+                }
             } catch (err) {
                 this.$emit('err', err);
             }
