@@ -11,7 +11,7 @@ from rio_cogeo.cogeo import cog_translate
 s3 = boto3.client("s3")
 
 def handler(event, context):
-    print(event)
+    event = json.loads(event['Records'][0]['body'])
 
     try:
         meta_res = requests.get(f"{os.environ.get('API')}/api")

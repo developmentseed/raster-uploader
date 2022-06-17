@@ -30,10 +30,12 @@
             <Loading desc='Submitting Step'/>
         </template>
         <template v-else>
-            <CogMap
-                :step='step'
-                @err='$emit("err", $event)'
-            />
+            <div class='col col--12 grid mt6'>
+                <CogMap
+                    :step='step'
+                    @err='$emit("err", $event)'
+                />
+            </div>
         </template>
     </template>
 </div>
