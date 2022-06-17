@@ -59,6 +59,8 @@ export default class UploadStep extends Generic {
 
     /**
      * Update config object with the step object applied
+     *
+     * @returns {Object} Config Object
      */
     compile() {
         if (this.type === 'selection') {
