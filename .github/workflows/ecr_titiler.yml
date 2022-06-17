@@ -32,5 +32,5 @@ jobs:
                 docker run titiler&
                 sleep 5
                 docker cp $(docker ps | sed -n 2p | sed 's/ .*//'):/asset .
-                zip asset/* asset.zip
+                zip asset.zip asset/*
                 aws s3 cp asset.zip s3://assets-853558080719-us-east-1/titiler/${{ github.event.pull_request.head.sha }}.zip
