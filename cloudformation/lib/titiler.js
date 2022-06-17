@@ -52,7 +52,7 @@ const stack = {
         TiTilerAPI: {
             Type: 'AWS::ApiGatewayV2::Api',
             Properties: {
-                Name: 'titiler-lambda-production-endpoint',
+                Name: cf.join([cf.stackName, '-titiler']),
                 ProtocolType: 'HTTP',
             }
         },
