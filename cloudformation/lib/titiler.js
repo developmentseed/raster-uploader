@@ -5,7 +5,7 @@ const stack = {
     Resources: {
         TiTilerLambda: {
             Type: 'AWS::Lambda::Function',
-            DependsOn: [ 'TiTilerRole' ],
+            DependsOn: [ 'TiTilerRole', 'TiTilerLogs' ],
             Properties: {
                 FunctionName: cf.join([cf.stackName, '-titiler']),
                 Code: {
@@ -32,6 +32,13 @@ const stack = {
                 Runtime: 'python3.9',
                 Timeout: 10
             },
+        },
+        TiTilerLogs: {
+            Type: 'AWS::Logs::LogGroup',
+            Properties: {
+                LogGroupName: cf.join(['/aws/lambda/', cf.stackName, '-titiler']),
+                RetentionInDays: 7
+            }
         },
         TiTilerRole: {
             Type: 'AWS::IAM::Role',
