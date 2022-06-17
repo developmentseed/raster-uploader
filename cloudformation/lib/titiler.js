@@ -5,16 +5,14 @@ const stack = {
     Resources: {
         TiTilerLambda: {
             Type: 'AWS::Lambda::Function',
-            DependsOn: [
-                'TiTilerLogs',
-                'TitilerRole'
-            ],
+            DependsOn: [ 'TiTilerRole' ],
             Properties: {
+                FunctionName: cf.join([cf.stackName, '-titiler']),
                 Code: {
-                    S3Bucket: 'assets-853558080719-us-east-1'
+                    S3Bucket: 'assets-853558080719-us-east-1',
                     S3Key: cf.join(['titiler/', cf.ref('GitSha'), '.zip'])
                 },
-                Role: cf.getAtt('TiTilerRole', 'Arn')
+                Role: cf.getAtt('TiTilerRole', 'Arn'),
                 Environment: {
                     Variables: {
                         'CPL_VSIL_CURL_ALLOWED_EXTENSIONS': '.tif,.TIF,.tiff',
@@ -51,21 +49,12 @@ const stack = {
                 ManagedPolicyArns: [ cf.join(['arn:', cf.ref('AWS::Partition'), ':iam::aws:policy/service-role/AWSLambdaBasicExecutionRole']) ]
             }
         },
-        TiTilerLogs: {
-            Type: 'AWS::Logs::LogGroup',
-            Properties: {
-                LogGroupName: cf.join([
-                    '/aws/lambda/', cf.stackName, `-titiler`
-                ]),
-                RetentionInDays: 7
-            }
-        },
         TiTilerAPI: {
             Type: 'AWS::ApiGatewayV2::Api',
             Properties: {
                 Name: 'titiler-lambda-production-endpoint',
                 ProtocolType: 'HTTP',
-            },
+            }
         },
         TiTilerPermission: {
             Type: 'AWS::Lambda::Permission',
@@ -81,7 +70,7 @@ const stack = {
             Properties: {
                 ApiId: cf.ref('TiTilerAPI'),
                 IntegrationType: 'AWS_PROXY',
-                IntegrationUri: cf.getAtt('titilerlambdaproductionlambdaAA4DE1A7', 'Arn')
+                IntegrationUri: cf.getAtt('TiTilerLambda', 'Arn'),
                 PayloadFormatVersion: '2.0'
             },
         },
@@ -97,7 +86,7 @@ const stack = {
         TiTilerStage: {
             Type: 'AWS::ApiGatewayV2::Stage',
             Properties: {
-                ApiId: cf.ref('TiTilerAPI')
+                ApiId: cf.ref('TiTilerAPI'),
                 StageName: '$default',
                 AutoDeploy: true,
             },

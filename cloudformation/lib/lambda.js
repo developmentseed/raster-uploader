@@ -55,7 +55,11 @@ const stack = {
     }
 }
 
+const exclude = ['titiler'];
+
 for (const task of fs.readdirSync(path.resolve(__dirname, '../../tasks'))) {
+    if (exclude.includes(task)) continue;
+
     stack.Resources[`LambdaFunction${task.charAt(0).toUpperCase() + task.slice(1)}`] = {
         Type: 'AWS::Lambda::Function',
         DependsOn: [`LambdaLogs${task}`],
