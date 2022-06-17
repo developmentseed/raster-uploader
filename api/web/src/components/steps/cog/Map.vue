@@ -15,7 +15,8 @@ export default {
     },
     data: function() {
         return {
-            map: false
+            map: false,
+            meta: {}
         }
     },
     mounted: function() {
@@ -38,10 +39,18 @@ export default {
                 this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
                 this.map.on('load', () => {
+                    this.getMeta();
                 });
             } catch (err) {
                 this.$emit('err', err);
             }
+        },
+        getMeta: async function() {
+            try {
+                this.meta = await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}`);
+            } catch (err) {
+                this.$emit('err', err);
+            t
         }
     }
 }

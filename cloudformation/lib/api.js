@@ -213,7 +213,7 @@ const stack = {
                         { Name: 'QUEUE', Value: cf.ref('Queue') },
                         { Name: 'SigningSecret', Value: cf.ref('SigningSecret') },
                         { Name: 'StackName', Value: cf.stackName },
-                        { Name: 'AWS_DEFAULT_REGION', Value: cf.region }
+                        { Name: 'AWS_DEFAULT_REGION', Value: cf.region },
                         { Name: 'TiTiler', Value: cf.join(['https://', cf.ref('TiTilerAPI'), '.execute-api.', cf.region, cf.ref('AWS::URLSuffix'), '/']) }
                     ],
                     LogConfiguration: {
