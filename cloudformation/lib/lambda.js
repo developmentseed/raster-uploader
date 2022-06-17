@@ -28,6 +28,19 @@ const stack = {
                         Statement: [{
                             Effect: 'Allow',
                             Action: [
+                                'kms:Decrypt',
+                                'kms:GenerateDataKey'
+                            ],
+                            Resource: [cf.getAtt('KMS', 'Arn')]
+                        },{
+                            Effect: 'Allow',
+                            Action: [
+                                's3:*'
+                            ],
+                            Resource: [cf.join(['arn:aws:s3:::', cf.ref('Bucket'), '/*'])]
+                        },{
+                            Effect: 'Allow',
+                            Action: [
                                 'lambda:GetFunction',
                                 'lambda:invokeFunction',
                                 'logs:CreateLogGroup',

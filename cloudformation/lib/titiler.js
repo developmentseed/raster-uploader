@@ -51,6 +51,25 @@ const stack = {
                     }],
                     Version: '2012-10-17'
                 },
+                Policies: [{
+                    PolicyName: cf.join([cf.stackName, '-titiler']),
+                    PolicyDocument: {
+                        Statement: [{
+                            Effect: 'Allow',
+                            Action: [
+                                'kms:Decrypt',
+                                'kms:GenerateDataKey'
+                            ],
+                            Resource: [cf.getAtt('KMS', 'Arn')]
+                        },{
+                            Effect: 'Allow',
+                            Action: [
+                                's3:*'
+                            ],
+                            Resource: [cf.join(['arn:aws:s3:::', cf.ref('Bucket'), '/*'])]
+                        }]
+                    }
+                }],
                 ManagedPolicyArns: [ cf.join(['arn:', cf.ref('AWS::Partition'), ':iam::aws:policy/service-role/AWSLambdaBasicExecutionRole']) ]
             }
         },
