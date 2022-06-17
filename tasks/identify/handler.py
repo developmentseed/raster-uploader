@@ -56,9 +56,8 @@ def handler(event, context):
     final = step({
         'upload': event.get('upload'),
         'type': 'cog',
-        'step': {
-            'config': event
-        }
+        'config': event,
+        'step': {}
     }, event.get('token'))
 
     s3.upload_file(
@@ -85,11 +84,11 @@ def nc(pth, config):
         return step({
             'upload': config.get('upload'),
             'type': 'selection',
+            'config': config
             'step': {
                 'title': 'Select a NetCDF Group',
                 'selections': selections,
-                'variable': 'group',
-                'config': config
+                'variable': 'group'
             }
         }, config.get('token'))
 
@@ -108,11 +107,11 @@ def nc(pth, config):
         return step({
             'upload': config.get('upload'),
             'type': 'selection',
+            'config': config,
             'step': {
                 'title': 'Select a NetCDF Variable',
                 'selections': selections,
-                'variable': 'variable',
-                'config': config
+                'variable': 'variable'
             }
         }, config.get('token'))
 
@@ -198,7 +197,8 @@ def step(step, token):
             },
             json={
                 'type': step.get('type'),
-                'step': step.get('step')
+                'step': step.get('step'),
+                'config': step.get('config')
             }
         )
 

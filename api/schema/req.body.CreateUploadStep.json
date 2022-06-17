@@ -3,6 +3,7 @@
     "required": [
         "parent",
         "step",
+        "config",
         "type"
     ],
     "additionalProperties": false,
@@ -11,6 +12,9 @@
             "type": "integer"
         },
         "step": {
+            "type": "object"
+        },
+        "config": {
             "type": "object"
         },
         "type": {

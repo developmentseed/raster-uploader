@@ -17,6 +17,7 @@
                 "required": [
                     "id",
                     "created",
+                    "config",
                     "upload_id",
                     "parent",
                     "step",
@@ -38,6 +39,9 @@
                         "type": "integer"
                     },
                     "step": {
+                        "type": "object"
+                    },
+                    "config": {
                         "type": "object"
                     },
                     "type": {

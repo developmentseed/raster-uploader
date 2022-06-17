@@ -5,6 +5,9 @@
         "step": {
             "type": "object"
         },
+        "config": {
+            "type": "object"
+        },
         "closed": {
             "type": "boolean"
         }
