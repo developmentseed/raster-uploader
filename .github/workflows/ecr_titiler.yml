@@ -1,4 +1,4 @@
-Tame: AWS ECR TiTiler
+name: AWS ECR TiTiler
 
 on:
     pull_request:
