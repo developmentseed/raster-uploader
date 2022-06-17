@@ -44,8 +44,8 @@ def handler(event):
         return
 
     pth = f'/tmp/{os.path.basename(s3file)}'
-    #with open(pth, 'wb') as f:
-    #    s3.download_fileobj(os.environ.get('BUCKET'), s3file, f)
+    with open(pth, 'wb') as f:
+        s3.download_fileobj(os.environ.get('BUCKET'), s3file, f)
 
     if s3ext == "nc":
         pth = nc(pth, event)
@@ -216,6 +216,6 @@ if __name__ == "__main__":
 
     handler({
         'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
-        'variable': 'precipitationCal',
-        'upload': 7
+        #'variable': 'precipitationCal',
+        'upload': 14
     })
