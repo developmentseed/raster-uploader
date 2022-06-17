@@ -16,4 +16,4 @@ RUN rm -rdf /asset/numpy/doc/ /asset/boto3* /asset/botocore* /asset/bin /asset/g
 
 COPY ./handler.py /asset/handler.py
 
-CMD ["echo", "hello world"]
+CMD ["handler.handler"]
