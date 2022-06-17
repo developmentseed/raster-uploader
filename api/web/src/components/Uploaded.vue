@@ -38,12 +38,14 @@
                         <StepSelection
                             :step='step'
                             @step='step = $event'
+                            @err='$emit("err", $event)'
                         />
                     </template>
                     <template v-else-if='step.type === "cog"'>
                         <StepCog
                             :step='step'
                             @step='step = $event'
+                            @err='$emit("err", $event)'
                         />
                     </template>
                     <template v-else>

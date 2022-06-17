@@ -30,7 +30,10 @@
             <Loading desc='Submitting Step'/>
         </template>
         <template v-else>
-            No Options Yet!
+            <CogMap
+                :step='step'
+                @err='$emit("err", $event)'
+            />
         </template>
     </template>
 </div>
@@ -38,6 +41,7 @@
 
 <script>
 import Loading from '../util/Loading.vue';
+import CogMap from './cog/Map.vue';
 
 export default {
     name: 'StepCog',
@@ -74,7 +78,8 @@ export default {
         }
     },
     components: {
-        Loading
+        Loading,
+        CogMap
     }
 }
 </script>
