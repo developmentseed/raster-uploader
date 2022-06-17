@@ -10,7 +10,7 @@ from rio_cogeo.cogeo import cog_translate
 
 s3 = boto3.client("s3")
 
-def handler(event):
+def handler(event, context):
     try:
         meta_res = requests.get(f"{os.environ.get('API')}/api")
         meta_res.raise_for_status()

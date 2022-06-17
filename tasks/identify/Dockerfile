@@ -8,6 +8,4 @@ RUN pip install pip -U
 COPY requirements.txt .
 RUN pip install -r requirements.txt --target ${LAMBDA_TASK_ROOT}
 
-WORKDIR /asset
-
 CMD ["handler.handler"]
