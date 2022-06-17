@@ -17,9 +17,12 @@
                 "required": [
                     "id",
                     "created",
+                    "config",
                     "upload_id",
                     "parent",
-                    "step"
+                    "step",
+                    "type",
+                    "closed"
                 ],
                 "additionalProperties": false,
                 "properties": {
@@ -37,6 +40,15 @@
                     },
                     "step": {
                         "type": "object"
+                    },
+                    "config": {
+                        "type": "object"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "closed": {
+                        "type": "integer"
                     }
                 }
             }

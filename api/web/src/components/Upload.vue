@@ -9,10 +9,11 @@
         </div>
         <div class='round mb60 col col--12'>
             <UploadFile
-                :single='false'
+                :single='true'
                 :url='base'
                 :headers='headers'
                 @err='$emit("err", $event)'
+                @ok='$router.push(`/upload/${$event.id}/`)'
             />
         </div>
     </div>

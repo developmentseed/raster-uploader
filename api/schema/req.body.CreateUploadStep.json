@@ -2,7 +2,9 @@
     "type": "object",
     "required": [
         "parent",
-        "step"
+        "step",
+        "config",
+        "type"
     ],
     "additionalProperties": false,
     "properties": {
@@ -11,6 +13,12 @@
         },
         "step": {
             "type": "object"
+        },
+        "config": {
+            "type": "object"
+        },
+        "type": {
+            "type": "string"
         }
     }
 }

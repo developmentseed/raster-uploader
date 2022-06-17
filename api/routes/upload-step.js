@@ -28,12 +28,12 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-            if (upload.uid !== req.user.id || req.user.access !== 'access') {
+            if (upload.uid !== req.auth.id && req.auth.access !== 'admin') {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 
             req.query.uid = req.auth.id;
-            const list = await UploadStep.list(config.pool, req.query);
+            const list = await UploadStep.list(config.pool, req.params.upload, req.query);
 
             res.json(list);
         } catch (err) {
@@ -65,7 +65,7 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-            if (upload.uid !== req.user.id || req.user.access !== 'access') {
+            if (upload.uid !== req.auth.id && req.auth.access !== 'admin') {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 
@@ -107,12 +107,13 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-            if (upload.uid !== req.user.id || req.user.access !== 'access') {
+
+            if (upload.uid !== req.auth.id && req.auth.access !== 'access') {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 
             req.body.upload_id = req.params.upload;
-            const step = UploadStep.generate(config.pool, req.body);
+            const step = await UploadStep.generate(config.pool, req.body);
 
             return res.json(step.serialize());
         } catch (err) {
@@ -145,18 +146,31 @@ export default async function router(schema, config) {
         try {
             await Auth.is_auth(req);
 
-            const upload = await UploadStep.from(config.pool, req.params.upload);
+            const upload = await Upload.from(config.pool, req.params.upload);
             if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 
-            const step = UploadStep.from(config.pool, req.params.step);
+            const step = await UploadStep.from(config.pool, req.params.step);
 
             if (step.upload_id !== upload.id) {
                 throw new Err(401, null, 'Upload Step does not belong to upload');
             }
 
+            if (step.closed) {
+                throw new Err(401, null, 'Cannot edit a closed step');
+            }
+
+            if (req.body.step) req.body.step = Object.assign(step.step, req.body.step);
+
             await step.commit(config.pool, null, req.body);
+
+            if (req.body.closed === false) {
+                await sqs.sendMessage({
+                    QueueUrl: process.env.QUEUE,
+                    MessageBody: JSON.stringify(step.compile())
+                }).promise();
+            }
 
             return res.json(step.serialize());
         } catch (err) {
@@ -193,7 +207,7 @@ export default async function router(schema, config) {
             }
 
             // TODO Ensure no children steps are present
-            const step = UploadStep.from(config.pool, req.params.step);
+            const step = await UploadStep.from(config.pool, req.params.step);
 
             if (step.upload_id !== upload.id) {
                 throw new Err(401, null, 'Upload Step does not belong to upload');

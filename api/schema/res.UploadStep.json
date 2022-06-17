@@ -5,7 +5,10 @@
         "upload_id",
         "created",
         "parent",
-        "step"
+        "step",
+        "config",
+        "type",
+        "closed"
     ],
     "additionalProperties": false,
     "properties": {
@@ -23,6 +26,15 @@
         },
         "step": {
             "type": "object"
+        },
+        "config": {
+            "type": "object"
+        },
+        "type": {
+            "type": "string"
+        },
+        "closed": {
+            "type": "integer"
         }
     }
 }

@@ -130,7 +130,10 @@ async function server(args, config) {
                 extensions: [
                     'zip',  // Archive  - https://en.wikipedia.org/wiki/ZIP_(file_format)
                     'nc',   // NetCDF   - https://en.wikipedia.org/wiki/NetCDF
-                    'tiff'  // Tiff
+                    'tiff', // Tiff
+                    'h5',
+                    'hdf5',
+                    'he5'
                 ]
             }
         });

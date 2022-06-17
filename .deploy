@@ -3,7 +3,8 @@
     "artifacts": {
         "docker": [
             "raster-uploader:{{gitsha}}",
-            "raster-uploader:task-identify-{{gitsha}}"
+            "raster-uploader:task-identify-{{gitsha}}",
+            "raster-uploader:task-titiler-{{gitsha}}"
         ]
     }
 }

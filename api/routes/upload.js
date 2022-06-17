@@ -3,8 +3,11 @@ import busboy from 'busboy';
 import Upload from '../lib/upload.js';
 import Auth from '../lib/auth.js';
 import S3 from '../lib/s3.js';
+import AWS from 'aws-sdk';
 
 export default async function router(schema, config) {
+    const sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION || 'us-east-1' });
+
     /**
      * @api {get} /api/upload List Uploads
      * @apiVersion 1.0.0
@@ -132,6 +135,13 @@ export default async function router(schema, config) {
                         size: meta.size
                     });
 
+                    await sqs.sendMessage({
+                        QueueUrl: process.env.QUEUE,
+                        MessageBody: JSON.stringify({
+                            upload: upload.id
+                        })
+                    }).promise();
+
                     return res.json(upload.serialize());
                 } catch (err) {
                     Err.respond(err, res);
@@ -208,7 +218,7 @@ export default async function router(schema, config) {
 
             await upload.delete(config.pool);
 
-            S3.del(`uploads/${upload.id}/`, {
+            await S3.del(`uploads/${upload.id}/`, {
                 recurse: true
             });
 
