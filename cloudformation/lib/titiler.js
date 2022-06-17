@@ -9,9 +9,9 @@ const stack = {
             Properties: {
                 FunctionName: cf.join([cf.stackName, '-titiler']),
                 Code: {
-                    S3Bucket: 'assets-853558080719-us-east-1',
-                    S3Key: cf.join(['titiler/', cf.ref('GitSha'), '.zip'])
+                    ImageUri: cf.join([cf.accountId, '.dkr.ecr.', cf.region, `.amazonaws.com/raster-uploader:task-titiler-`, cf.ref('GitSha')])
                 },
+                PackageType: 'Image',
                 Role: cf.getAtt('TiTilerRole', 'Arn'),
                 Environment: {
                     Variables: {
@@ -27,9 +27,7 @@ const stack = {
                         'VSI_CACHE_SIZE': '5000000'
                     }
                 },
-                Handler: 'handler.handler',
                 MemorySize: 1536,
-                Runtime: 'python3.9',
                 Timeout: 10
             },
         },

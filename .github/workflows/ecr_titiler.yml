@@ -27,11 +27,13 @@ jobs:
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: us-east-1
 
-            - name: Build Zip
-              run: |
-                docker run titiler&
-                sleep 5
-                docker cp $(docker ps | sed -n 2p | sed 's/ .*//'):/asset .
-                cd asset/
-                zip asset.zip *
-                aws s3 cp asset.zip s3://assets-853558080719-us-east-1/titiler/${{ github.event.pull_request.head.sha }}.zip
+            - name: Login to Amazon ECR
+              id: login-ecr
+              uses: aws-actions/amazon-ecr-login@v1
+
+            - name: Docker Tag API
+              run: docker tag task-titiler ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/raster-uploader:task-titiler-${{github.event.pull_request.head.sha}}
+
+            - name: Docker Push API
+              run: docker push ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/raster-uploader:task-titiler-${{github.event.pull_request.head.sha}}
+
