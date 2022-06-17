@@ -1,4 +1,4 @@
-import Auth from '../lib/Auth.js';
+import Auth from '../lib/auth.js';
 
 export default async function router(schema, config) {
     /**
