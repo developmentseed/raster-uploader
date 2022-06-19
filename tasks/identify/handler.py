@@ -1,6 +1,7 @@
 import os
 import json
 import boto3
+import time
 import requests
 import numpy as np
 from netCDF4 import Dataset
@@ -22,17 +23,30 @@ def handler(event, context):
         print(e)
         return e
 
-    s3files = s3.list_objects_v2(
-        Bucket=os.environ.get("BUCKET"),
-        Delimiter='/',
-        Prefix=f'uploads/{event.get("upload")}/'
-    )
+    s3files = []
+    attempts = 0
+    while len(s3files) == 0 and attempts < 5:
+        time.sleep(attempts)
 
-    s3files = s3files.get('Contents', [])
+        s3files_req = s3.list_objects_v2(
+            Bucket=os.environ.get("BUCKET"),
+            Delimiter='/',
+            Prefix=f'uploads/{event.get("upload")}/'
+        )
+
+        s3files = s3files_req.get('Contents', [])
+
+        attempts = attempts + 1
 
     if len(s3files) == 0:
-        print('Error: No uploaded file!');
-        return
+        return step({
+            'upload': config.get('upload'),
+            'type': 'error',
+            'config': config,
+            'step': {
+                'message': 'No uploaded file!',
+            }
+        }, config.get('token'))
 
     s3file = None
     s3ext = None
@@ -43,8 +57,14 @@ def handler(event, context):
             break;
 
     if s3file is None:
-        print('ERROR: No supported formats!')
-        return
+        return step({
+            'upload': config.get('upload'),
+            'type': 'error',
+            'config': config,
+            'step': {
+                'message': 'No supported formats!',
+            }
+        }, config.get('token'))
 
     pth = f'/tmp/{os.path.basename(s3file)}'
     with open(pth, 'wb') as f:
@@ -53,8 +73,17 @@ def handler(event, context):
     if s3ext == "nc":
         pth = nc(pth, event)
     else:
-        print('ERROR: No processing pipeline')
-        return
+        return step({
+            'upload': config.get('upload'),
+            'type': 'error',
+            'config': config,
+            'step': {
+                'message': 'No processing pipeline',
+            }
+        }, config.get('token'))
+
+    if pth is None:
+        return None
 
     final = step({
         'upload': event.get('upload'),
@@ -192,6 +221,7 @@ def nc(pth, config):
     return outfilename
 
 def step(step, token):
+    print(json.dumps(step.get('step')))
     try:
         step_res = requests.post(
             f"{os.environ.get('API')}/api/upload/{step.get('upload')}/step",
@@ -207,7 +237,7 @@ def step(step, token):
 
         step_res.raise_for_status()
 
-        return step_res.json()
+        return None
     except Exception as e:
         print(e)
         return e
@@ -218,7 +248,11 @@ if __name__ == "__main__":
     #os.environ['API'] = 'http://raster-uploader-prod-1759918000.us-east-1.elb.amazonaws.com'
 
     handler({
-        'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
-        #'variable': 'precipitationCal',
-        'upload': 14
-    })
+        'Records': [{
+            'body': json.dumps({
+                'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
+                #'variable': 'precipitationCal',
+                'upload': 15
+            })
+        }]
+    }, None)
