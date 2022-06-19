@@ -13,7 +13,7 @@ from rio_cogeo.cogeo import cog_translate
 s3 = boto3.client("s3")
 
 def handler(event, context):
-    event = json.loads(event['Records'][0]['body'])
+    config = json.loads(event['Records'][0]['body'])
 
     try:
         meta_res = requests.get(f"{os.environ.get('API')}/api")
@@ -31,7 +31,7 @@ def handler(event, context):
         s3files_req = s3.list_objects_v2(
             Bucket=os.environ.get("BUCKET"),
             Delimiter='/',
-            Prefix=f'uploads/{event.get("upload")}/'
+            Prefix=f'uploads/{config.get("upload")}/'
         )
 
         s3files = s3files_req.get('Contents', [])
@@ -71,7 +71,7 @@ def handler(event, context):
         s3.download_fileobj(os.environ.get('BUCKET'), s3file, f)
 
     if s3ext == "nc":
-        pth = nc(pth, event)
+        pth = nc(pth, config)
     else:
         return step({
             'upload': config.get('upload'),
@@ -86,16 +86,16 @@ def handler(event, context):
         return None
 
     final = step({
-        'upload': event.get('upload'),
+        'upload': config.get('upload'),
         'type': 'cog',
-        'config': event,
+        'config': config,
         'step': {}
-    }, event.get('token'))
+    }, config.get('token'))
 
     s3.upload_file(
         pth,
         os.environ.get('BUCKET'),
-        f'uploads/{event.get("upload")}/step/{final.get("id")}/final.tif'
+        f'uploads/{config.get("upload")}/step/{final.get("id")}/final.tif'
     )
 
 
