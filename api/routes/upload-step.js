@@ -168,7 +168,7 @@ export default async function router(schema, config) {
 
             await step.commit(config.pool, null, req.body);
 
-            if (req.body.closed === false) {
+            if (req.body.closed === true) {
                 await sqs.send(req.params.upload, step.compile(), req.auth.id);
             }
 
