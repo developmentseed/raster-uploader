@@ -135,8 +135,8 @@ export default async function router(schema, config) {
                         size: meta.size
                     });
 
-                    await sqs.send({
-                        upload: upload.id
+                    await sqs.send(upload.id, {
+                        upload: upload.id,
                     }, req.auth.id);
 
                     return res.json(upload.serialize());

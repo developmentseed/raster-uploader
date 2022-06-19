@@ -169,7 +169,7 @@ export default async function router(schema, config) {
             await step.commit(config.pool, null, req.body);
 
             if (req.body.closed === false) {
-                await sqs.send(step.compile(), req.auth.id);
+                await sqs.send(req.params.upload, step.compile(), req.auth.id);
             }
 
             return res.json(step.serialize());
