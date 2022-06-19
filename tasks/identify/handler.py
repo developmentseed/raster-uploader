@@ -13,7 +13,7 @@ from rio_cogeo.cogeo import cog_translate
 s3 = boto3.client("s3")
 
 def handler(event, context):
-    config = json.loads(event['Records'][0]['body'])
+    event = json.loads(event['Records'][0]['body'])
 
     try:
         meta_res = requests.get(f"{os.environ.get('API')}/api")
@@ -28,11 +28,11 @@ def handler(event, context):
     while len(s3files) == 0 and attempts < 5:
         time.sleep(attempts)
 
-        print(os.environ.get("BUCKET"), f'uploads/{config.get("upload")}/')
+        print(os.environ.get("BUCKET"), f'uploads/{event["config"].get("upload")}/')
         s3files_req = s3.list_objects_v2(
             Bucket=os.environ.get("BUCKET"),
             Delimiter='/',
-            Prefix=f'uploads/{config.get("upload")}/'
+            Prefix=f'uploads/{event["config"].get("upload")}/'
         )
 
         print(s3files_req) #tmp
@@ -42,13 +42,13 @@ def handler(event, context):
 
     if len(s3files) == 0:
         return step({
-            'upload': config.get('upload'),
+            'upload': event["config"].get('upload'),
             'type': 'error',
-            'config': config,
+            'config': event["config"],
             'step': {
                 'message': 'No uploaded file!',
             }
-        }, config.get('token'))
+        }, event["token"])
 
     print(s3files)
     s3file = None
@@ -61,55 +61,55 @@ def handler(event, context):
 
     if s3file is None:
         return step({
-            'upload': config.get('upload'),
+            'upload': event["config"]["upload"],
             'type': 'error',
-            'config': config,
+            'config': event["config"],
             'step': {
                 'message': 'No supported formats!',
             }
-        }, config.get('token'))
+        }, event['token'])
 
     pth = f'/tmp/{os.path.basename(s3file)}'
     with open(pth, 'wb') as f:
         s3.download_fileobj(os.environ.get('BUCKET'), s3file, f)
 
     if s3ext == "nc":
-        pth = nc(pth, config)
+        pth = nc(pth, event)
     else:
         return step({
-            'upload': config.get('upload'),
+            'upload': event["config"]["upload"],
             'type': 'error',
-            'config': config,
+            'config': event["config"],
             'step': {
                 'message': 'No processing pipeline',
             }
-        }, config.get('token'))
+        }, event["token"])
 
     if pth is None:
         return None
 
     final = step({
-        'upload': config.get('upload'),
+        'upload': event["config"]["upload"],
         'type': 'cog',
-        'config': config,
+        'config': event["config"],
         'step': {}
-    }, config.get('token'))
+    }, event["token"])
 
     s3.upload_file(
         pth,
         os.environ.get('BUCKET'),
-        f'uploads/{config.get("upload")}/step/{final.get("id")}/final.tif'
+        f'uploads/{event["config"]["upload"]}/step/{final.get("id")}/final.tif'
     )
 
 
-def nc(pth, config):
-    #variable_name = config['variable_name']
-    #x_variable, y_variable = config.get('x_variable'), config.get('y_variable')
+def nc(pth, event):
+    #variable_name = event["config"]['variable_name']
+    #x_variable, y_variable = event["config"].get('x_variable'), event["config"].get('y_variable')
     src = Dataset(pth, "r")
 
-    if config.get('group') is None and len(src.groups) == 1:
-        config['group'] = list(src.groups.keys())[0]
-    elif config.get('group') is None and len(src.groups) > 1:
+    if event["config"].get('group') is None and len(src.groups) == 1:
+        event["config"]['group'] = list(src.groups.keys())[0]
+    elif event["config"].get('group') is None and len(src.groups) > 1:
         selections = []
         for var in data.groups:
             selections.append({
@@ -117,22 +117,22 @@ def nc(pth, config):
             })
 
         return step({
-            'upload': config.get('upload'),
+            'upload': event["config"]["upload"],
             'type': 'selection',
-            'config': config,
+            'config': event["config"],
             'step': {
                 'title': 'Select a NetCDF Group',
                 'selections': selections,
                 'variable': 'group'
             }
-        }, config.get('token'))
+        }, event["token"])
 
-    if config.get('group'):
-        data = src.groups[config.get('group')]
+    if event["config"].get('group'):
+        data = src.groups[event["config"].get('group')]
     else:
         data = src
 
-    if config.get('variable') is None:
+    if event["config"].get('variable') is None:
         selections = []
         for var in data.variables:
             selections.append({
@@ -140,18 +140,18 @@ def nc(pth, config):
             })
 
         return step({
-            'upload': config.get('upload'),
+            'upload': event["config"]["upload"],
             'type': 'selection',
-            'config': config,
+            'config': event["config"],
             'step': {
                 'title': 'Select a NetCDF Variable',
                 'selections': selections,
                 'variable': 'variable'
             }
-        }, config.get('token'))
+        }, event["token"])
 
 
-    variable = data[config.get('variable')][:]
+    variable = data[event["config"].get('variable')][:]
     nodata_value = variable.fill_value
     # IDEMP SPECIFIC
     variable = np.transpose(variable[0])
@@ -169,7 +169,7 @@ def nc(pth, config):
     else:
         xmin, ymin, xmax, ymax = [-180, -90, 180, 90]
 
-    src_crs = config.get('src_crs')
+    src_crs = event["config"].get('src_crs')
 
     if src_crs:
         src_crs = CRS.from_proj4(src_crs)
@@ -184,7 +184,7 @@ def nc(pth, config):
     )
 
     # https://github.com/NASA-IMPACT/cloud-optimized-data-pipelines/blob/rwegener2-envi-to-cog/docker/omno2-to-cog/OMNO2d.003/handler.py
-    affine_transformation = config.get('affine_transformation')
+    affine_transformation = event["config"].get('affine_transformation')
     if affine_transformation:
         xres = (xmax - xmin) / float(src_width)
         yres = (ymax - ymin) / float(src_height)
@@ -254,8 +254,10 @@ if __name__ == "__main__":
         'Records': [{
             'body': json.dumps({
                 'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
-                #'variable': 'precipitationCal',
-                'upload': 15
+                'config': {
+                    'upload': 15
+                    #'variable': 'precipitationCal',
+                }
             })
         }]
     }, None)

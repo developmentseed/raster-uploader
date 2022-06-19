@@ -11,7 +11,7 @@ export default class SQS {
         this.secret = secret;
     }
 
-    async send(config, uid) {
+    async send(upload, config, uid) {
         try {
             if (!process.env.QUEUE) throw new Err(400, null, 'QUEUE not set');
 
@@ -24,6 +24,7 @@ export default class SQS {
             await this.sqs.sendMessage({
                 QueueUrl: process.env.QUEUE,
                 MessageBody: JSON.stringify({
+                    upload,
                     token,
                     config
                 })
