@@ -28,12 +28,14 @@ def handler(event, context):
     while len(s3files) == 0 and attempts < 5:
         time.sleep(attempts)
 
+        print(os.environ.get("BUCKET"), f'uploads/{config.get("upload")}/')
         s3files_req = s3.list_objects_v2(
             Bucket=os.environ.get("BUCKET"),
             Delimiter='/',
             Prefix=f'uploads/{config.get("upload")}/'
         )
 
+        print(s3files_req) #tmp
         s3files = s3files_req.get('Contents', [])
 
         attempts = attempts + 1
@@ -48,6 +50,7 @@ def handler(event, context):
             }
         }, config.get('token'))
 
+    print(s3files)
     s3file = None
     s3ext = None
     for ext in meta['limits']['extensions']:
