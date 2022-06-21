@@ -38,6 +38,12 @@
                         <div class='select-arrow'></div>
                     </div>
                 </div>
+
+                <div class='col col--4'>
+                    <label>Overview Level</label>
+                    <span class='fr ml3 cursor-pointer color-gray-light color-black-on-hover' style='margin-top: 5px;'><svg class='icon'><use xlink:href='#icon-info'/></svg></span>
+                    <input type='number' v-model='defaults.overview' class='input'/>
+                </div>
             </div>
 
             <UploadFile
@@ -62,7 +68,8 @@ export default {
             base: new URL('/api/upload', window.location.origin),
             defaults: {
                 blocksize: 512,
-                compression: 'deflate'
+                compression: 'deflate',
+                overview: 5
             },
             headers: {
                 Authorization: `Bearer ${localStorage.token}`
