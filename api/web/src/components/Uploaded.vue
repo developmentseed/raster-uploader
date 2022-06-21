@@ -43,14 +43,14 @@
                     <template v-else-if='step.type === "selection"'>
                         <StepSelection
                             :step='step'
-                            @step='steps.upload_steps.splice(step_it, 1, $event)'
+                            @step='getUploadSteps'
                             @err='$emit("err", $event)'
                         />
                     </template>
                     <template v-else-if='step.type === "cog"'>
                         <StepCog
                             :step='step'
-                            @step='steps.upload_steps.splice(step_it, 1, $event)'
+                            @step='getUploadSteps'
                             @err='$emit("err", $event)'
                         />
                     </template>
