@@ -30,21 +30,27 @@
                     </div>
                 </div>
 
-                <div :key='step.id' v-for='step in steps.upload_steps' class='col col--12'>
+                <div :key='step.id' v-for='(step, step_it) in steps.upload_steps' class='col col--12'>
                     <template v-if='loading.steps'>
                         <Loading desc='Loading Upload Steps'/>
+                    </template>
+                    <template v-else-if='step.type === "error"'>
+                        <StepError
+                            :step='step'
+                            @err='$emit("err", $event)'
+                        />
                     </template>
                     <template v-else-if='step.type === "selection"'>
                         <StepSelection
                             :step='step'
-                            @step='step = $event'
+                            @step='steps.upload_steps.splice(step_it, 1, $event)'
                             @err='$emit("err", $event)'
                         />
                     </template>
                     <template v-else-if='step.type === "cog"'>
                         <StepCog
                             :step='step'
-                            @step='step = $event'
+                            @step='steps.upload_steps.splice(step_it, 1, $event)'
                             @err='$emit("err", $event)'
                         />
                     </template>
@@ -66,6 +72,7 @@ import Loading from './util/Loading.vue';
 import StepSelection from './steps/Selection.vue';
 import StepLoading from './steps/Loading.vue';
 import StepCog from './steps/Cog.vue';
+import StepError from './steps/Error.vue';
 
 export default {
     name: 'Uploaded',
@@ -135,6 +142,7 @@ export default {
         Loading,
         StepSelection,
         StepLoading,
+        StepError,
         StepCog
     }
 }
