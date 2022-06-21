@@ -30,7 +30,7 @@
                     </div>
                 </div>
 
-                <div :key='step.id' v-for='(step, step_it) in steps.upload_steps' class='col col--12'>
+                <div :key='step.id' v-for='step in steps.upload_steps' class='col col--12'>
                     <template v-if='loading.steps'>
                         <Loading desc='Loading Upload Steps'/>
                     </template>
