@@ -1,4 +1,5 @@
 <template>
+            }
     <div class='col col--12 py12 px12 border border--gray-light round'>
         <div id='dragndrop' class='col col--12'>
 
@@ -73,6 +74,12 @@ export default {
         mimetype: {
             type: String,
             default: '*'
+        },
+        fields: {
+            type: Object,
+            default: function() {
+                return {}
+            }
         }
     },
     data: function() {
@@ -122,6 +129,12 @@ export default {
             });
 
             formData.append('file', file)
+
+            for (const key in this.fields) {
+                if (key === 'file') continue;
+                formData.append(key, this.fields[key]);
+            }
+
             xhr.send(formData)
         }
     },

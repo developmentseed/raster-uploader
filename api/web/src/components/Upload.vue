@@ -8,12 +8,15 @@
             </h2>
         </div>
         <div class='round mb60 col col--12 grid border border--gray-light py12 px12'>
-            <UploadSettings/>
+            <UploadSettings
+                @settings='settings = $event'
+            />
 
             <UploadFile
                 :single='true'
                 :url='base'
                 :headers='headers'
+                :fields='settings'
                 @err='$emit("err", $event)'
                 @ok='$router.push(`/upload/${$event.id}/`)'
             />
@@ -30,6 +33,7 @@ export default {
     props: ['meta'],
     data: function() {
         return {
+            settings: {},
             base: new URL('/api/upload', window.location.origin),
             headers: {
                 Authorization: `Bearer ${localStorage.token}`

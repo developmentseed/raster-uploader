@@ -10,7 +10,7 @@
                 class='fr btn btn--stroke btn--s color-gray color-black-on-hover round mr12'
                 style='height: 21px;'
             >
-                <svg v-if='folded' class='icon'><use xlink:href='#icon-chevron-down'/></svg>
+                <svg v-if='!folded' class='icon'><use xlink:href='#icon-chevron-down'/></svg>
                 <svg v-else class='icon'><use xlink:href='#icon-chevron-right'/></svg>
             </button>
 
@@ -19,7 +19,7 @@
             </div>
         </template>
     </div>
-    <template v-if='folded'>
+    <template v-if='!folded'>
         <div class='col col--12 pre'>
             <span v-text='step.message'/>
         </div>
@@ -34,7 +34,7 @@ export default {
         step: Object,
     },
     mounted: function() {
-        this.folded = !this.step.closed;
+        this.folded = this.step.closed;
     },
     data: function() {
         return {
