@@ -18,22 +18,40 @@
                 </div>
             </div>
             <div class='border border--gray-light round mb60 col col--12'>
-                IMAGE UPLOAD
+                <div class='col col--12 mt12'>
+                    <svg class='icon fl ml12 mt3 mr12'><use xlink:href='#icon-info'/></svg>
+                    Uploaded: <span v-text='upload.name'/>
+
+                    <div
+                        class='fr bg-gray-faint color-gray inline-block px6 py3 round txt-xs txt-bold'
+                        style='margin-right: 58px;'
+                    >
+                        <span v-text='new Date(upload.created).toISOString()'/>
+                    </div>
+                </div>
 
                 <div :key='step.id' v-for='step in steps.upload_steps' class='col col--12'>
                     <template v-if='loading.steps'>
                         <Loading desc='Loading Upload Steps'/>
                     </template>
+                    <template v-else-if='step.type === "error"'>
+                        <StepError
+                            :step='step'
+                            @err='$emit("err", $event)'
+                        />
+                    </template>
                     <template v-else-if='step.type === "selection"'>
                         <StepSelection
                             :step='step'
-                            @step='step = $event'
+                            @step='getUploadSteps'
+                            @err='$emit("err", $event)'
                         />
                     </template>
                     <template v-else-if='step.type === "cog"'>
                         <StepCog
                             :step='step'
-                            @step='step = $event'
+                            @step='getUploadSteps'
+                            @err='$emit("err", $event)'
                         />
                     </template>
                     <template v-else>
@@ -41,9 +59,9 @@
                     </template>
                 </div>
 
-                <div v-if='poll' class='col col--12'>
-                    <Loading desc='Polling for next steps'/>
-                </div>
+                <template v-if='poll'>
+                    <StepLoading/>
+                </template>
             </div>
         </template>
     </div>
@@ -52,7 +70,9 @@
 <script>
 import Loading from './util/Loading.vue';
 import StepSelection from './steps/Selection.vue';
+import StepLoading from './steps/Loading.vue';
 import StepCog from './steps/Cog.vue';
+import StepError from './steps/Error.vue';
 
 export default {
     name: 'Uploaded',
@@ -93,9 +113,13 @@ export default {
                 this.steps = await window.std(`/api/upload/${this.$route.params.uploadid}/step`);
                 this.loading.steps = false;
 
-                this.poll = this.steps.upload_steps.some((step) => {
-                    return step.closed;
-                });
+                if (this.steps.total === 0) {
+                    this.poll = true;
+                } else {
+                    this.poll = this.steps.upload_steps.some((step) => {
+                        return step.closed;
+                    });
+                }
             } catch (err) {
                 this.$emit('err', err);
             }
@@ -117,6 +141,8 @@ export default {
     components: {
         Loading,
         StepSelection,
+        StepLoading,
+        StepError,
         StepCog
     }
 }

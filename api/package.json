@@ -53,7 +53,7 @@
         "path-to-regexp": "^6.2.1"
     },
     "apidoc": {
-        "name": "OpenAddresses API",
+        "name": "Raster Upload API",
         "title": "OpenAddresses API",
         "version": "1.0.0",
         "header": {

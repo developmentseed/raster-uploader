@@ -3,10 +3,10 @@ import busboy from 'busboy';
 import Upload from '../lib/upload.js';
 import Auth from '../lib/auth.js';
 import S3 from '../lib/s3.js';
-import AWS from 'aws-sdk';
+import SQS from '../lib/sqs.js';
 
 export default async function router(schema, config) {
-    const sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION || 'us-east-1' });
+    const sqs = new SQS(config.SigningSecret);
 
     /**
      * @api {get} /api/upload List Uploads
@@ -135,12 +135,9 @@ export default async function router(schema, config) {
                         size: meta.size
                     });
 
-                    await sqs.sendMessage({
-                        QueueUrl: process.env.QUEUE,
-                        MessageBody: JSON.stringify({
-                            upload: upload.id
-                        })
-                    }).promise();
+                    await sqs.send(upload.id, {
+                        upload: upload.id,
+                    }, req.auth.id);
 
                     return res.json(upload.serialize());
                 } catch (err) {

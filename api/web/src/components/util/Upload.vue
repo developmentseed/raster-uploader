@@ -68,7 +68,7 @@ export default {
         },
         label: {
             type: String,
-            default: 'Select a file to upload'
+            default: 'Select a raster to upload'
         },
         mimetype: {
             type: String,

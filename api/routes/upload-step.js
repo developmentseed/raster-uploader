@@ -2,8 +2,11 @@ import { Err } from '@openaddresses/batch-schema';
 import Upload from '../lib/upload.js';
 import UploadStep from '../lib/upload-step.js';
 import Auth from '../lib/auth.js';
+import SQS from '../lib/sqs.js';
 
 export default async function router(schema, config) {
+    const sqs = new SQS(config.SigningSecret);
+
     /**
      * @api {get} /api/upload/:upload/step List Steps
      * @apiVersion 1.0.0
@@ -165,11 +168,8 @@ export default async function router(schema, config) {
 
             await step.commit(config.pool, null, req.body);
 
-            if (req.body.closed === false) {
-                await sqs.sendMessage({
-                    QueueUrl: process.env.QUEUE,
-                    MessageBody: JSON.stringify(step.compile())
-                }).promise();
+            if (req.body.closed === true) {
+                await sqs.send(req.params.upload, step.compile(), req.auth.id);
             }
 
             return res.json(step.serialize());

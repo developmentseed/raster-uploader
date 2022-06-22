@@ -1,17 +1,22 @@
 <template>
 <div class='col col--12 grid my12'>
     <div class='col col--12'>
-        <svg class='icon fl ml12 mt3 mr12'><use xlink:href='#icon-picture'/></svg>
+        <svg class='icon fl mt3 mx12'><use xlink:href='#icon-picture'/></svg>
         COGified
 
         <template v-if='step.closed'>
             <button
                 @click='folded = !folded'
                 class='fr btn btn--stroke btn--s color-gray color-black-on-hover round mr12'
+                style='height: 21px;'
             >
                 <svg v-if='folded' class='icon'><use xlink:href='#icon-chevron-down'/></svg>
                 <svg v-else class='icon'><use xlink:href='#icon-chevron-right'/></svg>
             </button>
+
+            <div class='fr bg-gray-faint color-gray inline-block px6 py3 round txt-xs txt-bold mr12'>
+                <span v-text='new Date(step.created).toISOString()'/>
+            </div>
         </template>
         <template v-else>
             <button
@@ -25,7 +30,12 @@
             <Loading desc='Submitting Step'/>
         </template>
         <template v-else>
-            No Options Yet!
+            <div class='col col--12 grid mt6'>
+                <CogMap
+                    :step='step'
+                    @err='$emit("err", $event)'
+                />
+            </div>
         </template>
     </template>
 </div>
@@ -33,6 +43,7 @@
 
 <script>
 import Loading from '../util/Loading.vue';
+import CogMap from './cog/Map.vue';
 
 export default {
     name: 'StepCog',
@@ -69,7 +80,8 @@ export default {
         }
     },
     components: {
-        Loading
+        Loading,
+        CogMap
     }
 }
 </script>

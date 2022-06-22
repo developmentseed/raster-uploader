@@ -7,7 +7,9 @@
                 <span>New Upload</span>
             </h2>
         </div>
-        <div class='round mb60 col col--12'>
+        <div class='round mb60 col col--12 grid border border--gray-light py12 px12'>
+            <UploadSettings/>
+
             <UploadFile
                 :single='true'
                 :url='base'
@@ -21,6 +23,7 @@
 
 <script>
 import UploadFile from './util/Upload.vue';
+import UploadSettings from './util/UploadSettings.vue';
 
 export default {
     name: 'Upload',
@@ -34,8 +37,12 @@ export default {
         }
     },
     methods: {
+        external: function(url) {
+            window.open(url, '_blank');
+        }
     },
     components: {
+        UploadSettings,
         UploadFile
     }
 }

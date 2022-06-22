@@ -9,6 +9,8 @@ export default class Config {
         // TODO Figure out frontend URL
         this.url = 'http://developmentseed.org';
 
+        this.titiler = process.env.TiTiler;
+
         try {
             if (!process.env.AWS_DEFAULT_REGION) {
                 if (!this.silent) console.error('ok - set env AWS_DEFAULT_REGION: us-east-1');
