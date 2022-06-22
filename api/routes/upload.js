@@ -116,12 +116,15 @@ export default async function router(schema, config) {
                 size: 0
             };
             const files = [];
+            const fields = {};
 
             bb.on('file', (fieldname, file, blob) => {
                 meta.name = blob.filename;
                 meta.path = `uploads/${upload.id}/${blob.filename}`;
                 files.push(S3.put(meta.path, file));
 
+            }).on('field', (name, val) => {
+                fields[name] = val;
             }).on('error', (err) => {
                 Err.respond(err, res);
             }).on('close', async () => {
@@ -132,11 +135,18 @@ export default async function router(schema, config) {
 
                     await upload.commit(config.pool, {}, {
                         name: meta.name,
-                        size: meta.size
+                        size: meta.size,
+                        config: {
+                            cog: {
+                                blocksize: fields.blocksize || 512,
+                                compression: fields.compression || 'deflate',
+                                overview: fields.overview || null
+                            }
+                        }
                     });
 
                     await sqs.send(upload.id, {
-                        upload: upload.id,
+                        upload: upload.id
                     }, req.auth.id);
 
                     return res.json(upload.serialize());

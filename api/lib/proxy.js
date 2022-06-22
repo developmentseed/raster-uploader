@@ -36,9 +36,7 @@ export default class Proxy {
                     }).pipe(res);
                 }
             } else {
-                return await arequest({
-                    url: url,
-                    json: typeof req.body === 'object',
+                return await fetch(url, {
                     method: req.method,
                     body: req.body
                 });

@@ -2,7 +2,6 @@ import { Err } from '@openaddresses/batch-schema';
 import Upload from '../lib/upload.js';
 import UploadStep from '../lib/upload-step.js';
 import Auth from '../lib/auth.js';
-import SQS from '../lib/sqs.js';
 
 export default async function router(schema, config) {
     /**
@@ -20,7 +19,7 @@ export default async function router(schema, config) {
      */
     await schema.get('/upload/:upload/step/:step', {
         ':upload': 'integer',
-        ':step': 'integer',
+        ':step': 'integer'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
@@ -39,7 +38,6 @@ export default async function router(schema, config) {
             if (req.auth.access !== 'admin' && req.auth.id !== step.uid) {
                 throw new Err(401, null, 'Cannot access an upload step you didn\'t create');
             }
-
 
 
             res.json(step.serialize());
