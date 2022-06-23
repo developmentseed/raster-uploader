@@ -25,7 +25,7 @@ and then deployed via the AWS CLI or AWS Console UI.
 
 It is highly recommended however to use the deploy tool over this method as Parameters, existance of
 ECS/Docker resources, & S3 access are not provided by the default AWS Cloudformation deploy experience
-and must be checked manually before a deploy can suceed.
+and must be checked manually before a deployment can succeed.
 
 Deploy comes pre-installed in the reposity and can be run via:
 ```sh
