@@ -58,10 +58,18 @@ export default {
             loading: {
                 submit: false
             },
+            info: null,
             folded: null
         }
     },
     methods: {
+        info: async function() {
+            try {
+                const info = await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}/cog/info`);
+            } catch (err) {
+                this.$emit('err', err);
+            }
+        },
         submit: async function() {
             try {
                 this.loading.submit = true;

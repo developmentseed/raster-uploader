@@ -17,7 +17,7 @@ export default async function router(schema, config) {
      * @apiParam {Number} :upload The ID of the upload
      * @apiParam {Number} :step The ID of the step
      */
-    await schema.get('/upload/:upload/step/:step', {
+    await schema.get('/upload/:upload/step/:step/cog/info', {
         ':upload': 'integer',
         ':step': 'integer'
     }, async (req, res) => {
@@ -33,12 +33,17 @@ export default async function router(schema, config) {
 
             if (step.upload_id !== upload.id) {
                 throw new Err(401, null, 'Upload Step does not belong to upload');
-            }
-
-            if (req.auth.access !== 'admin' && req.auth.id !== step.uid) {
+            } else if (step.type !== 'cog') {
+                throw new Err(401, null, 'Can only request info on "Cog" Steps');
+            } else if (req.auth.access !== 'admin' && req.auth.id !== step.uid) {
                 throw new Err(401, null, 'Cannot access an upload step you didn\'t create');
             }
 
+            const url = new URL('/cog/info', config.titiler);
+            url.searchParams.append('url', `s3://${process.env.ASSET_BUCKET}/upload/${upload.id}/step/${step.id}/final.tif`);
+
+            const res = await fetch(url);
+            console.error(await res.json());
 
             res.json(step.serialize());
         } catch (err) {
