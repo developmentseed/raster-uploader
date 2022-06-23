@@ -63,9 +63,9 @@ export default {
         }
     },
     methods: {
-        info: async function() {
+        getInfo: async function() {
             try {
-                const info = await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}/cog/info`);
+                this.info = await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}/cog/info`);
             } catch (err) {
                 this.$emit('err', err);
             }
