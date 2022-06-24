@@ -10,7 +10,7 @@
                 class='fr btn btn--stroke btn--s color-gray color-black-on-hover round mr12'
                 style='height: 21px;'
             >
-                <svg v-if='folded' class='icon'><use xlink:href='#icon-chevron-down'/></svg>
+                <svg v-if='!folded' class='icon'><use xlink:href='#icon-chevron-down'/></svg>
                 <svg v-else class='icon'><use xlink:href='#icon-chevron-right'/></svg>
             </button>
 
@@ -25,7 +25,7 @@
             >Submit</button>
         </template>
     </div>
-    <template v-if='folded'>
+    <template v-if='!folded'>
         <template v-if='loading.submit'>
             <Loading desc='Submitting Step'/>
         </template>
@@ -59,7 +59,7 @@ export default {
         step: Object,
     },
     mounted: function() {
-        this.folded = !this.step.closed;
+        this.folded = this.step.closed;
         if (this.step.step.selection) this.selection = this.step.step.selection;
     },
     data: function() {

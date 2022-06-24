@@ -18,17 +18,10 @@
                 </div>
             </div>
             <div class='border border--gray-light round mb60 col col--12'>
-                <div class='col col--12 mt12'>
-                    <svg class='icon fl ml12 mt3 mr12'><use xlink:href='#icon-info'/></svg>
-                    Uploaded: <span v-text='upload.name'/>
-
-                    <div
-                        class='fr bg-gray-faint color-gray inline-block px6 py3 round txt-xs txt-bold'
-                        style='margin-right: 58px;'
-                    >
-                        <span v-text='new Date(upload.created).toISOString()'/>
-                    </div>
-                </div>
+                <StepInitial
+                    :upload=upload
+                    @err='$emit("err", $event)'
+                />
 
                 <div :key='step.id' v-for='step in steps.upload_steps' class='col col--12'>
                     <template v-if='loading.steps'>
@@ -73,6 +66,7 @@ import StepSelection from './steps/Selection.vue';
 import StepLoading from './steps/Loading.vue';
 import StepCog from './steps/Cog.vue';
 import StepError from './steps/Error.vue';
+import StepInitial from './steps/Initial.vue';
 
 export default {
     name: 'Uploaded',
@@ -83,7 +77,8 @@ export default {
                 upload: true,
                 steps: true
             },
-            poll: true,
+            poll: false,
+            polling: false,
             steps: {
                 total: 0,
                 upload_steps: []
@@ -97,6 +92,22 @@ export default {
         await this.getUpload();
         await this.getUploadSteps();
     },
+    unmounted: async function() {
+        this.poll = false;
+        if (this.polling) clearInterval(this.polling);
+    },
+    watch: {
+        poll: function() {
+            if (!this.poll && this.polling) {
+                clearInterval(this.polling)
+                this.polling = null;
+            } else if (this.poll && !this.polling) {
+                this.polling = setInterval(() => {
+                    this.getUploadSteps(false);
+                }, 5000);
+            }
+        }
+    },
     methods: {
         getUpload: async function() {
             try {
@@ -107,11 +118,11 @@ export default {
                 this.$emit('err', err);
             }
         },
-        getUploadSteps: async function() {
+        getUploadSteps: async function(loading=true) {
             try {
-                this.loading.steps = true;
+                if (loading) this.loading.steps = true;
                 this.steps = await window.std(`/api/upload/${this.$route.params.uploadid}/step`);
-                this.loading.steps = false;
+                if (loading) this.loading.steps = false;
 
                 if (this.steps.total === 0) {
                     this.poll = true;
@@ -142,6 +153,7 @@ export default {
         Loading,
         StepSelection,
         StepLoading,
+        StepInitial,
         StepError,
         StepCog
     }

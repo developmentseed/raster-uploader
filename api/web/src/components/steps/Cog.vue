@@ -10,7 +10,7 @@
                 class='fr btn btn--stroke btn--s color-gray color-black-on-hover round mr12'
                 style='height: 21px;'
             >
-                <svg v-if='folded' class='icon'><use xlink:href='#icon-chevron-down'/></svg>
+                <svg v-if='!folded' class='icon'><use xlink:href='#icon-chevron-down'/></svg>
                 <svg v-else class='icon'><use xlink:href='#icon-chevron-right'/></svg>
             </button>
 
@@ -25,14 +25,18 @@
             >Submit</button>
         </template>
     </div>
-    <template v-if='folded'>
+    <template v-if='!folded'>
         <template v-if='loading.submit'>
             <Loading desc='Submitting Step'/>
+        </template>
+        <template v-if='loading.info'>
+            <Loading desc='Loading Raster Metadata'/>
         </template>
         <template v-else>
             <div class='col col--12 grid mt6'>
                 <CogMap
                     :step='step'
+                    :info='info'
                     @err='$emit("err", $event)'
                 />
             </div>
@@ -51,17 +55,29 @@ export default {
         step: Object,
     },
     mounted: function() {
-        this.folded = !this.step.closed;
+        this.folded = this.step.closed;
+        this.getInfo();
     },
     data: function() {
         return {
             loading: {
-                submit: false
+                submit: false,
+                info: false
             },
+            info: null,
             folded: null
         }
     },
     methods: {
+        getInfo: async function() {
+            try {
+                this.loading.info = true;
+                this.info = await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}/cog/info`);
+                this.loading.info = false;
+            } catch (err) {
+                this.$emit('err', err);
+            }
+        },
         submit: async function() {
             try {
                 this.loading.submit = true;

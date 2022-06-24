@@ -10,6 +10,9 @@
         },
         "name": {
             "type": "string"
+        },
+        "config": {
+            "type": "object"
         }
     }
 }
