@@ -2,8 +2,11 @@ import { Err } from '@openaddresses/batch-schema';
 import Upload from '../lib/upload.js';
 import UploadStep from '../lib/upload-step.js';
 import Auth from '../lib/auth.js';
+import Tile from '../lib/tile.js';
 
 export default async function router(schema, config) {
+    const tile = new Tile(config.SigningSecret);
+
     /**
      * @api {get} /api/upload/:upload/step/:step/cog/info COG Info
      * @apiVersion 1.0.0
@@ -45,7 +48,55 @@ export default async function router(schema, config) {
             const tires = await fetch(url);
             const tibody = await tires.json();
 
+            tibody.token = tile.token(upload.id, step.id);
+
             res.json(tibody);
+        } catch (err) {
+            return Err.respond(err, res);
+        }
+    });
+
+    /**
+     * @api {get} /api/cog/:z/:x/:y.png COG Tile
+     * @apiVersion 1.0.0
+     * @apiName COGInfo
+     * @apiGroup Cogs
+     * @apiPermission user
+     *
+     * @apiDescription
+     *     Get a given tile from a cog
+     *
+     * @apiParam {Number} :upload The ID of the upload
+     * @apiParam {Number} :step The ID of the step
+     *
+     * @apiParam {Number} :x WMS X Coordinate
+     * @apiParam {Number} :y WMS Y Coordinate
+     * @apiParam {Number} :z WMS Z Coordinate
+     */
+    await schema.get('/cog/:z/:x/:y.png', {
+        ':upload': 'integer',
+        ':step': 'integer',
+        ':z': 'integer',
+        ':x': 'integer',
+        ':y': 'integer'
+    }, async (req, res) => {
+        try {
+            const params = tile.verify(req.query.access);
+
+            const url = new URL(`/cog/tiles/${req.params.z}/${req.params.x}/${req.params.y}.png`, config.titiler);
+
+            // IMERG - TODO REMOVE
+            url.searchParams.append('rescale', '0,2');
+            // -------------------
+
+            url.searchParams.append('url', `s3://${process.env.ASSET_BUCKET}/uploads/${params.upload}/step/${params.step}/final.tif`);
+
+            const tires = await fetch(url);
+
+            res
+                .status(tires.status)
+                .set(Object.fromEntries(tires.headers))
+                .send(tires.body);
         } catch (err) {
             return Err.respond(err, res);
         }

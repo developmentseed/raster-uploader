@@ -11,7 +11,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 export default {
     name: 'StepCogMap',
     props: {
-        step: Object
+        step: Object,
+        info: Object
     },
     data: function() {
         return {
@@ -30,28 +31,39 @@ export default {
                 const res = await window.std('/api/map');
                 mapboxgl.accessToken = res.token;
 
+                const url = window.location.origin + `/api/cog/{z}/{x}/{y}.png?access=${encodeURIComponent(this.info.token)}`
+                console.error(url);
+
                 this.map = new mapboxgl.Map({
                     container: 'map',
-                    zoom: 1,
-                    style: 'mapbox://styles/mapbox/light-v9',
+                    style: {
+                        version: 8,
+                        sources: {
+                            'raster-tiles': {
+                                type: 'raster',
+                                tiles: [ url ],
+                                tileSize: 256,
+                            },
+                        },
+                        layers: [{
+                            id: 'simple-tiles',
+                            type: 'raster',
+                            source: 'raster-tiles',
+                            minzoom: 0,
+                            maxzoom: 22
+                        }]
+                    },
                 });
 
                 this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
                 this.map.on('load', () => {
-                    //this.getMeta();
+
                 });
             } catch (err) {
                 this.$emit('err', err);
             }
         },
-        getMeta: async function() {
-            try {
-                this.meta = await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}`);
-            } catch (err) {
-                this.$emit('err', err);
-            }
-        }
     }
 }
 </script>

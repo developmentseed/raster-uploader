@@ -29,10 +29,14 @@
         <template v-if='loading.submit'>
             <Loading desc='Submitting Step'/>
         </template>
+        <template v-if='loading.info'>
+            <Loading desc='Loading Raster Metadata'/>
+        </template>
         <template v-else>
             <div class='col col--12 grid mt6'>
                 <CogMap
                     :step='step'
+                    :info='info'
                     @err='$emit("err", $event)'
                 />
             </div>
@@ -57,7 +61,8 @@ export default {
     data: function() {
         return {
             loading: {
-                submit: false
+                submit: false,
+                info: false
             },
             info: null,
             folded: null
@@ -66,7 +71,9 @@ export default {
     methods: {
         getInfo: async function() {
             try {
+                this.loading.info = true;
                 this.info = await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}/cog/info`);
+                this.loading.info = false;
             } catch (err) {
                 this.$emit('err', err);
             }
