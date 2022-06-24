@@ -242,7 +242,7 @@ def step(step, token):
 
         step_res.raise_for_status()
 
-        return step_res
+        return step_res.json()
     except Exception as e:
         print(e)
         return e
