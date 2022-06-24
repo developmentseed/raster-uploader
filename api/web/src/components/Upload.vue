@@ -40,16 +40,24 @@
                 />
             </template>
             <template v-else-if='uploadtype === "http"'>
-                HTTP
+                <UploadHTTP
+                    @err='$emit("err", $event)'
+                    @ok='$router.push(`/upload/${$event.id}/`)'
+                />
             </template>
             <template v-else-if='uploadtype === "s3"'>
-                AWS S3
+                <UploadS3
+                    @err='$emit("err", $event)'
+                    @ok='$router.push(`/upload/${$event.id}/`)'
+                />
             </template>
         </div>
     </div>
 </template>
 
 <script>
+import UploadS3 from './util/UploadS3.vue';
+import UploadHTTP from './util/UploadHTTP.vue';
 import UploadFile from './util/Upload.vue';
 import UploadSettings from './util/UploadSettings.vue';
 
@@ -73,7 +81,9 @@ export default {
     },
     components: {
         UploadSettings,
-        UploadFile
+        UploadFile,
+        UploadHTTP,
+        UploadS3
     }
 }
 </script>
