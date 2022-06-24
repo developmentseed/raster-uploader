@@ -14,7 +14,7 @@ jobs:
 
         strategy:
             matrix:
-                task: [identify, obtain]
+                task: [identify, obtain, titiler]
 
         runs-on: ubuntu-latest
 
@@ -24,7 +24,7 @@ jobs:
                   ref: ${{ github.event.pull_request.head.sha }}
 
             - name: Docker Build Task
-              run: docker build -t task-${{ matrix.task }} tasks/${{ matrix.version }}
+              run: docker build -t task-${{matrix.task}} tasks/${{matrix.task}}
 
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v1
@@ -38,7 +38,7 @@ jobs:
               uses: aws-actions/amazon-ecr-login@v1
 
             - name: Docker Tag API
-              run: docker tag task-${{ matrix.version }} ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/raster-uploader:task-${{ matrix.version }}-${{github.event.pull_request.head.sha}}
+              run: docker tag task-${{matrix.task}} ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/raster-uploader:task-${{matrix.task}}-${{github.event.pull_request.head.sha}}
 
             - name: Docker Push API
-              run: docker push ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/raster-uploader:task-${{ matrix.version }}-${{github.event.pull_request.head.sha}}
+              run: docker push ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/raster-uploader:task-${{matrix.task}}-${{github.event.pull_request.head.sha}}
