@@ -26,6 +26,7 @@ export default class Upload extends Generic {
         if (!query.filter) query.filter = '';
         if (!query.limit) query.limit = 100;
         if (!query.page) query.page = 0;
+        if (!query.archived) query.archived = false;
 
         try {
             const pgres = await pool.query(sql`
@@ -43,6 +44,7 @@ export default class Upload extends Generic {
                 WHERE
                     name ~ ${query.filter}
                     AND (${query.uid}::BIGINT IS NULL OR uid = ${query.uid})
+                    AND (${query.archived}::BOOLEAN IS NULL OR archived = ${query.archived})
                 ORDER BY
                     id DESC
                 LIMIT
