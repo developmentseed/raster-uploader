@@ -116,7 +116,7 @@ def nc(pth, event):
                 'name': var
             })
 
-        return step({
+        step({
             'upload': event["config"]["upload"],
             'type': 'selection',
             'config': event["config"],
@@ -126,6 +126,7 @@ def nc(pth, event):
                 'variable': 'group'
             }
         }, event["token"])
+        return None
 
     if event["config"].get('group'):
         data = src.groups[event["config"].get('group')]
@@ -139,7 +140,7 @@ def nc(pth, event):
                 'name': var
             })
 
-        return step({
+        step({
             'upload': event["config"]["upload"],
             'type': 'selection',
             'config': event["config"],
@@ -149,6 +150,7 @@ def nc(pth, event):
                 'variable': 'variable'
             }
         }, event["token"])
+        return None
 
 
     variable = data[event["config"].get('variable')][:]
@@ -240,7 +242,7 @@ def step(step, token):
 
         step_res.raise_for_status()
 
-        return None
+        return step_res
     except Exception as e:
         print(e)
         return e

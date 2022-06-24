@@ -52,6 +52,7 @@ export default {
     },
     mounted: function() {
         this.folded = this.step.closed;
+        this.getInfo();
     },
     data: function() {
         return {

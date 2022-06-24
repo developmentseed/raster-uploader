@@ -29,7 +29,7 @@ export default async function router(schema, config) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 
-            const step = await UploadStep.from(config.pool, req.params.upload);
+            const step = await UploadStep.from(config.pool, req.params.step);
 
             if (step.upload_id !== upload.id) {
                 throw new Err(401, null, 'Upload Step does not belong to upload');
@@ -40,12 +40,12 @@ export default async function router(schema, config) {
             }
 
             const url = new URL('/cog/info', config.titiler);
-            url.searchParams.append('url', `s3://${process.env.ASSET_BUCKET}/upload/${upload.id}/step/${step.id}/final.tif`);
+            url.searchParams.append('url', `s3://${process.env.ASSET_BUCKET}/uploads/${upload.id}/step/${step.id}/final.tif`);
 
             const res = await fetch(url);
-            console.error(await res.json());
+            const body = await res.json();
 
-            res.json(step.serialize());
+            res.json(body);
         } catch (err) {
             return Err.respond(err, res);
         }
