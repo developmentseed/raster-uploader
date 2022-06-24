@@ -42,10 +42,10 @@ export default async function router(schema, config) {
             const url = new URL('/cog/info', config.titiler);
             url.searchParams.append('url', `s3://${process.env.ASSET_BUCKET}/uploads/${upload.id}/step/${step.id}/final.tif`);
 
-            const res = await fetch(url);
-            const body = await res.json();
+            const tires = await fetch(url);
+            const tibody = await tires.json();
 
-            res.json(body);
+            res.json(tibody);
         } catch (err) {
             return Err.respond(err, res);
         }
