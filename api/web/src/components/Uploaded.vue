@@ -127,8 +127,8 @@ export default {
                 if (this.steps.total === 0) {
                     this.poll = true;
                 } else {
-                    this.poll = this.steps.upload_steps.some((step) => {
-                        return step.closed;
+                    this.poll = !this.steps.upload_steps.some((step) => {
+                        return !step.closed;
                     });
                 }
             } catch (err) {
