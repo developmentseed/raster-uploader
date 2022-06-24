@@ -93,10 +93,12 @@ export default async function router(schema, config) {
 
             const tires = await fetch(url);
 
+            const blob = Buffer.from(await tires.arrayBuffer(), 'binary');
+
             res
                 .status(tires.status)
                 .set(Object.fromEntries(tires.headers))
-                .send(tires.body);
+                .send(blob);
         } catch (err) {
             return Err.respond(err, res);
         }
