@@ -2,6 +2,9 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
+        "archived": {
+            "type": "boolean"
+        },
         "limit": {
             "$ref": "./util/limit.json"
         },
