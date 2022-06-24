@@ -20,8 +20,8 @@
         </template>
     </div>
     <template v-if='!folded'>
-        <div class='col col--12 pre'>
-            <span v-text='step.message'/>
+        <div class='col col--12 pre mx12'>
+            <span v-text='step.step.message'/>
         </div>
     </template>
 </div>
