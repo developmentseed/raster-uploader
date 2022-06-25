@@ -84,7 +84,7 @@ for (const task of fs.readdirSync(path.resolve(__dirname, '../../tasks'))) {
                 ImageUri: cf.join([cf.accountId, '.dkr.ecr.', cf.region, `.amazonaws.com/raster-uploader:task-${task}-`, cf.ref('GitSha')])
             },
             PackageType: 'Image',
-            FunctionName: cf.join([cf.stackName, '-identify']),
+            FunctionName: cf.join([cf.stackName, '-', task]),
             Role: cf.getAtt('LambdaFunctionRole', 'Arn'),
             MemorySize: 1024,
             ReservedConcurrentExecutions: 5,

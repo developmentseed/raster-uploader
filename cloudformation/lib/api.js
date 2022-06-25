@@ -131,7 +131,8 @@ const stack = {
                             ],
                             Resource: [
                                 cf.getAtt('Queue', 'Arn'),
-                                cf.getAtt('DeadQueue', 'Arn')
+                                cf.getAtt('DeadQueue', 'Arn'),
+                                cf.getAtt('ObtainQueue', 'Arn')
                             ]
                         }]
                     }
