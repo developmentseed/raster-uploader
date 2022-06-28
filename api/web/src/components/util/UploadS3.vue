@@ -62,7 +62,7 @@ export default {
         submitObtain: async function() {
             try {
                 this.loading.submit = true;
-                await window.std(`/api/obtain`, {
+                const res = await window.std(`/api/obtain`, {
                     method: 'POST',
                     body: {
                         cog: this.cog,
@@ -73,6 +73,8 @@ export default {
                         }
                     }
                 });
+
+                this.$emit('ok', res);
             } catch (err) {
                 this.$emit('err', err);
             }

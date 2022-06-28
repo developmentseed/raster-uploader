@@ -17,21 +17,26 @@ export default async function router(schema, config) {
      *     Create a new obtain
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.CreateObtain.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.Standard.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
      */
     await schema.post('/obtain', {
         body: 'req.body.CreateObtain.json',
-        res: 'res.Standard.json'
+        res: 'res.Upload.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
 
+            const upload = await Upload.generate(config.pool, {
+                name: '<pending obtain>',
+                uid: req.auth.id,
+                config: {
+                    cog: req.body.cog
+                }
+            });
+
             await sqs.obtain(req.body, req.auth.id);
 
-            return res.json({
-                status: 200,
-                message: 'Obtain Submitted'
-            });
+            return res.json(upload.serialize());
         } catch (err) {
             return Err.respond(err, res);
         }
