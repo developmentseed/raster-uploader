@@ -1,7 +1,7 @@
 <template>
 <div class='col col--12 grid py12 px12 border border--gray-light round'>
     <template v-if='loading.submit'>
-        <Loading desc='Submitting Upload'/>
+        <Loading desc='Submitting Obtain AWS S3'/>
     </template>
     <template v-else-if='!submitted'>
         <div class='col col--12'>
