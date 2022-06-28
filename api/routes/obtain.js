@@ -16,17 +16,17 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Create a new obtain
      *
+     * @apiSchema (Body) {jsonschema=../schema/req.body.CreateObtain.json} apiParam
      * @apiSchema {jsonschema=../schema/res.Standard.json} apiSuccess
      */
     await schema.post('/obtain', {
+        body: 'req.body.CreateObtain.json',
         res: 'res.Standard.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
 
-            await sqs.obtain({
-
-            });
+            await sqs.obtain(req.body, req.auth.id);
 
             return res.json({
                 status: 200,
