@@ -12,9 +12,9 @@ export default class SQS {
     }
 
     async send(upload, config, uid) {
-        try {
-            if (!process.env.QUEUE) throw new Err(400, null, 'QUEUE not set');
+        if (!process.env.QUEUE) throw new Err(400, null, 'QUEUE not set');
 
+        try {
             const token = jwt.sign({
                 u: uid
             }, this.secret, {
@@ -35,9 +35,9 @@ export default class SQS {
     }
 
     async obtain(config, uid) {
-        try {
-            if (!process.env.OBTAIN_QUEUE) throw new Err(400, null, 'OBTAIN_QUEUE not set');
+        if (!process.env.OBTAIN_QUEUE) throw new Err(400, null, 'OBTAIN_QUEUE not set');
 
+        try {
             const token = jwt.sign({
                 u: uid
             }, this.secret, {

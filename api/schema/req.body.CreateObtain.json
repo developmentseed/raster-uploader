@@ -1,19 +1,44 @@
 {
     "type": "object",
+    "required": [
+        "cog",
+        "obtain"
+    ],
     "additionalProperties": false,
-    "oneOf": [{
-        "url": {
-            "type": "string"
-        }
-    }, {
-        "url": {
-            "type": "string"
+    "properties": {
+        "cog": {
+            "$ref": "./util/cog.json"
         },
-        "access_key_id": {
-            "type": "string"
-        },
-        "secret_access_key": {
-            "type": "string"
+        "obtain": {
+            "oneOf": [{
+                "type": "object",
+                "additionalProperties": false,
+                "required": [ "url" ],
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    }
+                }
+            }, {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "url",
+                    "access_key_id",
+                    "secret_access_key"
+                ],
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    },
+                    "access_key_id": {
+                        "type": "string"
+                    },
+                    "secret_access_key": {
+                        "type": "string"
+                    }
+                }
+            }]
         }
-    }]
+    }
 }
