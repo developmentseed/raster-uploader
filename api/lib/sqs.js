@@ -35,7 +35,7 @@ export default class SQS {
 
         async obtain(config, uid) {
             try {
-                if (!process.env.QUEUE) throw new Err(400, null, 'QUEUE not set');
+                if (!process.env.OBTAIN_QUEUE) throw new Err(400, null, 'OBTAIN_QUEUE not set');
 
                 const token = jwt.sign({
                     u: uid
@@ -44,9 +44,8 @@ export default class SQS {
                 });
 
                 await this.sqs.sendMessage({
-                    QueueUrl: process.env.QUEUE,
+                    QueueUrl: process.env.OBTAIN_QUEUE,
                     MessageBody: JSON.stringify({
-                        upload,
                         token,
                         config
                     })
