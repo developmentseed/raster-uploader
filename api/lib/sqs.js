@@ -32,5 +32,28 @@ export default class SQS {
         } catch (err) {
             throw new Err(500, new Error(err), 'Failed to send message');
         }
+
+        async obtain(config, uid) {
+            try {
+                if (!process.env.QUEUE) throw new Err(400, null, 'QUEUE not set');
+
+                const token = jwt.sign({
+                    u: uid
+                }, this.secret, {
+                    expiresIn: '15m'
+                });
+
+                await this.sqs.sendMessage({
+                    QueueUrl: process.env.QUEUE,
+                    MessageBody: JSON.stringify({
+                        upload,
+                        token,
+                        config
+                    })
+                }).promise();
+            } catch (err) {
+                throw new Err(500, new Error(err), 'Failed to send message');
+            }
+        }
     }
 }

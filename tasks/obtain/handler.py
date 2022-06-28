@@ -1,18 +1,23 @@
 import boto3
 import requests
+from urlparse import urlparse
 
 s3 = boto3.client("s3")
 
 def handler(event, context):
     event = json.loads(event['Records'][0]['body'])
 
-    try:
-        meta_res = requests.get(f"{os.environ.get('API')}/api")
-        meta_res.raise_for_status()
-        meta = meta_res.json()
-    except Exception as e:
-        print(e)
-        return e
+    if event.get('type') == 's3':
+        print(event)
+    elif event.get('type') == 'http':
+        o = urlparse(event.get('url'), allow_fragments=False)
+
+        s3res = s3.get_object(
+            Bucket=o.netloc,
+            Key=o.path.lstrip('/')
+        )
+
+
 
 if __name__ == "__main__":
     os.environ['BUCKET'] = 'raster-uploader-prod-853558080719-us-east-1'
@@ -23,10 +28,8 @@ if __name__ == "__main__":
         'Records': [{
             'body': json.dumps({
                 'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
-                'config': {
-                    'upload': 15
-                    #'variable': 'precipitationCal',
-                }
+                'type': 'http',
+                'url': ''
             })
         }]
     }, None)
