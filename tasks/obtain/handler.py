@@ -39,7 +39,7 @@ def handler(event, context):
         Key=f'uploads/{event.get("upload")}/file.tiff'
     )
 
-    res = requests.post(
+    res = requests.patch(
         f"{os.environ.get('API')}/api/upload/{event.get('upload')}",
         headers={
             'Authorization': f'bearer {event.get("token")}'
