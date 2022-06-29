@@ -20,23 +20,19 @@ def handler(event, context):
     elif event.get('type') == 'http':
         res = requests.get(event.get('url'), stream=True)
         res.raise_for_status()
+
+        file = os.path.basename(urlparse(event.get('url')).path)
         handler = ResponseStream(res.iter_content(64))
 
     s3.put_object(
         Bucket=os.environ['BUCKET'],
-        Key=f'uploads/{event.get("upload")}/file.tiff',
-        Body=handler
-    )
-
-    s3.put_object(
-        Bucket=os.environ['BUCKET'],
-        Key=f'uploads/{event.get("upload")}/file.tiff',
+        Key=f'uploads/{event.get("upload")}/{file}',
         Body=handler
     )
 
     meta = s3.head_object(
         Bucket=os.environ['BUCKET'],
-        Key=f'uploads/{event.get("upload")}/file.tiff'
+        Key=f'uploads/{event.get("upload")}/{file}'
     )
 
     res = requests.patch(
@@ -46,7 +42,7 @@ def handler(event, context):
         },
         json={
             'size': meta.get('ContentLength'),
-            'name': 'file.tiff',
+            'name': file
         }
     )
 

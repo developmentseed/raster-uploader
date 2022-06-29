@@ -190,6 +190,8 @@ export default async function router(schema, config) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
             }
 
+            await upload.commit(config.pool, null, req.body);
+
             return res.json(upload.serialize());
         } catch (err) {
             return Err.respond(err, res);
