@@ -1,6 +1,9 @@
+import os
+import json
 import boto3
 import requests
-from urlparse import urlparse
+from urllib.parse import urlparse
+from io import BytesIO, SEEK_SET, SEEK_END
 
 s3 = boto3.client("s3")
 
@@ -8,15 +11,84 @@ def handler(event, context):
     event = json.loads(event['Records'][0]['body'])
 
     if event.get('type') == 's3':
-        print(event)
-    elif event.get('type') == 'http':
         o = urlparse(event.get('url'), allow_fragments=False)
 
         s3res = s3.get_object(
             Bucket=o.netloc,
             Key=o.path.lstrip('/')
         )
+    elif event.get('type') == 'http':
+        res = requests.get(event.get('url'), stream=True)
+        res.raise_for_status()
+        handler = ResponseStream(res.iter_content(64))
 
+    s3.put_object(
+        Bucket=os.environ['BUCKET'],
+        Key=f'uploads/{event.get("upload")}/file.tiff',
+        Body=handler
+    )
+
+    s3.put_object(
+        Bucket=os.environ['BUCKET'],
+        Key=f'uploads/{event.get("upload")}/file.tiff',
+        Body=handler
+    )
+
+    meta = s3.head_object(
+        Bucket=os.environ['BUCKET'],
+        Key=f'uploads/{event.get("upload")}/file.tiff'
+    )
+
+    res = requests.post(
+        f"{os.environ.get('API')}/api/upload/{event.get('upload')}",
+        headers={
+            'Authorization': f'bearer {event.get("token")}'
+        },
+        json={
+            'size': meta.get('ContentLength'),
+            'name': 'file.tiff',
+        }
+    )
+
+    res.raise_for_status()
+
+class ResponseStream(object):
+    def __init__(self, request_iterator):
+        self._bytes = BytesIO()
+        self._iterator = request_iterator
+
+    def _load_all(self):
+        self._bytes.seek(0, SEEK_END)
+        for chunk in self._iterator:
+            self._bytes.write(chunk)
+
+    def _load_until(self, goal_position):
+        current_position = self._bytes.seek(0, SEEK_END)
+        while current_position < goal_position:
+            try:
+                current_position += self._bytes.write(next(self._iterator))
+            except StopIteration:
+                break
+
+    def tell(self):
+        return self._bytes.tell()
+
+    def read(self, size=None):
+        left_off_at = self._bytes.tell()
+        if size is None:
+            self._load_all()
+        else:
+            goal_position = left_off_at + size
+            self._load_until(goal_position)
+
+        self._bytes.seek(left_off_at)
+        return self._bytes.read(size)
+
+    def seek(self, position, whence=SEEK_SET):
+        if whence == SEEK_END:
+            self._load_all()
+        else:
+            self._bytes.seek(position, whence)
 
 
 if __name__ == "__main__":
@@ -29,7 +101,8 @@ if __name__ == "__main__":
             'body': json.dumps({
                 'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
                 'type': 'http',
-                'url': ''
+                'upload': 1,
+                'url': 'https://download.osgeo.org/geotiff/samples/usgs/o41078a5.tif'
             })
         }]
     }, None)
