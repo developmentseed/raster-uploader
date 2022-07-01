@@ -35,7 +35,7 @@ export default async function router(schema, config) {
                 }
             });
 
-            await sqs.obtain(req.body, req.auth.id);
+            await sqs.obtain(req.body.obtain, req.auth.id);
 
             return res.json(upload.serialize());
         } catch (err) {
