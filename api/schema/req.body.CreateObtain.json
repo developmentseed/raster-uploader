@@ -15,6 +15,10 @@
                 "additionalProperties": false,
                 "required": [ "url" ],
                 "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["http"]
+                    },
                     "url": {
                         "type": "string"
                     }
@@ -28,6 +32,10 @@
                     "secret_access_key"
                 ],
                 "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["s3"]
+                    },
                     "url": {
                         "type": "string"
                     },

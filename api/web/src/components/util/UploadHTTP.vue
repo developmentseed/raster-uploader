@@ -57,6 +57,7 @@ export default {
                     body: {
                         cog: this.cog,
                         obtain: {
+                            type: 'http',
                             url: this.url
                         }
                     }
