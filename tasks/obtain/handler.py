@@ -23,6 +23,9 @@ def handler(event, context):
 
         file = os.path.basename(urlparse(event.get('url')).path)
         handler = ResponseStream(res.iter_content(64))
+    else:
+        print("Unknown Obtain Type")
+        exit()
 
     s3.put_object(
         Bucket=os.environ['BUCKET'],
