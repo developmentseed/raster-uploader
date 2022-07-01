@@ -42,7 +42,8 @@ def handler(event, context):
         },
         json={
             'size': meta.get('ContentLength'),
-            'name': file
+            'name': file,
+            'uploaded': True
         }
     )
 
