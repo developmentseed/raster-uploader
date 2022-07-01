@@ -194,7 +194,7 @@ export default async function router(schema, config) {
 
             await upload.commit(config.pool, null, req.body);
 
-            if (req.body.obtain && req.body.uploaded) {
+            if (upload.obtain && req.body.uploaded) {
                 await sqs.send(upload.id, {
                     upload: upload.id,
                     ...upload.config
