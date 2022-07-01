@@ -11,18 +11,18 @@ def handler(event, context):
     event = json.loads(event['Records'][0]['body'])
     print(event)
 
-    if event.get('type') == 's3':
-        o = urlparse(event.get('url'), allow_fragments=False)
+    if event["config"].get('type') == 's3':
+        o = urlparse(event["config"].get('url'), allow_fragments=False)
 
         s3res = s3.get_object(
             Bucket=o.netloc,
             Key=o.path.lstrip('/')
         )
-    elif event.get('type') == 'http':
-        res = requests.get(event.get('url'), stream=True)
+    elif event["config"].get('type') == 'http':
+        res = requests.get(event["config"].get('url'), stream=True)
         res.raise_for_status()
 
-        file = os.path.basename(urlparse(event.get('url')).path)
+        file = os.path.basename(urlparse(event["config"].get('url')).path)
         handler = ResponseStream(res.iter_content(64))
     else:
         print("Unknown Obtain Type")
@@ -30,17 +30,17 @@ def handler(event, context):
 
     s3.put_object(
         Bucket=os.environ['BUCKET'],
-        Key=f'uploads/{event.get("upload")}/{file}',
+        Key=f'uploads/{event["config"].get("upload")}/{file}',
         Body=handler
     )
 
     meta = s3.head_object(
         Bucket=os.environ['BUCKET'],
-        Key=f'uploads/{event.get("upload")}/{file}'
+        Key=f'uploads/{event["config"].get("upload")}/{file}'
     )
 
     res = requests.patch(
-        f"{os.environ.get('API')}/api/upload/{event.get('upload')}",
+        f"{os.environ.get('API')}/api/upload/{event['config'].get('upload')}",
         headers={
             'Authorization': f'bearer {event.get("token")}'
         },
@@ -101,9 +101,11 @@ if __name__ == "__main__":
         'Records': [{
             'body': json.dumps({
                 'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
-                'type': 'http',
-                'upload': 1,
-                'url': 'https://download.osgeo.org/geotiff/samples/usgs/o41078a5.tif'
+                'config': {
+                    'type': 'http',
+                    'upload': 1,
+                    'url': 'https://download.osgeo.org/geotiff/samples/usgs/o41078a5.tif'
+                }
             })
         }]
     }, None)
