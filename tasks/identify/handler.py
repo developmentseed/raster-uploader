@@ -193,6 +193,8 @@ def nc(pth, event):
         geotransform = eval(affine_transformation)
         dst_transform = Affine.from_gdal(*geotransform)
 
+    cog = event['config']['cog']
+
     # Save output as COG
     output_profile = dict(
         driver="GTiff",
@@ -204,10 +206,10 @@ def nc(pth, event):
         width=dst_width,
         nodata=nodata_value,
         tiled=True,
-        compress="deflate",
-        blockxsize=128,
-        blockysize=128,
-        overview_level=5
+        compress=cog['compression'],
+        blockxsize=cog['blocksize'],
+        blockysize=cog['blocksize'],
+        overview_level=cog['overview']
     )
 
     print("profile h/w: ", output_profile["height"], output_profile["width"])
@@ -259,6 +261,11 @@ if __name__ == "__main__":
                 'config': {
                     'upload': 15
                     #'variable': 'precipitationCal',
+                    'cog': {
+                        'overview': 5,
+                        'blocksize': 512,
+                        'compression': 'deflate'
+                    }
                 }
             })
         }]

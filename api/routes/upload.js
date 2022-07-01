@@ -147,7 +147,8 @@ export default async function router(schema, config) {
                     });
 
                     await sqs.send(upload.id, {
-                        upload: upload.id
+                        upload: upload.id,
+                        ...upload.config
                     }, req.auth.id);
 
                     return res.json(upload.serialize());
@@ -192,6 +193,13 @@ export default async function router(schema, config) {
             }
 
             await upload.commit(config.pool, null, req.body);
+
+            if (req.body.obtain && req.body.uploaded) {
+                await sqs.send(upload.id, {
+                    upload: upload.id,
+                    ...upload.config
+                }, req.auth.id);
+            }
 
             return res.json(upload.serialize());
         } catch (err) {
