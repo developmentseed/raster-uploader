@@ -7,7 +7,10 @@
         "updated",
         "size",
         "status",
-        "name"
+        "obtain",
+        "name",
+        "uploaded",
+        "archived"
     ],
     "additionalProperties": false,
     "properties": {
@@ -31,6 +34,16 @@
         },
         "name": {
             "type": "string"
+        },
+        "obtain": {
+            "type": "boolean",
+            "description": "If the source was not directly uploaded, mark it as an obtain upload"
+        },
+        "uploaded": {
+            "type": "boolean"
+        },
+        "archived": {
+            "type": "boolean"
         }
     }
 }

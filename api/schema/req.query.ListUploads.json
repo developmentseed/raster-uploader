@@ -5,6 +5,9 @@
         "archived": {
             "type": "boolean"
         },
+        "uploaded": {
+            "type": "boolean"
+        },
         "limit": {
             "$ref": "./util/limit.json"
         },
@@ -30,7 +33,9 @@
                 "created",
                 "updated",
                 "size",
-                "status"
+                "status",
+                "archived",
+                "uploaded"
             ],
             "description": "Field to sort order by"
         }

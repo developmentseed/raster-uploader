@@ -29,6 +29,7 @@ export default async function router(schema, config) {
             const upload = await Upload.generate(config.pool, {
                 name: '<pending obtain>',
                 uid: req.auth.id,
+                obtain: true,
                 config: {
                     cog: req.body.cog
                 }
