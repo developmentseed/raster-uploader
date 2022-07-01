@@ -9,6 +9,7 @@ s3 = boto3.client("s3")
 
 def handler(event, context):
     event = json.loads(event['Records'][0]['body'])
+    print(event)
 
     if event.get('type') == 's3':
         o = urlparse(event.get('url'), allow_fragments=False)
