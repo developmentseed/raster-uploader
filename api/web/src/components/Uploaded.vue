@@ -110,11 +110,11 @@ export default {
 
                 const poll = !this.upload.uploaded && this.upload.obtain;
 
-                if (poll) {
+                if (poll && !this.polling.upload) {
                     this.polling.upload = setInterval(() => {
                         this.getUpload(false);
                     }, 5000);
-                } else if (this.polling.upload) {
+                } else if (!poll && this.polling.upload) {
                     clearInterval(this.polling.upload);
                     if (!this.polling.steps) this.getUploadSteps();
                 }
@@ -132,11 +132,11 @@ export default {
                     return !step.closed;
                 });
 
-                if (poll) {
+                if (poll && !this.polling.steps) {
                     this.polling.steps = setInterval(() => {
                         this.getUploadSteps(false);
                     }, 5000);
-                } else if (this.polling.steps) {
+                } else if (!poll && this.polling.steps) {
                     clearInterval(this.polling.steps);
                 }
             } catch (err) {
