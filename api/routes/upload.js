@@ -136,6 +136,7 @@ export default async function router(schema, config) {
                     await upload.commit(config.pool, {}, {
                         name: meta.name,
                         size: meta.size,
+                        uploaded: true,
                         config: {
                             cog: {
                                 blocksize: fields.blocksize || 512,
