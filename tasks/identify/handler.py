@@ -28,14 +28,12 @@ def handler(event, context):
     while len(s3files) == 0 and attempts < 5:
         time.sleep(attempts)
 
-        print(os.environ.get("BUCKET"), f'uploads/{event["config"].get("upload")}/')
         s3files_req = s3.list_objects_v2(
             Bucket=os.environ.get("BUCKET"),
             Delimiter='/',
             Prefix=f'uploads/{event["config"].get("upload")}/'
         )
 
-        print(s3files_req) #tmp
         s3files = s3files_req.get('Contents', [])
 
         attempts = attempts + 1
@@ -50,7 +48,6 @@ def handler(event, context):
             }
         }, event["token"])
 
-    print(s3files)
     s3file = None
     s3ext = None
     for ext in meta['limits']['extensions']:
@@ -75,6 +72,8 @@ def handler(event, context):
 
     if s3ext == "nc":
         pth = nc(pth, event)
+    if s3ext == "tif":
+        pth = tiff(pth, event)
     else:
         return step({
             'upload': event["config"]["upload"],
@@ -95,11 +94,37 @@ def handler(event, context):
         'step': {}
     }, event["token"])
 
+    print(final)
     s3.upload_file(
         pth,
         os.environ.get('BUCKET'),
         f'uploads/{event["config"]["upload"]}/step/{final.get("id")}/final.tif'
     )
+
+def tiff(pth, event):
+    cog = event['config']['cog']
+
+    # Save output as COG
+    output_profile = dict(
+        driver="GTiff",
+        tiled=True,
+        compress=cog['compression'],
+        blockxsize=cog['blocksize'],
+        blockysize=cog['blocksize'],
+        overview_level=cog['overview']
+    )
+
+    outfilename = f'{os.path.splitext(pth)[0]}_cog.tif'
+
+    cog_translate(
+        pth,
+        outfilename,
+        output_profile,
+        config=dict(GDAL_NUM_THREADS="ALL_CPUS", GDAL_TIFF_OVR_BLOCKSIZE="128"),
+        quiet=False
+    )
+
+    return outfilename
 
 
 def nc(pth, event):
@@ -219,16 +244,18 @@ def nc(pth, event):
         with memfile.open(**output_profile) as mem:
             data = variable.astype(np.float32)
             mem.write(data, indexes=1)
+
+        print(outfilename);
         cog_translate(
             memfile,
             outfilename,
             output_profile,
             config=dict(GDAL_NUM_THREADS="ALL_CPUS", GDAL_TIFF_OVR_BLOCKSIZE="128"),
+            quiet=False
         )
     return outfilename
 
 def step(step, token):
-    print(json.dumps(step.get('step')))
     try:
         step_res = requests.post(
             f"{os.environ.get('API')}/api/upload/{step.get('upload')}/step",
@@ -259,7 +286,7 @@ if __name__ == "__main__":
             'body': json.dumps({
                 'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
                 'config': {
-                    'upload': 15
+                    'upload': 37,
                     #'variable': 'precipitationCal',
                     'cog': {
                         'overview': 5,
