@@ -75,8 +75,10 @@ def handler(event, context):
         s3.download_fileobj(os.environ.get('BUCKET'), s3file, f)
 
     if s3ext == "nc":
+        print('NetCDF Conversion')
         pth = nc(pth, event)
     if s3ext == "tif":
+        print('Tiff Conversion')
         pth = tiff(pth, event)
     else:
         return step({
@@ -98,7 +100,7 @@ def handler(event, context):
         'step': {}
     }, event["token"])
 
-    print(final)
+    print('Final', final)
     s3.upload_file(
         pth,
         os.environ.get('BUCKET'),
@@ -115,7 +117,7 @@ if __name__ == "__main__":
             'body': json.dumps({
                 'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
                 'config': {
-                    'upload': 37,
+                    'upload': 40,
                     #'variable': 'precipitationCal',
                     'cog': {
                         'overview': 5,

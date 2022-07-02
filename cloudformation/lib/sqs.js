@@ -41,13 +41,22 @@ const stack = {
                 }
             }
         },
-        LambdaSource: {
+        ObtainLambdaSource: {
             Type: 'AWS::Lambda::EventSourceMapping',
             DependsOn: ['LambdaFunctionIdentify'],
             Properties: {
                 Enabled: 'True',
                 EventSourceArn:  cf.getAtt('ObtainQueue', 'Arn'),
                 FunctionName: cf.ref('LambdaFunctionObtain')
+            }
+        },
+        IdentifyLambdaSource: {
+            Type: 'AWS::Lambda::EventSourceMapping',
+            DependsOn: ['LambdaFunctionIdentify'],
+            Properties: {
+                Enabled: 'True',
+                EventSourceArn:  cf.getAtt('Queue', 'Arn'),
+                FunctionName: cf.ref('LambdaFunctionIdentify')
             }
         },
     },
