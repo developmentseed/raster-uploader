@@ -1,0 +1,36 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "limit": {
+            "$ref": "./util/limit.json"
+        },
+        "page": {
+            "$ref": "./util/page.json"
+        },
+        "status": {
+            "$ref": "./util/status.json"
+        },
+        "order": {
+            "$ref": "./util/order.json"
+        },
+        "filter": {
+            "type": "string",
+            "description": "Filter by name",
+            "default": ""
+        },
+        "sort": {
+            "type": "string",
+            "default": "created",
+            "enum": [
+                "id",
+                "created",
+                "updated",
+                "name",
+                "uid",
+                "cron"
+            ],
+            "description": "Field to sort order by"
+        }
+    }
+}
