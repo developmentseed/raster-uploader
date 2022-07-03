@@ -10,43 +10,27 @@
             "$ref": "./util/cog.json"
         },
         "obtain": {
-            "oneOf": [{
-                "type": "object",
-                "additionalProperties": false,
-                "required": [ "url" ],
-                "properties": {
-                    "type": {
-                        "type": "string",
-                        "enum": ["http"]
-                    },
-                    "url": {
-                        "type": "string"
-                    }
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "url",
+                "type"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": ["http", "s3"]
+                },
+                "url": {
+                    "type": "string"
+                },
+                "aws_access_key_id": {
+                    "type": "string"
+                },
+                "aws_secret_access_key": {
+                    "type": "string"
                 }
-            }, {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                    "url",
-                    "access_key_id",
-                    "secret_access_key"
-                ],
-                "properties": {
-                    "type": {
-                        "type": "string",
-                        "enum": ["s3"]
-                    },
-                    "url": {
-                        "type": "string"
-                    },
-                    "access_key_id": {
-                        "type": "string"
-                    },
-                    "secret_access_key": {
-                        "type": "string"
-                    }
-                }
-            }]
+            }
         }
     }
 }

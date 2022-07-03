@@ -69,8 +69,8 @@ export default {
                         obtain: {
                             type: 's3',
                             url: this.url,
-                            access_key_id: this.access_key_id,
-                            secret_access_key: this.secret_access_key,
+                            aws_access_key_id: this.access_key_id,
+                            aws_secret_access_key: this.secret_access_key,
                         }
                     }
                 });
