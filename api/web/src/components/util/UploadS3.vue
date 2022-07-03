@@ -10,11 +10,11 @@
         </div>
         <div class='col col--6 pr6'>
             <label>AWS Access Key ID</label>
-            <input type='text' v-model='secret_access_key' class='input w-full'/>
+            <input type='text' v-model='access_key_id' class='input w-full'/>
         </div>
         <div class='col col--6 pl6'>
             <label>AWS Secret Access Key</label>
-            <input type='text' v-model='access_key_id' class='input w-full'/>
+            <input type='text' v-model='secret_access_key' class='input w-full'/>
         </div>
         <div class='col col--12 clearfix mt12'>
             <button @click='submitObtain' class='btn btn--stroke color-gray color-green-on-hover round fr'>Submit</button>
