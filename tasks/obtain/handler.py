@@ -6,7 +6,7 @@ import requests
 from urllib.parse import urlparse
 from io import BytesIO, SEEK_SET, SEEK_END
 
-s3 = boto3.client("s3")
+ru_s3 = boto3.client("s3")
 
 def handler(event, context):
     event = json.loads(event['Records'][0]['body'])
@@ -14,7 +14,13 @@ def handler(event, context):
     if event["config"].get('type') == 's3':
         o = urlparse(event["config"].get('url'), allow_fragments=False)
 
-        s3res = s3.get_object(
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=event['config'].get('aws_access_key_id'),
+            aws_secret_access_key=event['config'].get('aws_secret_access_key')
+        )
+
+        s3res = s3_client.get_object(
             Bucket=o.netloc,
             Key=o.path.lstrip('/')
         )
@@ -31,13 +37,13 @@ def handler(event, context):
         print("Unknown Obtain Type")
         exit()
 
-    s3.put_object(
+    ru_s3.put_object(
         Bucket=os.environ['BUCKET'],
         Key=f'uploads/{event["config"].get("upload")}/{file}',
         Body=handler
     )
 
-    meta = s3.head_object(
+    meta = ru_s3.head_object(
         Bucket=os.environ['BUCKET'],
         Key=f'uploads/{event["config"].get("upload")}/{file}'
     )
@@ -105,9 +111,14 @@ if __name__ == "__main__":
             'body': json.dumps({
                 'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
                 'config': {
-                    'type': 'http',
                     'upload': 1,
-                    'url': 'https://download.osgeo.org/geotiff/samples/usgs/o41078a5.tif'
+                    #'type': 'http',
+                    #'url': 'https://download.osgeo.org/geotiff/samples/usgs/o41078a5.tif',
+
+                    'type': 's3',
+                    'url': 's3://raster-uploader-prod-853558080719-us-east-1/fixtures/imerg_test.nc',
+                    'aws_access_key_id': '',
+                    'aws_secret_access_key': ''
                 }
             })
         }]
