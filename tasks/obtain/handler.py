@@ -1,3 +1,4 @@
+import io
 import os
 import json
 import boto3
@@ -9,7 +10,6 @@ s3 = boto3.client("s3")
 
 def handler(event, context):
     event = json.loads(event['Records'][0]['body'])
-    print(event)
 
     if event["config"].get('type') == 's3':
         o = urlparse(event["config"].get('url'), allow_fragments=False)
@@ -18,6 +18,9 @@ def handler(event, context):
             Bucket=o.netloc,
             Key=o.path.lstrip('/')
         )
+
+        handler = io.BytesIO(s3res['Body'].read())
+        file = os.path.basename(urlparse(event["config"].get('url')).path)
     elif event["config"].get('type') == 'http':
         res = requests.get(event["config"].get('url'), stream=True)
         res.raise_for_status()
