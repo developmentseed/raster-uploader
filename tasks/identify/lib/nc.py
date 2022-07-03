@@ -60,8 +60,8 @@ def nc(pth, event):
                 'variable': 'variable'
             }
         }, event["token"])
-        return None
 
+        return None
 
     variable = data[event["config"].get('variable')][:]
     nodata_value = variable.fill_value
