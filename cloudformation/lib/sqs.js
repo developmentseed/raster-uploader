@@ -21,15 +21,6 @@ const stack = {
                 QueueName: cf.join([cf.stackName, '-dead-queue'])
             }
         },
-        LambdaSource: {
-            Type: 'AWS::Lambda::EventSourceMapping',
-            DependsOn: ['LambdaFunctionIdentify'],
-            Properties: {
-                Enabled: 'True',
-                EventSourceArn:  cf.getAtt('Queue', 'Arn'),
-                FunctionName: cf.ref('LambdaFunctionIdentify')
-            }
-        },
         ObtainQueue: {
             Type: 'AWS::SQS::Queue',
             Properties: {
