@@ -16,6 +16,18 @@ from lib.tiff import tiff
 
 s3 = boto3.client("s3")
 
+def error(event, err):
+    print('ERROR', err);
+
+    return step({
+        'upload': event["config"]["upload"],
+        'type': 'error',
+        'config': event["config"],
+        'step': {
+            'message': err
+        }
+    }, event['token'])
+
 def handler(event, context):
     event = json.loads(event['Records'][0]['body'])
 
@@ -24,33 +36,28 @@ def handler(event, context):
         meta_res.raise_for_status()
         meta = meta_res.json()
     except Exception as e:
-        print(e)
-        return e
+        return error(event, str(e))
 
     s3files = []
     attempts = 0
     while len(s3files) == 0 and attempts < 5:
-        time.sleep(attempts)
+        try:
+            time.sleep(attempts)
 
-        s3files_req = s3.list_objects_v2(
-            Bucket=os.environ.get("BUCKET"),
-            Delimiter='/',
-            Prefix=f'uploads/{event["config"].get("upload")}/'
-        )
+            s3files_req = s3.list_objects_v2(
+                Bucket=os.environ.get("BUCKET"),
+                Delimiter='/',
+                Prefix=f'uploads/{event["config"].get("upload")}/'
+            )
 
-        s3files = s3files_req.get('Contents', [])
+            s3files = s3files_req.get('Contents', [])
 
-        attempts = attempts + 1
+            attempts = attempts + 1
+        except Exception as e:
+            return error(event, str(e))
 
     if len(s3files) == 0:
-        return step({
-            'upload': event["config"].get('upload'),
-            'type': 'error',
-            'config': event["config"],
-            'step': {
-                'message': 'No uploaded file!',
-            }
-        }, event["token"])
+        return error(event, 'No uploaded file!')
 
     s3file = None
     s3ext = None
@@ -70,25 +77,28 @@ def handler(event, context):
             }
         }, event['token'])
 
-    pth = f'/tmp/{os.path.basename(s3file)}'
-    with open(pth, 'wb') as f:
-        s3.download_fileobj(os.environ.get('BUCKET'), s3file, f)
+    try:
+        pth = f'/tmp/{os.path.basename(s3file)}'
+        with open(pth, 'wb') as f:
+            s3.download_fileobj(os.environ.get('BUCKET'), s3file, f)
 
-    if s3ext == "nc":
-        print('NetCDF Conversion')
-        pth = nc(pth, event)
-    if s3ext == "tif":
-        print('Tiff Conversion')
-        pth = tiff(pth, event)
-    else:
-        return step({
-            'upload': event["config"]["upload"],
-            'type': 'error',
-            'config': event["config"],
-            'step': {
-                'message': 'No processing pipeline',
-            }
-        }, event["token"])
+        if s3ext == "nc":
+            print('NetCDF Conversion')
+            pth = nc(pth, event)
+        if s3ext == "tif":
+            print('Tiff Conversion')
+            pth = tiff(pth, event)
+        else:
+            return step({
+                'upload': event["config"]["upload"],
+                'type': 'error',
+                'config': event["config"],
+                'step': {
+                    'message': 'No processing pipeline',
+                }
+            }, event["token"])
+    except Exception as e:
+        return error(event, str(e))
 
     if pth is None:
         return None
