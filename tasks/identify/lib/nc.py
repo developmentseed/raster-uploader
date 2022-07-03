@@ -4,6 +4,8 @@ import boto3
 import time
 import requests
 import numpy as np
+
+from lib.step import step
 from netCDF4 import Dataset
 from rasterio.crs import CRS
 from rasterio.warp import calculate_default_transform
