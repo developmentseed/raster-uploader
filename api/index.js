@@ -127,13 +127,18 @@ async function server(args, config) {
         return res.json({
             version: pkg.version,
             limits: {
+                compression: [
+                    '.zip',
+                    '.tar',
+                    '.gz'
+                ],
                 extensions: [
-                    'zip',  // Archive  - https://en.wikipedia.org/wiki/ZIP_(file_format)
-                    'nc',   // NetCDF   - https://en.wikipedia.org/wiki/NetCDF
-                    'tif',  // Tiff
-                    'h5',
-                    'hdf5',
-                    'he5'
+                    '.zip',  // Archive  - https://en.wikipedia.org/wiki/ZIP_(file_format)
+                    '.nc',   // NetCDF   - https://en.wikipedia.org/wiki/NetCDF
+                    '.tif',  // Tiff
+                    '.h5',
+                    '.hdf5',
+                    '.he5'
                 ]
             }
         });

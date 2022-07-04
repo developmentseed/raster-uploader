@@ -13,6 +13,7 @@ from rio_cogeo.cogeo import cog_translate
 from lib.step import step
 from lib.nc import nc
 from lib.tiff import tiff
+from lib.compression import decompress
 
 s3 = boto3.client("s3")
 
@@ -59,29 +60,47 @@ def handler(event, context):
     if len(s3files) == 0:
         return error(event, 'No uploaded file!')
 
-    s3file = None
-    s3ext = None
-    for ext in meta['limits']['extensions']:
-        if s3files[0]['Key'].endswith(ext):
-            s3file = s3files[0]['Key']
-            s3ext = ext
-            break;
+    try: # Download & Decompression
+        pth = f'/tmp/{os.path.basename(s3files[0]["Key"])}'
+        with open(pth, 'wb') as f:
+            s3.download_fileobj(os.environ.get('BUCKET'), s3files[0]["Key"], f)
 
-    if s3file is None:
+        s3ext = os.path.splitext(s3files[0]["Key"])[1]
+        if s3ext in meta['limits']['compression']:
+            files = decompress(pth, extension)
+        else:
+            files = [ pth ]
+    except Exception as e:
+        return error(event, str(e))
+
+    filtered = []
+    for file in files: # Filter by supported extensions
+        if os.path.splitext(file)[1] in meta['limits']['extensions']:
+            filtered.append(file)
+
+    if len(filtered) == 0:
+        return error(event, 'No supported rasters found!')
+    elif len(file) == 1:
+        file = filtered[0]
+    else:
+        selections = []
+        for file in filtered:
+            selections.append({
+                'name': file
+            });
+
         return step({
             'upload': event["config"]["upload"],
-            'type': 'error',
+            'type': 'selection',
             'config': event["config"],
             'step': {
-                'message': 'No supported formats!',
-            }
-        }, event['token'])
+                'title': 'Select a file from the archive',
+                'selections': selections,
+                'variable': 'file'
+                }
+        }, event["token"])
 
     try:
-        pth = f'/tmp/{os.path.basename(s3file)}'
-        with open(pth, 'wb') as f:
-            s3.download_fileobj(os.environ.get('BUCKET'), s3file, f)
-
         if s3ext == "nc":
             print('NetCDF Conversion')
             pth = nc(pth, event)
