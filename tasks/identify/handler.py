@@ -4,6 +4,8 @@ import boto3
 import time
 import requests
 import numpy as np
+import sys
+import traceback
 from netCDF4 import Dataset
 from rasterio.crs import CRS
 from rasterio.warp import calculate_default_transform
@@ -19,6 +21,7 @@ s3 = boto3.client("s3")
 
 def error(event, err):
     print('ERROR', err);
+    traceback.print_exc(file=sys.stdout)
 
     return step({
         'upload': event["config"]["upload"],
@@ -67,7 +70,7 @@ def handler(event, context):
 
         s3ext = os.path.splitext(s3files[0]["Key"])[1]
         if s3ext in meta['limits']['compression']:
-            files = decompress(pth, extension)
+            files = decompress(pth, event)
         else:
             files = [ pth ]
     except Exception as e:
@@ -80,9 +83,7 @@ def handler(event, context):
 
     if len(filtered) == 0:
         return error(event, 'No supported rasters found!')
-    elif len(file) == 1:
-        file = filtered[0]
-    else:
+    elif len(filtered) > 1:
         selections = []
         for file in filtered:
             selections.append({
@@ -101,12 +102,12 @@ def handler(event, context):
         }, event["token"])
 
     try:
-        if s3ext == "nc":
+        if os.path.splitext(filtered[0])[1] == ".nc":
             print('NetCDF Conversion')
-            pth = nc(pth, event)
-        elif s3ext == "tif":
+            pth = nc(filtered[0], event)
+        elif os.path.splitext(filtered[0])[1] == ".tif":
             print('Tiff Conversion')
-            pth = tiff(pth, event)
+            pth = tiff(filtered[0], event)
         else:
             return error(event, 'No processing pipeline')
     except Exception as e:
@@ -139,7 +140,7 @@ if __name__ == "__main__":
             'body': json.dumps({
                 'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
                 'config': {
-                    'upload': 52,
+                    'upload': 1,
                     #'variable': 'precipitationCal',
                     'cog': {
                         'overview': 5,

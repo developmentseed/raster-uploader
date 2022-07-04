@@ -3,6 +3,8 @@ import json
 import requests
 
 def step(step, token):
+    print(step)
+
     try:
         step_res = requests.post(
             f"{os.environ.get('API')}/api/upload/{step.get('upload')}/step",
