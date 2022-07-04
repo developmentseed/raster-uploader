@@ -6,13 +6,13 @@ import { sql } from 'slonik';
 /**
  * @class
  */
-export default class Upload extends Generic {
-    static _table = 'uploads';
-    static _patch = JSON.parse(fs.readFileSync(new URL('../schema/req.body.PatchUpload.json', import.meta.url)));
-    static _res = JSON.parse(fs.readFileSync(new URL('../schema/res.Upload.json', import.meta.url)));
+export default class Schedule extends Generic {
+    static _table = 'schedules';
+    static _patch = JSON.parse(fs.readFileSync(new URL('../schema/req.body.PatchSchedule.json', import.meta.url)));
+    static _res = JSON.parse(fs.readFileSync(new URL('../schema/res.Schedule.json', import.meta.url)));
 
     /**
-     * List & Filter Uploads
+     * List & Filter Schedules
      *
      * @param {Pool} pool - Postgres Pool instance
      * @param {Object} query - Query object
@@ -26,8 +26,6 @@ export default class Upload extends Generic {
         if (!query.filter) query.filter = '';
         if (!query.limit) query.limit = 100;
         if (!query.page) query.page = 0;
-        if (!query.archived) query.archived = false;
-        if (!query.uploaded) query.uploaded = null;
 
         try {
             const pgres = await pool.query(sql`
@@ -37,18 +35,13 @@ export default class Upload extends Generic {
                     uid,
                     created,
                     updated,
-                    size,
-                    status,
                     name,
-                    obtain,
-                    uploaded
+                    cron
                 FROM
-                    uploads
+                    schedules
                 WHERE
                     name ~ ${query.filter}
                     AND (${query.uid}::BIGINT IS NULL OR uid = ${query.uid})
-                    AND (${query.archived}::BOOLEAN IS NULL OR archived = ${query.archived})
-                    AND (${query.uploaded}::BOOLEAN IS NULL OR uploaded = ${query.uploaded})
                 ORDER BY
                     id DESC
                 LIMIT
@@ -59,7 +52,7 @@ export default class Upload extends Generic {
 
             return this.deserialize_list(pgres);
         } catch (err) {
-            throw new Err(500, err, 'Failed to list uploads');
+            throw new Err(500, err, 'Failed to list schdules');
         }
     }
 }

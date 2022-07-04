@@ -41,12 +41,14 @@
             </template>
             <template v-else-if='uploadtype === "http"'>
                 <UploadHTTP
+                    :cog='settings'
                     @err='$emit("err", $event)'
                     @ok='$router.push(`/upload/${$event.id}/`)'
                 />
             </template>
             <template v-else-if='uploadtype === "s3"'>
                 <UploadS3
+                    :cog='settings'
                     @err='$emit("err", $event)'
                     @ok='$router.push(`/upload/${$event.id}/`)'
                 />

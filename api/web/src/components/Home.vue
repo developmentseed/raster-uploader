@@ -62,6 +62,9 @@
                                 <div v-if='upload.archived' class='fr bg-gray-faint bg-gray-on-hover color-white-on-hover color-gray inline-block px6 py3 round txt-xs txt-bold mr3'>
                                     Archived
                                 </div>
+                                <div class='fr bg-gray-faint color-gray inline-block px6 py3 round txt-xs txt-bold mr12'>
+                                    <span v-text='new Date(upload.created).toISOString()'/>
+                                </div>
                             </div>
                         </div>
                     </div>

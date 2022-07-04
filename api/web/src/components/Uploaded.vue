@@ -52,8 +52,11 @@
                     </template>
                 </div>
 
-                <template v-if='poll'>
+                <template v-if='polling.steps'>
                     <StepLoading/>
+                </template>
+                <template v-else-if='upload.obtain && !upload.uploaded'>
+                    <Loading desc='Waiting for Obtain Script to Complete'/>
                 </template>
             </div>
         </template>
@@ -77,8 +80,10 @@ export default {
                 upload: true,
                 steps: true
             },
-            poll: false,
-            polling: false,
+            polling: {
+                steps: false,
+                upload: false
+            },
             steps: {
                 total: 0,
                 upload_steps: []
@@ -90,23 +95,11 @@ export default {
     },
     mounted: async function() {
         await this.getUpload();
-        await this.getUploadSteps();
+        if (this.upload.uploaded) await this.getUploadSteps();
     },
     unmounted: async function() {
-        this.poll = false;
-        if (this.polling) clearInterval(this.polling);
-    },
-    watch: {
-        poll: function() {
-            if (!this.poll && this.polling) {
-                clearInterval(this.polling)
-                this.polling = null;
-            } else if (this.poll && !this.polling) {
-                this.polling = setInterval(() => {
-                    this.getUploadSteps(false);
-                }, 5000);
-            }
-        }
+        if (this.polling.steps) clearInterval(this.polling.steps);
+        if (this.polling.upload) clearInterval(this.polling.upload);
     },
     methods: {
         getUpload: async function() {
@@ -114,6 +107,17 @@ export default {
                 this.loading.upload = true;
                 this.upload = await window.std(`/api/upload/${this.$route.params.uploadid}`);
                 this.loading.upload = false;
+
+                const poll = !this.upload.uploaded && this.upload.obtain;
+
+                if (poll && !this.polling.upload) {
+                    this.polling.upload = setInterval(() => {
+                        this.getUpload(false);
+                    }, 5000);
+                } else if (!poll && this.polling.upload) {
+                    clearInterval(this.polling.upload);
+                    if (!this.polling.steps) this.getUploadSteps();
+                }
             } catch (err) {
                 this.$emit('err', err);
             }
@@ -124,12 +128,16 @@ export default {
                 this.steps = await window.std(`/api/upload/${this.$route.params.uploadid}/step`);
                 if (loading) this.loading.steps = false;
 
-                if (this.steps.total === 0) {
-                    this.poll = true;
-                } else {
-                    this.poll = this.steps.upload_steps.some((step) => {
-                        return step.closed;
-                    });
+                const poll = !this.steps.upload_steps.some((step) => {
+                    return !step.closed;
+                });
+
+                if (poll && !this.polling.steps) {
+                    this.polling.steps = setInterval(() => {
+                        this.getUploadSteps(false);
+                    }, 5000);
+                } else if (!poll && this.polling.steps) {
+                    clearInterval(this.polling.steps);
                 }
             } catch (err) {
                 this.$emit('err', err);

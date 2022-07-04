@@ -131,7 +131,8 @@ const stack = {
                             ],
                             Resource: [
                                 cf.getAtt('Queue', 'Arn'),
-                                cf.getAtt('DeadQueue', 'Arn')
+                                cf.getAtt('DeadQueue', 'Arn'),
+                                cf.getAtt('ObtainQueue', 'Arn')
                             ]
                         }]
                     }
@@ -208,9 +209,10 @@ const stack = {
                                 '/uploader'
                             ])
                         },
+                        { Name: 'QUEUE', Value: cf.ref('Queue') },
+                        { Name: 'OBTAIN_QUEUE', Value: cf.ref('ObtainQueue') },
                         { Name: 'SecretARN', Value: cf.ref('APISecrets') },
                         { Name: 'ASSET_BUCKET', Value: cf.ref('Bucket') },
-                        { Name: 'QUEUE', Value: cf.ref('Queue') },
                         { Name: 'SigningSecret', Value: cf.ref('SigningSecret') },
                         { Name: 'StackName', Value: cf.stackName },
                         { Name: 'AWS_DEFAULT_REGION', Value: cf.region },

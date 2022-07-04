@@ -5,12 +5,8 @@
         "uid",
         "created",
         "updated",
-        "size",
-        "status",
-        "obtain",
         "name",
-        "uploaded",
-        "archived"
+        "cron"
     ],
     "additionalProperties": false,
     "properties": {
@@ -26,24 +22,11 @@
         "updated": {
             "$ref": "./util/updated.json"
         },
-        "size": {
-            "type": ["null", "integer"]
-        },
-        "status": {
-            "$ref": "./util/status.json"
-        },
         "name": {
             "type": "string"
         },
-        "obtain": {
-            "type": "boolean",
-            "description": "If the source was not directly uploaded, mark it as an obtain upload"
-        },
-        "uploaded": {
-            "type": "boolean"
-        },
-        "archived": {
-            "type": "boolean"
+        "cron": {
+            "type": "string"
         }
     }
 }

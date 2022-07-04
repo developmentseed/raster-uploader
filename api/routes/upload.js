@@ -136,6 +136,7 @@ export default async function router(schema, config) {
                     await upload.commit(config.pool, {}, {
                         name: meta.name,
                         size: meta.size,
+                        uploaded: true,
                         config: {
                             cog: {
                                 blocksize: fields.blocksize || 512,
@@ -146,7 +147,8 @@ export default async function router(schema, config) {
                     });
 
                     await sqs.send(upload.id, {
-                        upload: upload.id
+                        upload: upload.id,
+                        ...upload.config
                     }, req.auth.id);
 
                     return res.json(upload.serialize());
@@ -188,6 +190,16 @@ export default async function router(schema, config) {
 
             if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
+            }
+
+            await upload.commit(config.pool, null, req.body);
+
+            console.error('LOG', upload.obtain, req.body.uploaded);
+            if (upload.obtain && req.body.uploaded) {
+                await sqs.send(upload.id, {
+                    upload: upload.id,
+                    ...upload.config
+                }, req.auth.id);
             }
 
             return res.json(upload.serialize());

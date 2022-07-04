@@ -20,7 +20,10 @@
                     "updated",
                     "size",
                     "status",
-                    "name"
+                    "name",
+                    "obtain",
+                    "uploaded",
+                    "archived"
                 ],
                 "additionalProperties": false,
                 "properties": {
@@ -41,6 +44,15 @@
                     },
                     "name": {
                         "type": "string"
+                    },
+                    "obtain": {
+                        "type": "boolean"
+                    },
+                    "uploaded": {
+                        "type": "boolean"
+                    },
+                    "archived": {
+                        "type": "boolean"
                     }
                 }
             }

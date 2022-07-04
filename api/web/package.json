@@ -15,7 +15,7 @@
         "mapbox-gl": "^2.8.2",
         "moment": "^2.29.3",
         "sass": "^1.49.7",
-        "sass-loader": "^12.0.0",
+        "sass-loader": "^13.0.0",
         "semver-sort": "^1.0.0",
         "vue": "^3.2.31",
         "vue-router": "^4.0.14"

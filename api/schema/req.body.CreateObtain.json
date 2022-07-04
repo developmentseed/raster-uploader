@@ -1,0 +1,36 @@
+{
+    "type": "object",
+    "required": [
+        "cog",
+        "obtain"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "cog": {
+            "$ref": "./util/cog.json"
+        },
+        "obtain": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "url",
+                "type"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": ["http", "s3"]
+                },
+                "url": {
+                    "type": "string"
+                },
+                "aws_access_key_id": {
+                    "type": "string"
+                },
+                "aws_secret_access_key": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

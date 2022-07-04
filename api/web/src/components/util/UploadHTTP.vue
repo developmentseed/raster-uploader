@@ -1,18 +1,18 @@
 <template>
 <div class='col col--12 grid py12 px12 border border--gray-light round'>
-    <template v-if='loading'>
-        <Loading desc='Submitting Upload'/>
+    <template v-if='loading.submit'>
+        <Loading desc='Submitting Obtain HTTP'/>
     </template>
-    <template v-if='!submit'>
+    <template v-else-if='!submitted'>
         <div class='col col--12'>
             <label>HTTP URL</label>
             <input type='text' v-model='url' class='input w-full'/>
         </div>
         <div class='col col--12 clearfix mt12'>
-            <button class='btn btn--stroke color-gray color-green-on-hover round fr'>Submit</button>
+            <button @click='submitObtain' class='btn btn--stroke color-gray color-green-on-hover round fr'>Submit</button>
         </div>
     </template>
-    <template v-else-if='submit'>
+    <template v-else-if='submitted'>
         <div class='flex flex--center-main'>
             <svg class='icon color-green w60 h60'><use href='#icon-check'/></svg>
         </div>
@@ -36,11 +36,39 @@ import Loading from './Loading.vue';
 
 export default {
     name: 'UploadHTTP',
+    props: {
+        cog: Object
+    },
     data: function() {
         return {
             url: '',
-            loading: false,
-            submitted: false
+            submitted: false,
+            loading: {
+                submit: false
+            }
+        }
+    },
+    methods: {
+        submitObtain: async function() {
+            try {
+                this.loading.submit = true;
+                const res = await window.std(`/api/obtain`, {
+                    method: 'POST',
+                    body: {
+                        cog: this.cog,
+                        obtain: {
+                            type: 'http',
+                            url: this.url
+                        }
+                    }
+                });
+
+                this.$emit('ok', res);
+            } catch (err) {
+                this.$emit('err', err);
+            }
+
+            this.loading.submit = false;
         }
     },
     components: {

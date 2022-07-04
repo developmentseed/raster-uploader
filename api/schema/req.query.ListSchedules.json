@@ -2,12 +2,6 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
-        "archived": {
-            "type": "boolean"
-        },
-        "uploaded": {
-            "type": "boolean"
-        },
         "limit": {
             "$ref": "./util/limit.json"
         },
@@ -22,7 +16,7 @@
         },
         "filter": {
             "type": "string",
-            "description": "Filter by filename",
+            "description": "Filter by name",
             "default": ""
         },
         "sort": {
@@ -32,10 +26,9 @@
                 "id",
                 "created",
                 "updated",
-                "size",
-                "status",
-                "archived",
-                "uploaded"
+                "name",
+                "uid",
+                "cron"
             ],
             "description": "Field to sort order by"
         }
