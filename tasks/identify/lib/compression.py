@@ -27,4 +27,4 @@ def decompress(pth, event):
         for file in f:
             files.append(os.path.join(r, file))
 
-    return files
+    return tmppath, files

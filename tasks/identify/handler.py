@@ -70,7 +70,7 @@ def handler(event, context):
 
         s3ext = os.path.splitext(s3files[0]["Key"])[1]
         if s3ext in meta['limits']['compression']:
-            files = decompress(pth, event)
+            tmppath, files = decompress(pth, event)
         else:
             files = [ pth ]
     except Exception as e:
@@ -87,7 +87,7 @@ def handler(event, context):
         selections = []
         for file in filtered:
             selections.append({
-                'name': file
+                'name': file.replace(tmppath, '')
             });
 
         return step({
