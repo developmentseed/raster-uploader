@@ -22,7 +22,7 @@ export default async function router(schema, config) {
      */
     await schema.get('/upload/:upload/step/:step/cog/info', {
         ':upload': 'integer',
-        ':step': 'integer'
+        ':step': 'integer',
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
@@ -43,6 +43,11 @@ export default async function router(schema, config) {
             }
 
             const url = new URL('/cog/info', config.titiler);
+
+            for (const query in req.query) {
+                url.searchParams.append(query, req.query[query]);
+            }
+
             url.searchParams.append('url', `s3://${process.env.ASSET_BUCKET}/uploads/${upload.id}/step/${step.id}/final.tif`);
 
             const tires = await fetch(url);
@@ -59,7 +64,7 @@ export default async function router(schema, config) {
     /**
      * @api {get} /api/cog/:z/:x/:y.png COG Tile
      * @apiVersion 1.0.0
-     * @apiName COGInfo
+     * @apiName COGTile
      * @apiGroup Cogs
      * @apiPermission user
      *
@@ -72,24 +77,27 @@ export default async function router(schema, config) {
      * @apiParam {Number} :x WMS X Coordinate
      * @apiParam {Number} :y WMS Y Coordinate
      * @apiParam {Number} :z WMS Z Coordinate
+     *
+     * @apiSchema (Query) {jsonschema=../schema/req.query.COGTile.json} apiParam
      */
     await schema.get('/cog/:z/:x/:y.png', {
         ':upload': 'integer',
         ':step': 'integer',
         ':z': 'integer',
         ':x': 'integer',
-        ':y': 'integer'
+        ':y': 'integer',
+        query: 'req.query.COGTile.json'
     }, async (req, res) => {
         try {
             const params = tile.verify(req.query.access);
 
             const url = new URL(`/cog/tiles/${req.params.z}/${req.params.x}/${req.params.y}.png`, config.titiler);
-
-            // IMERG - TODO REMOVE
-            url.searchParams.append('rescale', '0,2');
-            // -------------------
-
             url.searchParams.append('url', `s3://${process.env.ASSET_BUCKET}/uploads/${params.upload}/step/${params.step}/final.tif`);
+
+            delete req.query.access;
+            for (const query in req.query) {
+                url.searchParams.append(query, req.query[query]);
+            }
 
             const tires = await fetch(url);
 

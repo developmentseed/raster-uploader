@@ -1,0 +1,12 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "rescale": {
+            "type": "string"
+        },
+        "access": {
+            "type": "string"
+        }
+    }
+}
