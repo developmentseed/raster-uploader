@@ -28,7 +28,8 @@ def error(event, err):
         'type': 'error',
         'config': event["config"],
         'step': {
-            'message': err
+            'message': err,
+            'closed': True
         }
     }, event['token'])
 
@@ -83,7 +84,9 @@ def handler(event, context):
 
     if len(filtered) == 0:
         return error(event, 'No supported rasters found!')
-    elif len(filtered) > 1:
+    elif len(filtered) > 1 and event["config"].get('file') is not None:
+        filtered = [ event["config"]["file"] ]
+    eli len(filtered) > 1:
         selections = []
         for file in filtered:
             selections.append({
