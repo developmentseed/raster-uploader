@@ -138,7 +138,7 @@ if __name__ == "__main__":
     os.environ['API'] = 'http://localhost:4999'
     #os.environ['API'] = 'http://raster-uploader-prod-1759918000.us-east-1.elb.amazonaws.com'
 
-    upload = 54
+    upload = 53
     token = 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925'
 
     upload = requests.get(
@@ -153,7 +153,7 @@ if __name__ == "__main__":
     upload['config']['upload'] = upload['id']
 
     # Temporary - TODO request latest step config
-    upload['config']['variable'] = 'AvgSurfT_tavg'
+    upload['config']['variable'] = 'precipitationCal'
 
     handler({
         'Records': [{

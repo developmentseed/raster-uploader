@@ -65,8 +65,11 @@ def nc(pth, event):
 
     variable = data[event["config"].get('variable')][:]
     nodata_value = variable.fill_value
-    # IDEMP SPECIFIC
-    #variable = np.transpose(variable[0])
+
+    # not perfect but something for now
+    if len(variable.shape) == 3 and variable.shape[0] == 1:
+        variable = np.transpose(variable[0])
+
     x_variable = None
     y_variable = None
     #---
