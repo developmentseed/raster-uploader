@@ -35,6 +35,7 @@ def error(event, err):
 
 def handler(event, context):
     event = json.loads(event['Records'][0]['body'])
+    print(event)
 
     try:
         meta_res = requests.get(f"{os.environ.get('API')}/api")
@@ -50,7 +51,7 @@ def handler(event, context):
             time.sleep(attempts)
 
             s3files_req = s3.list_objects_v2(
-                Bucket=os.environ.get("BUCKET"),
+                Bucket=meta['assets']['bucket'],
                 Delimiter='/',
                 Prefix=f'uploads/{event["config"].get("upload")}/'
             )
@@ -67,7 +68,7 @@ def handler(event, context):
     try: # Download & Decompression
         pth = f'/tmp/{os.path.basename(s3files[0]["Key"])}'
         with open(pth, 'wb') as f:
-            s3.download_fileobj(os.environ.get('BUCKET'), s3files[0]["Key"], f)
+            s3.download_fileobj(meta['assets']['bucket'], s3files[0]["Key"], f)
 
         s3ext = os.path.splitext(s3files[0]["Key"])[1]
         if s3ext in meta['limits']['compression']:
@@ -86,7 +87,7 @@ def handler(event, context):
         return error(event, 'No supported rasters found!')
     elif len(filtered) > 1 and event["config"].get('file') is not None:
         filtered = [ event["config"]["file"] ]
-    eli len(filtered) > 1:
+    elif len(filtered) > 1:
         selections = []
         for file in filtered:
             selections.append({
@@ -129,28 +130,33 @@ def handler(event, context):
     print('Final', final)
     s3.upload_file(
         pth,
-        os.environ.get('BUCKET'),
+        meta['assets']['bucket'],
         f'uploads/{event["config"]["upload"]}/step/{final.get("id")}/final.tif'
     )
 
 if __name__ == "__main__":
-    os.environ['BUCKET'] = 'raster-uploader-prod-853558080719-us-east-1'
     os.environ['API'] = 'http://localhost:4999'
     #os.environ['API'] = 'http://raster-uploader-prod-1759918000.us-east-1.elb.amazonaws.com'
+
+    upload = 54
+    token = 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925'
+
+    upload = requests.get(
+        f"{os.environ.get('API')}/api/upload/{upload}",
+        headers={
+            'Authorization': f'bearer {token}'
+        },
+    )
+    upload.raise_for_status()
+    upload = upload.json()
+
+    upload['config']['upload'] = upload['id']
 
     handler({
         'Records': [{
             'body': json.dumps({
-                'token': 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925',
-                'config': {
-                    'upload': 1,
-                    #'variable': 'precipitationCal',
-                    'cog': {
-                        'overview': 5,
-                        'blocksize': 512,
-                        'compression': 'deflate'
-                    }
-                }
+                'token': token,
+                'config': upload['config']
             })
         }]
     }, None)

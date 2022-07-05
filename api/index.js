@@ -126,6 +126,9 @@ async function server(args, config) {
     app.get('/api', (req, res) => {
         return res.json({
             version: pkg.version,
+            assets: {
+                bucket: config.Bucket,
+            },
             limits: {
                 compression: [
                     '.zip',

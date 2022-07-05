@@ -25,11 +25,13 @@ export default class Config {
                 this.SigningSecret = '123';
 
                 process.env.ASSET_BUCKET = 'test';
+                this.Bucket = process.env.ASSET_BUCKET;
             } else {
                 this.StackName = process.env.StackName;
 
                 if (!process.env.SigningSecret) throw new Error('SigningSecret env must be set');
                 if (!process.env.ASSET_BUCKET) throw new Error('ASSET_BUCKET env must be set');
+                this.Bucket = process.env.ASSET_BUCKET;
                 this.SigningSecret = process.env.SigningSecret;
             }
         } catch (err) {
