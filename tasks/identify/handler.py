@@ -152,6 +152,9 @@ if __name__ == "__main__":
 
     upload['config']['upload'] = upload['id']
 
+    # Temporary - TODO request latest step config
+    upload['config']['variable'] = 'AvgSurfT_tavg'
+
     handler({
         'Records': [{
             'body': json.dumps({
