@@ -26,14 +26,16 @@
         </template>
     </div>
     <template v-if='!folded'>
-        <template v-if='loading.submit'>
-            <Loading desc='Submitting Step'/>
-        </template>
-        <template v-else>
-            <div class='col col--12 pre mx12 mt3'>
-                <span v-text='step.step.message'/>
-            </div>
-        </template>
+        <div class='col col--12 border border--gray-light round grid mx12 my12 px12 py12'>
+            <template v-if='loading.submit'>
+                <Loading desc='Submitting Step'/>
+            </template>
+            <template v-else>
+                <div class='col col--12 pre mx12 mt3'>
+                    <span v-text='step.step.message'/>
+                </div>
+            </template>
+        </div>
     </template>
 </div>
 </template>

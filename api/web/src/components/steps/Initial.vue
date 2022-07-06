@@ -18,7 +18,7 @@
         </div>
     </div>
     <template v-if='!folded'>
-        <div class='col col--12 px12 py12'>
+        <div class='col col--12 border border--gray-light round grid mx12 my12 px12 py12'>
             <UploadSettings
                 :disabled='true'
             />
