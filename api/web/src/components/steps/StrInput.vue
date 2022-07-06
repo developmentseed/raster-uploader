@@ -2,7 +2,7 @@
 <div class='col col--12 grid my12'>
     <div class='col col--12'>
         <svg class='icon fl mx12 mt3'><use xlink:href='#icon-cursor'/></svg>
-        Variable Selection
+        Text Input
 
         <template v-if='step.closed'>
             <button
@@ -35,16 +35,7 @@
                     <span class='ml12' v-text='step.step.title || "Select from the following:"'/>
                 </div>
                 <div class='col col--12 grid border border--gray-light round mx12'>
-                    <div @click='update(sel)' :key='sel.id' v-for='sel in step.step.selections' class='col col--12' :class='{
-                        "cursor-pointer": !step.closed,
-                        "bg-darken10-on-hover": !step.closed
-                    }'>
-                        <div class='w-full py6 px6' :class='{
-                            "bg-gray-light": selection === sel.name
-                        }'>
-                            <span class='txt-h4 round' v-text='sel.name'/>
-                        </div>
-                    </div>
+                    <input v-model='selection' class='input'/>
                 </div>
             </template>
         </div>
@@ -56,7 +47,7 @@
 import Loading from '../util/Loading.vue';
 
 export default {
-    name: 'StepSelection',
+    name: 'StepStrInput',
     props: {
         step: Object,
     },
@@ -70,14 +61,10 @@ export default {
                 submit: false
             },
             folded: null,
-            selection: null
+            selection: ''
         }
     },
     methods: {
-        update: function(sel) {
-            if (this.step.closed) return;
-            this.selection = sel.name;
-        },
         submit: async function() {
             if (!this.selection) return;
 

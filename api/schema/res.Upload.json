@@ -10,7 +10,8 @@
         "obtain",
         "name",
         "uploaded",
-        "archived"
+        "archived",
+        "config"
     ],
     "additionalProperties": false,
     "properties": {
@@ -44,6 +45,9 @@
         },
         "archived": {
             "type": "boolean"
+        },
+        "config": {
+            "type": "object"
         }
     }
 }

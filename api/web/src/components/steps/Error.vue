@@ -18,16 +18,31 @@
                 <span v-text='new Date(step.created).toISOString()'/>
             </div>
         </template>
+        <template v-else>
+            <button
+                @click='submit'
+                class='fr btn btn--stroke btn--s color-gray color-green-on-hover round mr12'
+            >Resubmit</button>
+        </template>
     </div>
     <template v-if='!folded'>
-        <div class='col col--12 pre mx12'>
-            <span v-text='step.step.message'/>
+        <div class='col col--12 border border--gray-light round grid mx12 my12 px12 py12'>
+            <template v-if='loading.submit'>
+                <Loading desc='Submitting Step'/>
+            </template>
+            <template v-else>
+                <div class='col col--12 pre mx12 mt3'>
+                    <span v-text='step.step.message'/>
+                </div>
+            </template>
         </div>
     </template>
 </div>
 </template>
 
 <script>
+import Loading from '../util/Loading.vue';
+
 export default {
     name: 'StepError',
     props: {
@@ -38,8 +53,28 @@ export default {
     },
     data: function() {
         return {
-            folded: null
+            folded: null,
+            loading: {
+                submit: false
+            }
         }
+    },
+    methods: {
+        submit: async function() {
+            try {
+                this.loading.submit = true;
+                const step = await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}`, {
+                    method: 'PUT',
+                });
+                this.loading.submit = false;
+                this.$emit('step', step);
+            } catch (err) {
+                this.$emit('err', err);
+            }
+        }
+    },
+    components: {
+        Loading
     }
 }
 </script>

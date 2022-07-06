@@ -21,6 +21,26 @@ const stack = {
                 QueueName: cf.join([cf.stackName, '-dead-queue'])
             }
         },
+        TransformQueue: {
+            Type: 'AWS::SQS::Queue',
+            Properties: {
+                QueueName: cf.join([cf.stackName, '-transform-queue' ]),
+                VisibilityTimeout: 1200,
+                RedrivePolicy: {
+                    deadLetterTargetArn: cf.getAtt('DeadQueue', 'Arn'),
+                    maxReceiveCount: 3
+                }
+            }
+        },
+        TransformLambdaSource: {
+            Type: 'AWS::Lambda::EventSourceMapping',
+            DependsOn: ['LambdaFunctionTransform'],
+            Properties: {
+                Enabled: 'True',
+                EventSourceArn:  cf.getAtt('TransformQueue', 'Arn'),
+                FunctionName: cf.ref('LambdaFunctionTransform')
+            }
+        },
         ObtainQueue: {
             Type: 'AWS::SQS::Queue',
             Properties: {

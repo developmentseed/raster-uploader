@@ -223,4 +223,46 @@ export default async function router(schema, config) {
             return Err.respond(err, res);
         }
     });
+
+    /**
+     * @api {put} /api/upload/:upload/step/:step Resubmit Step
+     * @apiVersion 1.0.0
+     * @apiName PutUploadStep
+     * @apiGroup Steps
+     * @apiPermission user
+     *
+     * @apiDescription
+     *     Resubmit a step to an SQS Queue
+     *
+     * @apiParam {Number} :upload The ID of the upload
+     * @apiParam {Number} :step The ID of the step
+     *
+     * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
+     */
+    await schema.put('/upload/:upload/step/:step', {
+        ':upload': 'integer',
+        ':step': 'integer',
+        res: 'res.UploadStep.json'
+    }, async (req, res) => {
+        try {
+            await Auth.is_auth(req);
+
+            const upload = await Upload.from(config.pool, req.params.upload);
+            if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
+                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
+            }
+
+            const step = await UploadStep.from(config.pool, req.params.step);
+
+            if (step.upload_id !== upload.id) {
+                throw new Err(401, null, 'Upload Step does not belong to upload');
+            }
+
+            await sqs.send(req.params.upload, step.compile(), req.auth.id);
+
+            return res.json(step.serialize());
+        } catch (err) {
+            return Err.respond(err, res);
+        }
+    });
 }

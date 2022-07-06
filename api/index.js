@@ -126,14 +126,22 @@ async function server(args, config) {
     app.get('/api', (req, res) => {
         return res.json({
             version: pkg.version,
+            assets: {
+                bucket: config.Bucket,
+            },
             limits: {
+                compression: [
+                    '.zip',
+                    '.tar',
+                    '.gz'
+                ],
                 extensions: [
-                    'zip',  // Archive  - https://en.wikipedia.org/wiki/ZIP_(file_format)
-                    'nc',   // NetCDF   - https://en.wikipedia.org/wiki/NetCDF
-                    'tif',  // Tiff
-                    'h5',
-                    'hdf5',
-                    'he5'
+                    '.zip',  // Archive  - https://en.wikipedia.org/wiki/ZIP_(file_format)
+                    '.nc',   // NetCDF   - https://en.wikipedia.org/wiki/NetCDF
+                    '.tif',  // Tiff
+                    '.h5',
+                    '.hdf5',
+                    '.he5'
                 ]
             }
         });
@@ -184,8 +192,14 @@ async function server(args, config) {
             }
         } else if (req.query.token) {
             try {
-                req.token = Token.validate(config.pool, req.query.token);
-                req.token.type = 'token';
+                if (req.query.token[0] === 'e') {
+                    const decoded = jwt.verify(req.query.token, config.SigningSecret);
+                    req.token = await User.from(config.pool, decoded.u);
+                    req.token.type = 'session';
+                } else {
+                    req.token = await Token.validate(config.pool, req.query.token);
+                    req.token.type = 'token';
+                }
             } catch (err) {
                 return Err.respond(new Err(401, err, 'Invalid Token'), res);
             }

@@ -33,13 +33,14 @@
             <Loading desc='Loading Raster Metadata'/>
         </template>
         <template v-else>
-            <div class='col col--12 grid mt6'>
-                <CogMap
-                    :step='step'
-                    :info='info'
-                    @err='$emit("err", $event)'
-                />
+            <div class='col col--12 mx12 pt12 mb6'>
+                <button @click='download' class='mt6 btn btn--s btn--stroke round fr btn--gray'><svg class='icon'><use href='#icon-arrow-down'/></svg></button>
             </div>
+            <CogMap
+                :step='step'
+                :info='info'
+                @err='$emit("err", $event)'
+            />
         </template>
     </template>
 </div>
@@ -93,7 +94,17 @@ export default {
             } catch (err) {
                 this.$emit('err', err);
             }
-        }
+        },
+        download: function() {
+            const url = new URL(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}/cog/download`, window.location.origin);
+            url.searchParams.append('token', localStorage.token);
+
+            this.external(url);
+        },
+        external: function(url) {
+            if (!url) return;
+            window.open(url, "_blank")
+        },
     },
     components: {
         Loading,

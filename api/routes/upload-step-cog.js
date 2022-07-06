@@ -3,9 +3,59 @@ import Upload from '../lib/upload.js';
 import UploadStep from '../lib/upload-step.js';
 import Auth from '../lib/auth.js';
 import Tile from '../lib/tile.js';
+import S3 from '../lib/s3.js';
 
 export default async function router(schema, config) {
     const tile = new Tile(config.SigningSecret);
+
+    /**
+     * @api {get} /api/upload/:upload/step/:step/cog/download COG Download
+     * @apiVersion 1.0.0
+     * @apiName COGDownload
+     * @apiGroup Cogs
+     * @apiPermission user
+     *
+     * @apiDescription
+     *     Download a cog
+     *
+     * @apiParam {Number} :upload The ID of the upload
+     * @apiParam {Number} :step The ID of the step
+     *
+     * @apiSchema (Query) {jsonschema=../schema/req.query.COGDownload.json} apiParam
+     */
+    await schema.get('/upload/:upload/step/:step/cog/download', {
+        ':upload': 'integer',
+        ':step': 'integer',
+        query: 'req.query.COGDownload.json'
+    }, async (req, res) => {
+        try {
+            await Auth.is_auth(req, true);
+
+            const upload = await Upload.from(config.pool, req.params.upload);
+            if (upload.uid !== req.auth.id && req.auth.access !== 'admin') {
+                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
+            }
+
+            const step = await UploadStep.from(config.pool, req.params.step);
+
+            if (step.upload_id !== upload.id) {
+                throw new Err(401, null, 'Upload Step does not belong to upload');
+            } else if (step.type !== 'cog') {
+                throw new Err(401, null, 'Can only request info on "Cog" Steps');
+            } else if (req.auth.access !== 'admin' && req.auth.id !== step.uid) {
+                throw new Err(401, null, 'Cannot access an upload step you didn\'t create');
+            }
+
+            const s3 = new S3({
+                Bucket: config.Bucket,
+                Key: `uploads/${upload.id}/step/${step.id}/final.tif`
+            });
+
+            return s3.stream(res, `upload-${upload.id}-step-${step.id}.tif`);
+        } catch (err) {
+            return Err.respond(err, res);
+        }
+    });
 
     /**
      * @api {get} /api/upload/:upload/step/:step/cog/info COG Info
@@ -22,7 +72,7 @@ export default async function router(schema, config) {
      */
     await schema.get('/upload/:upload/step/:step/cog/info', {
         ':upload': 'integer',
-        ':step': 'integer'
+        ':step': 'integer',
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
@@ -43,6 +93,11 @@ export default async function router(schema, config) {
             }
 
             const url = new URL('/cog/info', config.titiler);
+
+            for (const query in req.query) {
+                url.searchParams.append(query, req.query[query]);
+            }
+
             url.searchParams.append('url', `s3://${process.env.ASSET_BUCKET}/uploads/${upload.id}/step/${step.id}/final.tif`);
 
             const tires = await fetch(url);
@@ -59,7 +114,7 @@ export default async function router(schema, config) {
     /**
      * @api {get} /api/cog/:z/:x/:y.png COG Tile
      * @apiVersion 1.0.0
-     * @apiName COGInfo
+     * @apiName COGTile
      * @apiGroup Cogs
      * @apiPermission user
      *
@@ -72,24 +127,27 @@ export default async function router(schema, config) {
      * @apiParam {Number} :x WMS X Coordinate
      * @apiParam {Number} :y WMS Y Coordinate
      * @apiParam {Number} :z WMS Z Coordinate
+     *
+     * @apiSchema (Query) {jsonschema=../schema/req.query.COGTile.json} apiParam
      */
     await schema.get('/cog/:z/:x/:y.png', {
         ':upload': 'integer',
         ':step': 'integer',
         ':z': 'integer',
         ':x': 'integer',
-        ':y': 'integer'
+        ':y': 'integer',
+        query: 'req.query.COGTile.json'
     }, async (req, res) => {
         try {
             const params = tile.verify(req.query.access);
 
             const url = new URL(`/cog/tiles/${req.params.z}/${req.params.x}/${req.params.y}.png`, config.titiler);
-
-            // IMERG - TODO REMOVE
-            url.searchParams.append('rescale', '0,2');
-            // -------------------
-
             url.searchParams.append('url', `s3://${process.env.ASSET_BUCKET}/uploads/${params.upload}/step/${params.step}/final.tif`);
+
+            delete req.query.access;
+            for (const query in req.query) {
+                url.searchParams.append(query, req.query[query]);
+            }
 
             const tires = await fetch(url);
 
