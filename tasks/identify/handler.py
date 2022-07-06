@@ -86,7 +86,7 @@ def handler(event, context):
     if len(filtered) == 0:
         return error(event, 'No supported rasters found!')
     elif len(filtered) > 1 and event["config"].get('file') is not None:
-        filtered = [ event["config"]["file"] ]
+        filtered = [ tmppath + event["config"]["file"] ]
     elif len(filtered) > 1:
         selections = []
         for file in filtered:
@@ -138,7 +138,7 @@ if __name__ == "__main__":
     os.environ['API'] = 'http://localhost:4999'
     #os.environ['API'] = 'http://raster-uploader-prod-1759918000.us-east-1.elb.amazonaws.com'
 
-    upload = 53
+    upload = 58
     token = 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925'
 
     upload = requests.get(
@@ -151,9 +151,6 @@ if __name__ == "__main__":
     upload = upload.json()
 
     upload['config']['upload'] = upload['id']
-
-    # Temporary - TODO request latest step config
-    upload['config']['variable'] = 'precipitationCal'
 
     handler({
         'Records': [{
