@@ -192,8 +192,14 @@ async function server(args, config) {
             }
         } else if (req.query.token) {
             try {
-                req.token = Token.validate(config.pool, req.query.token);
-                req.token.type = 'token';
+                if (req.query.token[0] === 'e') {
+                    const decoded = jwt.verify(req.query.token, config.SigningSecret);
+                    req.token = await User.from(config.pool, decoded.u);
+                    req.token.type = 'session';
+                } else {
+                    req.token = await Token.validate(config.pool, req.query.token);
+                    req.token.type = 'token';
+                }
             } catch (err) {
                 return Err.respond(new Err(401, err, 'Invalid Token'), res);
             }

@@ -16,18 +16,21 @@ export default async function router(schema, config) {
      *     Download the initially uploaded file
      *
      * @apiParam {Number} :upload The ID of the upload
+     *
+     * @apiSchema (Query) {jsonschema=../schema/req.query.DownloadUpload.json} apiParam
      */
     await schema.get('/upload/:upload/download', {
         ':upload': 'integer',
+        query: 'req.query.DownloadUpload.json'
     }, async (req, res) => {
         try {
-            await Auth.is_auth(req);
+            await Auth.is_auth(req, true);
 
             const upload = await Upload.from(config.pool, req.params.upload);
 
             if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
                 throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            } else if (!uploaded.uploaded) {
+            } else if (!upload.uploaded) {
                 throw new Err(400, null, 'Cannot download an upload that hasn\'t been uploaded');
             }
 

@@ -49,8 +49,15 @@ export default {
     },
     methods: {
         download: function() {
+            const url = new URL(`/api/upload/${this.$route.params.uploadid}/download`, window.location.origin);
+            url.searchParams.append('token', localStorage.token);
 
-        }
+            this.external(url);
+        },
+        external: function(url) {
+            if (!url) return;
+            window.open(url, "_blank")
+        },
     }
 }
 </script>
