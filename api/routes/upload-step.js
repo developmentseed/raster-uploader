@@ -14,7 +14,7 @@ export default async function router(schema, config) {
      * @apiGroup Steps
      * @apiPermission user
      *
-     * @apiParam {Number} :upload The ID of the upload
+     * @apiParam {Number} upload The ID of the upload
      *
      * @apiDescription
      *     Return a list of steps related to a given upload
@@ -31,9 +31,7 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-            if (upload.uid !== req.auth.id && req.auth.access !== 'admin') {
-                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            }
+            upload.permission(req.auth);
 
             req.query.uid = req.auth.id;
             const list = await UploadStep.list(config.pool, req.params.upload, req.query);
@@ -54,8 +52,8 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Get a single upload step
      *
-     * @apiParam {Number} :upload The ID of the upload
-     * @apiParam {Number} :step The ID of the step
+     * @apiParam {Number} upload The ID of the upload
+     * @apiParam {Number} step The ID of the step
      *
      * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
      */
@@ -68,19 +66,10 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-            if (upload.uid !== req.auth.id && req.auth.access !== 'admin') {
-                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            }
+            upload.permission(req.auth);
 
             const step = await UploadStep.from(config.pool, req.params.upload);
-
-            if (step.upload_id !== upload.id) {
-                throw new Err(401, null, 'Upload Step does not belong to upload');
-            }
-
-            if (req.auth.access !== 'admin' && req.auth.id !== step.uid) {
-                throw new Err(401, null, 'Cannot access an upload step you didn\'t create');
-            }
+            step.permission(upload);
 
             res.json(step.serialize());
         } catch (err) {
@@ -95,7 +84,7 @@ export default async function router(schema, config) {
      * @apiGroup Steps
      * @apiPermission user
      *
-     * @apiParam {Number} :upload The ID of the upload
+     * @apiParam {Number} upload The ID of the upload
      *
      * @apiDescription
      *     Create a new upload step
@@ -110,10 +99,7 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-
-            if (upload.uid !== req.auth.id && req.auth.access !== 'access') {
-                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            }
+            upload.permission(req.auth);
 
             req.body.upload_id = req.params.upload;
             const step = await UploadStep.generate(config.pool, req.body);
@@ -134,8 +120,8 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Update information about a given upload step
      *
-     * @apiParam {Number} :upload The ID of the upload
-     * @apiParam {Number} :step The ID of the step
+     * @apiParam {Number} upload The ID of the upload
+     * @apiParam {Number} step The ID of the step
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.PatchUploadStep.json} apiParam
      * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
@@ -150,15 +136,10 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-            if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
-                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            }
+            upload.permission(req.auth);
 
             const step = await UploadStep.from(config.pool, req.params.step);
-
-            if (step.upload_id !== upload.id) {
-                throw new Err(401, null, 'Upload Step does not belong to upload');
-            }
+            step.permission(upload);
 
             if (step.closed) {
                 throw new Err(401, null, 'Cannot edit a closed step');
@@ -188,8 +169,8 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Delete a given upload step
      *
-     * @apiParam {Number} :upload The ID of the upload
-     * @apiParam {Number} :step The ID of the upload
+     * @apiParam {Number} upload The ID of the upload
+     * @apiParam {Number} step The ID of the upload
      *
      * @apiSchema {jsonschema=../schema/res.Standard.json} apiSuccess
      */
@@ -202,16 +183,11 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-            if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
-                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            }
+            upload.permission(req.auth);
 
             // TODO Ensure no children steps are present
             const step = await UploadStep.from(config.pool, req.params.step);
-
-            if (step.upload_id !== upload.id) {
-                throw new Err(401, null, 'Upload Step does not belong to upload');
-            }
+            step.permission(upload);
 
             await step.delete(config.pool);
 
@@ -234,8 +210,8 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Resubmit a step to an SQS Queue
      *
-     * @apiParam {Number} :upload The ID of the upload
-     * @apiParam {Number} :step The ID of the step
+     * @apiParam {Number} upload The ID of the upload
+     * @apiParam {Number} step The ID of the step
      *
      * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
      */
@@ -248,15 +224,10 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-            if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
-                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            }
+            upload.permission(req.auth);
 
             const step = await UploadStep.from(config.pool, req.params.step);
-
-            if (step.upload_id !== upload.id) {
-                throw new Err(401, null, 'Upload Step does not belong to upload');
-            }
+            step.permission(step);
 
             await sqs.send(req.params.upload, step.compile(), req.auth.id);
 

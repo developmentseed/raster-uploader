@@ -9,6 +9,45 @@ export default async function router(schema, config) {
     const tile = new Tile(config.SigningSecret);
 
     /**
+     * @api {get} /api/upload/:upload/step/:step/cog/transform COG Transform
+     * @apiVersion 1.0.0
+     * @apiName COGTransform
+     * @apiGroup Cogs
+     * @apiPermission user
+     *
+     * @apiDescription
+     *     Perform a transform step on a COG
+     *
+     * @apiParam {Number} upload The ID of the upload
+     * @apiParam {Number} step The ID of the step
+     *
+     * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
+     */
+    await schema.get('/upload/:upload/step/:step/cog/transform', {
+        ':upload': 'integer',
+        ':step': 'integer',
+        res: 'res.UploadStep.json'
+    }, async (req, res) => {
+        try {
+            await Auth.is_auth(req, true);
+
+            const upload = await Upload.from(config.pool, req.params.upload);
+            upload.permission(req.auth);
+
+            const step = await UploadStep.from(config.pool, req.params.step);
+            step.permission(upload);
+
+            if (step.type !== 'cog') {
+                throw new Err(401, null, 'Can only request info on "Cog" Steps');
+            }
+
+            return res.json(step.serialize());
+        } catch (err) {
+            return Err.respond(err, res);
+        }
+    });
+
+    /**
      * @api {get} /api/upload/:upload/step/:step/cog/download COG Download
      * @apiVersion 1.0.0
      * @apiName COGDownload
@@ -18,8 +57,8 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Download a cog
      *
-     * @apiParam {Number} :upload The ID of the upload
-     * @apiParam {Number} :step The ID of the step
+     * @apiParam {Number} upload The ID of the upload
+     * @apiParam {Number} step The ID of the step
      *
      * @apiSchema (Query) {jsonschema=../schema/req.query.COGDownload.json} apiParam
      */
@@ -32,18 +71,13 @@ export default async function router(schema, config) {
             await Auth.is_auth(req, true);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-            if (upload.uid !== req.auth.id && req.auth.access !== 'admin') {
-                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            }
+            upload.permission(req.auth);
 
             const step = await UploadStep.from(config.pool, req.params.step);
+            step.permission(upload);
 
-            if (step.upload_id !== upload.id) {
-                throw new Err(401, null, 'Upload Step does not belong to upload');
-            } else if (step.type !== 'cog') {
+            if (step.type !== 'cog') {
                 throw new Err(401, null, 'Can only request info on "Cog" Steps');
-            } else if (req.auth.access !== 'admin' && req.auth.id !== step.uid) {
-                throw new Err(401, null, 'Cannot access an upload step you didn\'t create');
             }
 
             const s3 = new S3({
@@ -67,29 +101,24 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Get information about a COG
      *
-     * @apiParam {Number} :upload The ID of the upload
-     * @apiParam {Number} :step The ID of the step
+     * @apiParam {Number} upload The ID of the upload
+     * @apiParam {Number} step The ID of the step
      */
     await schema.get('/upload/:upload/step/:step/cog/info', {
         ':upload': 'integer',
-        ':step': 'integer',
+        ':step': 'integer'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-            if (upload.uid !== req.auth.id && req.auth.access !== 'admin') {
-                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            }
+            upload.permission(req.auth);
 
             const step = await UploadStep.from(config.pool, req.params.step);
+            step.permission(upload);
 
-            if (step.upload_id !== upload.id) {
-                throw new Err(401, null, 'Upload Step does not belong to upload');
-            } else if (step.type !== 'cog') {
+            if (step.type !== 'cog') {
                 throw new Err(401, null, 'Can only request info on "Cog" Steps');
-            } else if (req.auth.access !== 'admin' && req.auth.id !== step.uid) {
-                throw new Err(401, null, 'Cannot access an upload step you didn\'t create');
             }
 
             const url = new URL('/cog/info', config.titiler);
@@ -121,12 +150,12 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Get a given tile from a cog
      *
-     * @apiParam {Number} :upload The ID of the upload
-     * @apiParam {Number} :step The ID of the step
+     * @apiParam {Number} upload The ID of the upload
+     * @apiParam {Number} step The ID of the step
      *
-     * @apiParam {Number} :x WMS X Coordinate
-     * @apiParam {Number} :y WMS Y Coordinate
-     * @apiParam {Number} :z WMS Z Coordinate
+     * @apiParam {Number} x WMS X Coordinate
+     * @apiParam {Number} y WMS Y Coordinate
+     * @apiParam {Number} z WMS Z Coordinate
      *
      * @apiSchema (Query) {jsonschema=../schema/req.query.COGTile.json} apiParam
      */

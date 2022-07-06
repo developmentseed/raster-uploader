@@ -63,7 +63,7 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Update a metadata object
      *
-     * @apiParam {String} :key Meta Key to update
+     * @apiParam {String} key Meta Key to update
      */
     await schema.patch('/meta/:key', {
         ':key': 'string',
@@ -95,7 +95,7 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Update a metadata object
      *
-     * @apiParam {String} :key Meta key to delete
+     * @apiParam {String} key Meta key to delete
      *
      * @apiSchema {jsonschema=../schema/res.Standard.json} apiSuccess
      */

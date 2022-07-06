@@ -62,4 +62,10 @@ export default class Upload extends Generic {
             throw new Err(500, err, 'Failed to list uploads');
         }
     }
+
+    permission(auth) {
+        if (this.uid !== auth.id && auth.access !== 'admin') {
+            throw new Err(401, null, 'Cannot access an upload you didn\'t create');
+        }
+    }
 }

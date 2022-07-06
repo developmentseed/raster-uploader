@@ -69,4 +69,10 @@ export default class UploadStep extends Generic {
 
         return this.config;
     }
+
+    permission(upload) {
+        if (this.upload_id !== upload.id) {
+            throw new Err(401, null, 'Upload Step does not belong to upload');
+        }
+    }
 }
