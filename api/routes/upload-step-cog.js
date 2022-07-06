@@ -4,9 +4,11 @@ import UploadStep from '../lib/upload-step.js';
 import Auth from '../lib/auth.js';
 import Tile from '../lib/tile.js';
 import S3 from '../lib/s3.js';
+import SQS from '../lib/sqs.js';
 
 export default async function router(schema, config) {
     const tile = new Tile(config.SigningSecret);
+    const sqs = new SQS(config.SigningSecret);
 
     /**
      * @api {get} /api/upload/:upload/step/:step/cog/transform COG Transform
@@ -38,8 +40,12 @@ export default async function router(schema, config) {
             step.permission(upload);
 
             if (step.type !== 'cog') {
-                throw new Err(401, null, 'Can only request info on "Cog" Steps');
+                throw new Err(401, null, 'Can only request transform on "Cog" Steps');
             }
+
+            req.body.upload = upload.id;
+            req.body.step = step.id;
+            await sqs.send(req.body, req.auth.id);
 
             return res.json(step.serialize());
         } catch (err) {

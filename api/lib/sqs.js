@@ -34,6 +34,28 @@ export default class SQS {
         }
     }
 
+    async transform(config, uid) {
+        if (!process.env.TRANSFORM_QUEUE) throw new Err(400, null, 'TRANSFORM_QUEUE not set');
+
+        try {
+            const token = jwt.sign({
+                u: uid
+            }, this.secret, {
+                expiresIn: '15m'
+            });
+
+            await this.sqs.sendMessage({
+                QueueUrl: process.env.TRANSFORM_QUEUE,
+                MessageBody: JSON.stringify({
+                    token,
+                    config
+                })
+            }).promise();
+        } catch (err) {
+            throw new Err(500, new Error(err), 'Failed to send message');
+        }
+    }
+
     async obtain(config, uid) {
         if (!process.env.OBTAIN_QUEUE) throw new Err(400, null, 'OBTAIN_QUEUE not set');
 
