@@ -17,7 +17,7 @@ def decompress(pth, event):
         file.close()
     elif pth.endswith('.gz'):
         with gzip.open(pth, 'rb') as f_in:
-            with open(os.path.splitext(pth)[0], 'wb') as f_out:
+            with open(tmppath + '/' + os.path.basename(os.path.splitext(pth)[0]), 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
     else:
         raise Exception('Unsupported compression type')

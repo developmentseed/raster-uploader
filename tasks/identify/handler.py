@@ -138,7 +138,7 @@ if __name__ == "__main__":
     os.environ['API'] = 'http://localhost:4999'
     #os.environ['API'] = 'http://raster-uploader-prod-1759918000.us-east-1.elb.amazonaws.com'
 
-    upload = 58
+    upload = 61
     token = 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925'
 
     upload = requests.get(
