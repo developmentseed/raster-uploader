@@ -3,9 +3,59 @@ import Upload from '../lib/upload.js';
 import UploadStep from '../lib/upload-step.js';
 import Auth from '../lib/auth.js';
 import Tile from '../lib/tile.js';
+import S3 from '../lib/s3.js';
 
 export default async function router(schema, config) {
     const tile = new Tile(config.SigningSecret);
+
+    /**
+     * @api {get} /api/upload/:upload/step/:step/cog/download COG Download
+     * @apiVersion 1.0.0
+     * @apiName COGDownload
+     * @apiGroup Cogs
+     * @apiPermission user
+     *
+     * @apiDescription
+     *     Download a cog
+     *
+     * @apiParam {Number} :upload The ID of the upload
+     * @apiParam {Number} :step The ID of the step
+     *
+     * @apiSchema (Query) {jsonschema=../schema/req.query.COGDownload.json} apiParam
+     */
+    await schema.get('/upload/:upload/step/:step/cog/download', {
+        ':upload': 'integer',
+        ':step': 'integer',
+        query: 'req.query.COGDownload.json'
+    }, async (req, res) => {
+        try {
+            await Auth.is_auth(req, true);
+
+            const upload = await Upload.from(config.pool, req.params.upload);
+            if (upload.uid !== req.auth.id && req.auth.access !== 'admin') {
+                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
+            }
+
+            const step = await UploadStep.from(config.pool, req.params.step);
+
+            if (step.upload_id !== upload.id) {
+                throw new Err(401, null, 'Upload Step does not belong to upload');
+            } else if (step.type !== 'cog') {
+                throw new Err(401, null, 'Can only request info on "Cog" Steps');
+            } else if (req.auth.access !== 'admin' && req.auth.id !== step.uid) {
+                throw new Err(401, null, 'Cannot access an upload step you didn\'t create');
+            }
+
+            const s3 = new S3({
+                Bucket: config.Bucket,
+                Key: `uploads/${upload.id}/step/${step.id}/final.tif`
+            });
+
+            return s3.stream(res, `upload-${upload.id}-step-${step.id}.tif`);
+        } catch (err) {
+            return Err.respond(err, res);
+        }
+    });
 
     /**
      * @api {get} /api/upload/:upload/step/:step/cog/info COG Info

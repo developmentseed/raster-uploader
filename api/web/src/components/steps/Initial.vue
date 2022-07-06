@@ -21,7 +21,6 @@
         <div class='col col--12 mx12 pt12'>
             <button @click='download' class='mt6 btn btn--s btn--stroke round fr btn--gray'><svg class='icon'><use href='#icon-arrow-down'/></svg></button>
         </div>
-
         <div class='col col--12 border border--gray-light round grid mx12 mb12 mt6 px12 py12'>
             <UploadSettings
                 :disabled='true'
