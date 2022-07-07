@@ -93,7 +93,7 @@ export default class Email {
             Destination: {
                 ToAddresses: [email]
             },
-            Source: config.FromEmailAddress,
+            Source: this.config.FromEmailAddress,
             Message: {
                 Subject: {
                     Data: subject
