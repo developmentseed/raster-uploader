@@ -6,6 +6,14 @@ const stack = {
         SigningSecret: {
             Type: 'String',
             Description: 'API Token Signing Secret'
+        },
+        FromEmailAddress: {
+            Type: 'String',
+            Description: 'Email address to be used to send emails'
+        },
+        FrontEndDomain: {
+            Type: 'String',
+            Description: 'Domain at which the frontend resides'
         }
     },
     Resources: {
@@ -220,7 +228,9 @@ const stack = {
                         { Name: 'SigningSecret', Value: cf.ref('SigningSecret') },
                         { Name: 'StackName', Value: cf.stackName },
                         { Name: 'AWS_DEFAULT_REGION', Value: cf.region },
-                        { Name: 'TiTiler', Value: cf.join(['https://', cf.ref('TiTilerAPI'), '.execute-api.', cf.region, '.', cf.ref('AWS::URLSuffix'), '/']) }
+                        { Name: 'TiTiler', Value: cf.join(['https://', cf.ref('TiTilerAPI'), '.execute-api.', cf.region, '.', cf.ref('AWS::URLSuffix'), '/']) },
+                        { Name: 'FROM_EMAIL_ADDRESS', Value: cf.ref('FromEmailAddress') },
+                        { Name: 'FRONTEND_DOMAIN', Value: cf.ref('FrontEndDomain') },
                     ],
                     LogConfiguration: {
                         LogDriver: 'awslogs',
