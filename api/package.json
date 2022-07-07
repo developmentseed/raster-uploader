@@ -22,7 +22,7 @@
     },
     "homepage": "https://github.com/developmentseed/raster-uploader#readme",
     "dependencies": {
-        "@openaddresses/batch-generic": "^5.0.0",
+        "@openaddresses/batch-generic": "^5.0.1",
         "@openaddresses/batch-schema": "^4.0.0",
         "@turf/bbox": "^6.5.0",
         "aws-sdk": "^2.1137.0",

@@ -28,6 +28,7 @@ export default async function router(schema, config) {
     await schema.post('/upload/:upload/step/:step/cog/transform', {
         ':upload': 'integer',
         ':step': 'integer',
+        body: 'req.body.CreateTransform.json',
         res: 'res.UploadStep.json'
     }, async (req, res) => {
         try {
@@ -45,7 +46,12 @@ export default async function router(schema, config) {
 
             req.body.upload = upload.id;
             req.body.step = step.id;
-            await sqs.send(req.body, req.auth.id);
+
+            await sqs.transform(req.body, req.auth.id);
+
+            step.closed = true;
+            console.error(step.parent, typeof step.parent);
+            await step.commit(config.pool);
 
             return res.json(step.serialize());
         } catch (err) {
