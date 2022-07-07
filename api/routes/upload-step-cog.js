@@ -11,7 +11,7 @@ export default async function router(schema, config) {
     const sqs = new SQS(config.SigningSecret);
 
     /**
-     * @api {get} /api/upload/:upload/step/:step/cog/transform COG Transform
+     * @api {post} /api/upload/:upload/step/:step/cog/transform COG Transform
      * @apiVersion 1.0.0
      * @apiName COGTransform
      * @apiGroup Cogs
@@ -25,7 +25,7 @@ export default async function router(schema, config) {
      *
      * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
      */
-    await schema.get('/upload/:upload/step/:step/cog/transform', {
+    await schema.post('/upload/:upload/step/:step/cog/transform', {
         ':upload': 'integer',
         ':step': 'integer',
         res: 'res.UploadStep.json'
