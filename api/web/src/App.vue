@@ -105,6 +105,14 @@ export default {
                 this.err = err;
             }
         },
+        getLogin: async function() {
+            try {
+                this.auth = await window.std('/api/login');
+            } catch (err) {
+                delete localStorage.token;
+                this.$router.push('/login');
+            }
+        },
         getMeta: async function() {
             try {
                 this.loading.meta = true;

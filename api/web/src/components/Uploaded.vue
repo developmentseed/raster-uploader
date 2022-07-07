@@ -3,6 +3,9 @@
         <template v-if='loading.upload'>
             <Loading desc='Loading Upload'/>
         </template>
+        <template v-else-if='loading.delete'>
+            <Loading desc='Deleting Upload'/>
+        </template>
         <template v-else>
             <div class='col col--12 clearfix py6'>
                 <h2 class='fl cursor-default'>
@@ -86,6 +89,7 @@ export default {
         return {
             loading: {
                 upload: true,
+                delete: false,
                 steps: true
             },
             polling: {
@@ -170,12 +174,15 @@ export default {
             }
         },
         deleteUpload: async function() {
+            if (this.polling.steps) clearInterval(this.polling.steps);
+            if (this.polling.upload) clearInterval(this.polling.upload);
+
             try {
-                this.loading.upload = true;
+                this.loading.delete = true;
                 await window.std(`/api/upload/${this.$route.params.uploadid}`, {
                     method: 'DELETE'
                 });
-                this.loading.upload = false;
+                this.loading.delete = false;
 
                 this.$router.push('/');
             } catch (err) {

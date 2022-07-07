@@ -19,7 +19,7 @@ export default class Email {
             theme: 'default',
             product: {
                 name: 'Raster Uploader',
-                link: config.url
+                link: config.Frontend
             }
         });
     }
@@ -42,7 +42,7 @@ export default class Email {
                     button: {
                         color: 'green',
                         text: 'Verify Email',
-                        link: `${this.config.url}/#/login/verify?token=${user.token}`
+                        link: `${this.config.Frontend}/#/login/verify?token=${user.token}`
                     }
                 },
                 outro: ''
@@ -66,7 +66,7 @@ export default class Email {
                     button: {
                         color: 'green',
                         text: 'Password Reset',
-                        link: `${this.config.url}/#/login/reset?token=${user.token}`
+                        link: `${this.config.Frontend}/#/login/reset?token=${user.token}`
                     }
                 },
                 outro: ''
@@ -93,7 +93,7 @@ export default class Email {
             Destination: {
                 ToAddresses: [email]
             },
-            Source: `robot@${this.config.domain}`,
+            Source: config.FromEmailAddress,
             Message: {
                 Subject: {
                     Data: subject
