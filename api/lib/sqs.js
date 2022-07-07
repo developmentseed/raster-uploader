@@ -34,7 +34,7 @@ export default class SQS {
         }
     }
 
-    async transform(config, uid) {
+    async transform(config, transform, uid) {
         if (!process.env.TRANSFORM_QUEUE) throw new Err(400, null, 'TRANSFORM_QUEUE not set');
 
         try {
@@ -44,11 +44,14 @@ export default class SQS {
                 expiresIn: '15m'
             });
 
+            if (!config.transform) config.transform = [];
+
             await this.sqs.sendMessage({
                 QueueUrl: process.env.TRANSFORM_QUEUE,
                 MessageBody: JSON.stringify({
                     token,
-                    config
+                    config,
+                    transform
                 })
             }).promise();
         } catch (err) {

@@ -47,10 +47,9 @@ export default async function router(schema, config) {
             req.body.upload = upload.id;
             req.body.step = step.id;
 
-            await sqs.transform(req.body, req.auth.id);
+            await sqs.transform(step.config, req.body, req.auth.id);
 
             step.closed = true;
-            console.error(step.parent, typeof step.parent);
             await step.commit(config.pool);
 
             return res.json(step.serialize());
