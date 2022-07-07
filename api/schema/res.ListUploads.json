@@ -23,7 +23,8 @@
                     "name",
                     "obtain",
                     "uploaded",
-                    "archived"
+                    "archived",
+                    "starred"
                 ],
                 "additionalProperties": false,
                 "properties": {
@@ -52,6 +53,9 @@
                         "type": "boolean"
                     },
                     "archived": {
+                        "type": "boolean"
+                    },
+                    "starred": {
                         "type": "boolean"
                     }
                 }

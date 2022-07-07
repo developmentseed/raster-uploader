@@ -14,6 +14,9 @@
         "config": {
             "type": "object"
         },
+        "starred": {
+            "type": "boolean"
+        },
         "uploaded": {
             "type": "boolean"
         }

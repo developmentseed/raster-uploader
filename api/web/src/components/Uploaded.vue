@@ -12,6 +12,14 @@
                 </h2>
 
                 <div class='fr'>
+                    <button @click='upload.starred = !upload.starred' class='mx6 btn btn--stroke round' :class='{
+                        "color-blue": upload.starred,
+                        "color-gray-light": !upload.starred,
+                        "color-gray-on-hover": !upload.starred
+                    }'>
+                        <svg class='icon'><use href='#icon-star'/></svg>
+                    </button>
+
                     <button @click='deleteUpload' class='btn round btn--stroke color-gray color-red-on-hover'>
                         <svg class='icon'><use href='#icon-trash'/></svg>
                     </button>
@@ -89,7 +97,8 @@ export default {
                 upload_steps: []
             },
             upload: {
-                id: false
+                id: false,
+                starred: false
             }
         }
     },
@@ -100,6 +109,11 @@ export default {
     unmounted: async function() {
         if (this.polling.steps) clearInterval(this.polling.steps);
         if (this.polling.upload) clearInterval(this.polling.upload);
+    },
+    watch: {
+        'upload.starred': function() {
+            this.patchUpload();
+        }
     },
     methods: {
         getUpload: async function() {
@@ -118,6 +132,18 @@ export default {
                     clearInterval(this.polling.upload);
                     if (!this.polling.steps) this.getUploadSteps();
                 }
+            } catch (err) {
+                this.$emit('err', err);
+            }
+        },
+        patchUpload: async function() {
+            try {
+                this.upload = await window.std(`/api/upload/${this.$route.params.uploadid}`, {
+                    method: 'PATCH',
+                    body: {
+                        starred: this.upload.starred
+                    }
+                });
             } catch (err) {
                 this.$emit('err', err);
             }

@@ -28,6 +28,7 @@ export default class Upload extends Generic {
         if (!query.page) query.page = 0;
         if (!query.archived) query.archived = false;
         if (!query.uploaded) query.uploaded = null;
+        if (!query.starred) query.starred = null;
 
         try {
             const pgres = await pool.query(sql`
@@ -41,13 +42,15 @@ export default class Upload extends Generic {
                     status,
                     name,
                     obtain,
-                    uploaded
+                    uploaded,
+                    starred
                 FROM
                     uploads
                 WHERE
                     name ~ ${query.filter}
                     AND (${query.uid}::BIGINT IS NULL OR uid = ${query.uid})
                     AND (${query.archived}::BOOLEAN IS NULL OR archived = ${query.archived})
+                    AND (${query.starred}::BOOLEAN IS NULL OR starred = ${query.starred})
                     AND (${query.uploaded}::BOOLEAN IS NULL OR uploaded = ${query.uploaded})
                 ORDER BY
                     id DESC
