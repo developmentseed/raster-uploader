@@ -47,7 +47,7 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Get a single upload
      *
-     * @apiParam {Number} :upload The ID of the upload
+     * @apiParam {Number} upload The ID of the upload
      *
      * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
      */
@@ -173,7 +173,7 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Update information about a given upload
      *
-     * @apiParam {Number} :upload The ID of the upload
+     * @apiParam {Number} upload The ID of the upload
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.PatchUpload.json} apiParam
      * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
@@ -218,7 +218,7 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Delete a given upload
      *
-     * @apiParam {Number} :upload The ID of the upload
+     * @apiParam {Number} upload The ID of the upload
      *
      * @apiSchema {jsonschema=../schema/res.Standard.json} apiSuccess
      */

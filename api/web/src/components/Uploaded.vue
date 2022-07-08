@@ -3,6 +3,9 @@
         <template v-if='loading.upload'>
             <Loading desc='Loading Upload'/>
         </template>
+        <template v-else-if='loading.delete'>
+            <Loading desc='Deleting Upload'/>
+        </template>
         <template v-else>
             <div class='col col--12 clearfix py6'>
                 <h2 class='fl cursor-default'>
@@ -12,6 +15,14 @@
                 </h2>
 
                 <div class='fr'>
+                    <button @click='upload.starred = !upload.starred' class='mx6 btn btn--stroke round' :class='{
+                        "color-blue": upload.starred,
+                        "color-gray-light": !upload.starred,
+                        "color-gray-on-hover": !upload.starred
+                    }'>
+                        <svg class='icon'><use href='#icon-star'/></svg>
+                    </button>
+
                     <button @click='deleteUpload' class='btn round btn--stroke color-gray color-red-on-hover'>
                         <svg class='icon'><use href='#icon-trash'/></svg>
                     </button>
@@ -78,6 +89,7 @@ export default {
         return {
             loading: {
                 upload: true,
+                delete: false,
                 steps: true
             },
             polling: {
@@ -89,7 +101,8 @@ export default {
                 upload_steps: []
             },
             upload: {
-                id: false
+                id: false,
+                starred: false
             }
         }
     },
@@ -100,6 +113,11 @@ export default {
     unmounted: async function() {
         if (this.polling.steps) clearInterval(this.polling.steps);
         if (this.polling.upload) clearInterval(this.polling.upload);
+    },
+    watch: {
+        'upload.starred': function() {
+            this.patchUpload();
+        }
     },
     methods: {
         getUpload: async function() {
@@ -118,6 +136,18 @@ export default {
                     clearInterval(this.polling.upload);
                     if (!this.polling.steps) this.getUploadSteps();
                 }
+            } catch (err) {
+                this.$emit('err', err);
+            }
+        },
+        patchUpload: async function() {
+            try {
+                this.upload = await window.std(`/api/upload/${this.$route.params.uploadid}`, {
+                    method: 'PATCH',
+                    body: {
+                        starred: this.upload.starred
+                    }
+                });
             } catch (err) {
                 this.$emit('err', err);
             }
@@ -144,12 +174,15 @@ export default {
             }
         },
         deleteUpload: async function() {
+            if (this.polling.steps) clearInterval(this.polling.steps);
+            if (this.polling.upload) clearInterval(this.polling.upload);
+
             try {
-                this.loading.upload = true;
+                this.loading.delete = true;
                 await window.std(`/api/upload/${this.$route.params.uploadid}`, {
                     method: 'DELETE'
                 });
-                this.loading.upload = false;
+                this.loading.delete = false;
 
                 this.$router.push('/');
             } catch (err) {

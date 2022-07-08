@@ -127,7 +127,7 @@ async function server(args, config) {
         return res.json({
             version: pkg.version,
             assets: {
-                bucket: config.Bucket,
+                bucket: config.Bucket
             },
             limits: {
                 compression: [

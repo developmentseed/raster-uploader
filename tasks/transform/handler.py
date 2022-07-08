@@ -6,6 +6,7 @@ import requests
 import numpy as np
 import sys
 import traceback
+import rasterio
 
 from lib.step import step
 
@@ -36,12 +37,23 @@ def handler(event, context):
     except Exception as e:
         return error(event, str(e))
 
+    pth = '/tmp/final.tif'
     try: # Download & Decompression
-        pth = f'/tmp/{os.path.basename(s3files[0]["Key"])}'
         with open(pth, 'wb') as f:
-            s3.download_fileobj(meta['assets']['bucket'], s3files[0]["Key"], f)
+            s3.download_fileobj(meta['assets']['bucket'], f'uploads/{event["config"]["upload"]}/step/{event["transform"]["step"]}/final.tif', f)
     except Exception as e:
         return error(event, str(e))
+
+    with rasterio.open(pth) as inp:
+        inp_profile = inp.profile
+        inp = inp.read()
+
+        ttype = event["transform"]["type"]
+        if ttype == "cog:flip":
+            data = np.flip(inp)
+
+        with rasterio.open(pth + '.out', 'w', **inp_profile) as dst:
+            dst.write(data)
 
     final = step({
         'upload': event["config"]["upload"],
@@ -52,7 +64,7 @@ def handler(event, context):
 
     print('Final', final)
     s3.upload_file(
-        pth,
+        pth + '.out',
         meta['assets']['bucket'],
         f'uploads/{event["config"]["upload"]}/step/{final.get("id")}/final.tif'
     )
@@ -60,25 +72,21 @@ def handler(event, context):
 if __name__ == "__main__":
     os.environ['API'] = 'http://localhost:4999'
 
-    upload = 53
+    upload = 62
+    upload_step = 56
     token = 'uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925'
-
-    upload = requests.get(
-        f"{os.environ.get('API')}/api/upload/{upload}",
-        headers={
-            'Authorization': f'bearer {token}'
-        },
-    )
-    upload.raise_for_status()
-    upload = upload.json()
-
-    upload['config']['upload'] = upload['id']
 
     handler({
         'Records': [{
             'body': json.dumps({
                 'token': token,
-                'config': upload['config']
+                'config': {
+                    'upload': upload,
+                },
+                'transform': {
+                    'step': upload_step,
+                    'type': 'cog:flip'
+                }
             })
         }]
     }, None)

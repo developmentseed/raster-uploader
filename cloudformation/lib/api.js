@@ -6,6 +6,14 @@ const stack = {
         SigningSecret: {
             Type: 'String',
             Description: 'API Token Signing Secret'
+        },
+        FromEmailAddress: {
+            Type: 'String',
+            Description: 'Email address to be used to send emails'
+        },
+        FrontEndDomain: {
+            Type: 'String',
+            Description: 'Domain at which the frontend resides'
         }
     },
     Resources: {
@@ -109,7 +117,10 @@ const stack = {
                             Action: [
                                 's3:*'
                             ],
-                            Resource: [cf.join(['arn:aws:s3:::', cf.ref('Bucket'), '/*'])]
+                            Resource: [
+                                cf.join(['arn:aws:s3:::', cf.ref('Bucket') ]),
+                                cf.join(['arn:aws:s3:::', cf.ref('Bucket'), '/*'])
+                            ]
                         },{
                             Effect: 'Allow',
                             Action: [
@@ -132,7 +143,8 @@ const stack = {
                             Resource: [
                                 cf.getAtt('Queue', 'Arn'),
                                 cf.getAtt('DeadQueue', 'Arn'),
-                                cf.getAtt('ObtainQueue', 'Arn')
+                                cf.getAtt('ObtainQueue', 'Arn'),
+                                cf.getAtt('TransformQueue', 'Arn')
                             ]
                         }]
                     }
@@ -211,12 +223,15 @@ const stack = {
                         },
                         { Name: 'QUEUE', Value: cf.ref('Queue') },
                         { Name: 'OBTAIN_QUEUE', Value: cf.ref('ObtainQueue') },
+                        { Name: 'TRANSFORM_QUEUE', Value: cf.ref('TransformQueue') },
                         { Name: 'SecretARN', Value: cf.ref('APISecrets') },
                         { Name: 'ASSET_BUCKET', Value: cf.ref('Bucket') },
                         { Name: 'SigningSecret', Value: cf.ref('SigningSecret') },
                         { Name: 'StackName', Value: cf.stackName },
                         { Name: 'AWS_DEFAULT_REGION', Value: cf.region },
-                        { Name: 'TiTiler', Value: cf.join(['https://', cf.ref('TiTilerAPI'), '.execute-api.', cf.region, '.', cf.ref('AWS::URLSuffix'), '/']) }
+                        { Name: 'TiTiler', Value: cf.join(['https://', cf.ref('TiTilerAPI'), '.execute-api.', cf.region, '.', cf.ref('AWS::URLSuffix'), '/']) },
+                        { Name: 'FROM_EMAIL_ADDRESS', Value: cf.ref('FromEmailAddress') },
+                        { Name: 'FRONTEND_DOMAIN', Value: cf.ref('FrontEndDomain') },
                     ],
                     LogConfiguration: {
                         LogDriver: 'awslogs',

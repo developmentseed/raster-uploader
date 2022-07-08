@@ -5,6 +5,9 @@
         "archived": {
             "type": "boolean"
         },
+        "starred": {
+            "type": "boolean"
+        },
         "uploaded": {
             "type": "boolean"
         },

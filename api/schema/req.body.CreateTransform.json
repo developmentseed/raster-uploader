@@ -1,0 +1,16 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "required": [ "type" ],
+    "properties": {
+        "type": {
+            "type": "string",
+            "enum": [
+                "cog:flip"
+            ]
+        },
+        "transform": {
+            "type": "object"
+        }
+    }
+}

@@ -108,7 +108,7 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Update information about a given user
      *
-     * @apiParam {Number} :uid The UID of the user to update
+     * @apiParam {Number} uid The UID of the user to update
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.PatchUser.json} apiParam
      * @apiSchema {jsonschema=../schema/res.User.json} apiSuccess

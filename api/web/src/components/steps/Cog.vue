@@ -21,8 +21,18 @@
         <template v-else>
             <button
                 @click='submit'
+                :disabled='operation === "select"'
                 class='fr btn btn--stroke btn--s color-gray color-green-on-hover round mr12'
+                style='height: 30px;'
             >Submit</button>
+
+            <div class='select-container fr mr6'>
+                <select v-model='operation' class='select select--stroke select--s'>
+                    <option value='select'>Select Op</option>
+                    <option value='flip'>Flip</option>
+                </select>
+                <div class='select-arrow'></div>
+            </div>
         </template>
     </div>
     <template v-if='!folded'>
@@ -65,6 +75,7 @@ export default {
                 submit: false,
                 info: false
             },
+            operation: 'select',
             info: null,
             folded: null
         }
@@ -82,11 +93,11 @@ export default {
         submit: async function() {
             try {
                 this.loading.submit = true;
-                const step = await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}`, {
-                    method: 'PATCH',
+                const step = await window.std(`/api/upload/${this.$route.params.uploadid}/step/${this.step.id}/cog/transform`, {
+                    method: 'POST',
                     body: {
-                        closed: true,
-                        step: { }
+                        type: `cog:${this.operation}`,
+                        transform: { }
                     }
                 });
                 this.loading.submit = false;

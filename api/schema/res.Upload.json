@@ -11,6 +11,7 @@
         "name",
         "uploaded",
         "archived",
+        "starred",
         "config"
     ],
     "additionalProperties": false,
@@ -44,6 +45,9 @@
             "type": "boolean"
         },
         "archived": {
+            "type": "boolean"
+        },
+        "starred": {
             "type": "boolean"
         },
         "config": {

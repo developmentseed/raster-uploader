@@ -50,8 +50,7 @@
                         <div class='col col--12 grid py6 px12'>
                             <div class='col col--6'>
                                 <div class='col col--12 clearfix'>
-                                    <svg v-if='upload.access === "private"' class='fl icon color-gray h24 w24'><use xlink:href='#icon-lock'/></svg>
-
+                                    <svg v-if='upload.starred' class='fl icon color-blue h24 w24 mr6'><use xlink:href='#icon-star'/></svg>
                                     <h3 class='txt-h4 fl' v-text='upload.name'></h3>
                                 </div>
                                 <div class='col col--12'>
