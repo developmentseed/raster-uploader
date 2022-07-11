@@ -9,7 +9,7 @@
     "additionalProperties": false,
     "properties": {
         "parent": {
-            "type": "integer"
+            "type": ["integer", "null"]
         },
         "step": {
             "type": "object"

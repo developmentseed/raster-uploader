@@ -38,7 +38,8 @@ export default class UploadStep extends Generic {
                     step,
                     type,
                     config,
-                    closed
+                    closed,
+                    parent
                 FROM
                     upload_steps
                 WHERE

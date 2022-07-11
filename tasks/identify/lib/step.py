@@ -14,6 +14,7 @@ def step(step, token):
             json={
                 'type': step.get('type'),
                 'step': step.get('step'),
+                'parent': step.get('parent'),
                 'config': step.get('config')
             }
         )
