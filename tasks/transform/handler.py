@@ -50,7 +50,7 @@ def handler(event, context):
 
         ttype = event["transform"]["type"]
         if ttype == "cog:flip":
-            data = np.flip(inp)
+            data = np.flip(inp, axis=0)
 
         with rasterio.open(pth + '.out', 'w', **inp_profile) as dst:
             dst.write(data)
