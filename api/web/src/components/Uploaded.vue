@@ -28,6 +28,12 @@
                     </button>
                 </div>
             </div>
+
+            <div class='border border--gray-light round mb60 col col--12'>
+
+            </div>
+
+
             <div class='border border--gray-light round mb60 col col--12'>
                 <StepInitial
                     :upload=upload
@@ -76,6 +82,7 @@
 
 <script>
 import Loading from './util/Loading.vue';
+import UploadedGraph from './steps/Graph.vue';
 import StepSelection from './steps/Selection.vue';
 import StepLoading from './steps/Loading.vue';
 import StepCog from './steps/Cog.vue';
@@ -192,6 +199,7 @@ export default {
     },
     components: {
         Loading,
+        UploadedGraph,
         StepSelection,
         StepLoading,
         StepInitial,
