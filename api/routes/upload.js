@@ -1,6 +1,6 @@
 import { Err } from '@openaddresses/batch-schema';
 import busboy from 'busboy';
-import Upload from '../lib/upload.js';
+import Upload from '../lib/types/upload.js';
 import Auth from '../lib/auth.js';
 import S3 from '../lib/s3.js';
 import SQS from '../lib/sqs.js';

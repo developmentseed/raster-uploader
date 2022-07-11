@@ -8,8 +8,8 @@ import { sql } from 'slonik';
  */
 export default class Schedule extends Generic {
     static _table = 'schedules';
-    static _patch = JSON.parse(fs.readFileSync(new URL('../schema/req.body.PatchSchedule.json', import.meta.url)));
-    static _res = JSON.parse(fs.readFileSync(new URL('../schema/res.Schedule.json', import.meta.url)));
+    static _patch = JSON.parse(fs.readFileSync(new URL('../../schema/req.body.PatchSchedule.json', import.meta.url)));
+    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.Schedule.json', import.meta.url)));
 
     /**
      * List & Filter Schedules

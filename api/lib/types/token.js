@@ -12,8 +12,8 @@ const randomBytes = promisify(crypto.randomBytes);
  */
 export default class Token extends Generic {
     static _table = 'users_tokens';
-    static _patch = JSON.parse(fs.readFileSync(new URL('../schema/req.body.PatchToken.json', import.meta.url)));
-    static _res = JSON.parse(fs.readFileSync(new URL('../schema/res.Token.json', import.meta.url)));
+    static _patch = JSON.parse(fs.readFileSync(new URL('../../schema/req.body.PatchToken.json', import.meta.url)));
+    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.Token.json', import.meta.url)));
 
     /**
      * List & Filter Tokens

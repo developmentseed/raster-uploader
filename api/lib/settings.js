@@ -1,4 +1,4 @@
-import Meta from './meta.js';
+import Meta from './types/meta.js';
 import { Err } from '@openaddresses/batch-schema';
 import Ajv from 'ajv';
 

@@ -1,5 +1,5 @@
 import { Err } from '@openaddresses/batch-schema';
-import User from '../lib/user.js';
+import User from '../lib/types/user.js';
 import Auth from '../lib/auth.js';
 import Login from '../lib/login.js';
 import Email from '../lib/email.js';

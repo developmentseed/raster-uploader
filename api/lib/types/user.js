@@ -9,8 +9,8 @@ import Generic from '@openaddresses/batch-generic';
  */
 export default class User extends Generic {
     static _table = 'users';
-    static _patch = JSON.parse(fs.readFileSync(new URL('../schema/req.body.PatchUser.json', import.meta.url)));
-    static _res = JSON.parse(fs.readFileSync(new URL('../schema/res.User.json', import.meta.url)));
+    static _patch = JSON.parse(fs.readFileSync(new URL('../../schema/req.body.PatchUser.json', import.meta.url)));
+    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.User.json', import.meta.url)));
 
     /**
      * Return a list of users
