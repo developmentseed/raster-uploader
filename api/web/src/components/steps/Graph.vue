@@ -30,9 +30,16 @@ export default {
     },
     mounted: function() {
         // Populate Nodes
-        this.processed.nodes.push({ data: { id: 'initial' } });
+        this.processed.nodes.push({ data: {
+            id: 'initial',
+            type: 'initial'
+        }});
+
         for (const step of this.steps.upload_steps) {
-            this.processed.nodes.push({ data: { id: String(step.id) } });
+            this.processed.nodes.push({ data: {
+                id: String(step.id),
+                type: step.type
+            }});
         }
 
         for (const step of this.steps.upload_steps) {
@@ -68,8 +75,24 @@ export default {
                         'curve-style': 'bezier',
                         'width': 6,
                         'target-arrow-shape': 'triangle',
-                        'line-color': '#ffaaaa',
-                        'target-arrow-color': '#ffaaaa'
+                        'line-color': '#c7cacc',
+                        'target-arrow-color': '#c7cacc'
+                    })
+                    .selector('[type = "initial"]').css({
+                        'label': 'Initial',
+                        'background-image': 'https://live.staticflickr.com/1261/1413379559_412a540d29_b.jpg'
+                    })
+                    .selector('[type = "error"]').css({
+                        'label': 'Error',
+                        'background-image': 'https://live.staticflickr.com/1261/1413379559_412a540d29_b.jpg'
+                    })
+                    .selector('[type = "selection"]').css({
+                        'label': 'Selection',
+                        'background-image': 'https://live.staticflickr.com/1261/1413379559_412a540d29_b.jpg'
+                    })
+                    .selector('[type = "cog"]').css({
+                        'label': 'COG',
+                        'background-image': 'https://live.staticflickr.com/1261/1413379559_412a540d29_b.jpg'
                     }),
                 layout: {
                     name: 'breadthfirst',
