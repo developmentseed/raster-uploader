@@ -40,7 +40,7 @@ export default {
             this.map.set(step.id, step);
 
             this.processed.nodes.push({ data: {
-                id: String(step.id),
+                id: step.id,
                 type: step.type
             }});
         }
@@ -49,12 +49,12 @@ export default {
             if (!step.parent) {
                 this.processed.edges.push({ data: {
                     source: 'initial',
-                    target: String(step.id)
+                    target: step.id
                 }});
             } else {
                 this.processed.edges.push({ data: {
-                    source: String(step.parent),
-                    target: String(step.id)
+                    source: step.parent,
+                    target: step.id
                 }});
             }
         }
@@ -109,26 +109,35 @@ export default {
                 }
             });
 
+            const latest = this.steps.upload_steps[this.steps.upload_steps.length - 1];
+            const node = this.graph.$id(latest.id)
+            node.addClass('selected');
+            this.parents(node)
+
             this.graph.on('tap', 'node', (evt) => {
                 this.graph.$('.selected').removeClass('selected');
                 evt.target.addClass('selected');
-
-                let ids = [];
-                ids.push(evt.target.id());
-                for (const parent of evt.target.predecessors()) {
-                    if (!parent.isNode()) continue;
-                    ids.push(parent.id());
-                }
-
-                ids.pop(); // remove initial
-                ids.reverse();
-                ids = ids.map((id) => {
-                    return this.map.get(parseInt(id));
-                });
-
-                this.$emit('steps', ids);
+                this.parents(evt.target)
             });
         });
+    },
+    methods: {
+        parents: function(node) {
+            let ids = [];
+            ids.push(node.id());
+            for (const parent of node.predecessors()) {
+                if (!parent.isNode()) continue;
+                ids.push(parent.id());
+            }
+
+            ids.pop(); // remove initial
+            ids.reverse();
+            ids = ids.map((id) => {
+                return this.map.get(parseInt(id));
+            });
+
+            this.$emit('steps', ids);
+        }
     }
 }
 </script>
