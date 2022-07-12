@@ -133,7 +133,7 @@ export default {
         linear: {
             deep: true,
             handler: function() {
-                const poll = !this.linear.some((step) => {
+                const poll = this.linear.some((step) => {
                     return !step.closed;
                 });
 
