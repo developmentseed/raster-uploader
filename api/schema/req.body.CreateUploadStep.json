@@ -7,6 +7,9 @@
     ],
     "additionalProperties": false,
     "properties": {
+        "parent": {
+            "type": "integer"
+        },
         "step": {
             "type": "object"
         },

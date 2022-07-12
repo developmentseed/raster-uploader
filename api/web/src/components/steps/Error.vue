@@ -25,7 +25,7 @@
             >Resubmit</button>
         </template>
     </div>
-    <template v-if='!folded'>
+    <template v-if='!step.closed || !folded'>
         <div class='col col--12 border border--gray-light round grid mx12 my12 px12 py12'>
             <template v-if='loading.submit'>
                 <Loading desc='Submitting Step'/>

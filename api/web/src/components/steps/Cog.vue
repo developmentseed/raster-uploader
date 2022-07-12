@@ -14,6 +14,14 @@
                 <svg v-else class='icon'><use xlink:href='#icon-chevron-right'/></svg>
             </button>
 
+            <button
+                @click='$emit("split", step)'
+                class='fr btn btn--stroke btn--s color-gray color-black-on-hover round mr12'
+                style='height: 21px;'
+            >
+                <svg class='icon'><use xlink:href='#icon-uncombine'/></svg>
+            </button>
+
             <div class='fr bg-gray-faint color-gray inline-block px6 py3 round txt-xs txt-bold mr12'>
                 <span v-text='new Date(step.created).toISOString()'/>
             </div>
@@ -35,7 +43,7 @@
             </div>
         </template>
     </div>
-    <template v-if='!folded'>
+    <template v-if='!step.closed || !folded'>
         <template v-if='loading.submit'>
             <Loading desc='Submitting Step'/>
         </template>

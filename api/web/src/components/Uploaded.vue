@@ -64,6 +64,7 @@
                                 :step='step'
                                 :open='!polling.steps && step_it === linear.length-1'
                                 @step='getUploadSteps'
+                                @split='postSplit($event)'
                                 @err='$emit("err", $event)'
                             />
                         </template>
@@ -73,6 +74,7 @@
                                 :step='step'
                                 :open='!polling.steps && step_it === linear.length-1'
                                 @step='getUploadSteps'
+                                @split='postSplit($event)'
                                 @err='$emit("err", $event)'
                             />
                         </template>
@@ -142,8 +144,8 @@ export default {
         linear: {
             deep: true,
             handler: function() {
-                const poll = this.linear.some((step) => {
-                    return !step.closed;
+                const poll = this.linear.every((step) => {
+                    return step.closed;
                 });
 
                 if (poll && !this.polling.steps) {
@@ -152,11 +154,30 @@ export default {
                     }, 5000);
                 } else if (!poll && this.polling.steps) {
                     clearInterval(this.polling.steps);
+                    this.polling.steps = false;
                 }
             }
         }
     },
     methods: {
+        postSplit: async function(step) {
+            try {
+                await window.std(`/api/upload/${this.$route.params.uploadid}/step`, {
+                    method: 'POST',
+                    body: {
+                        type: step.type,
+                        config: step.config,
+                        parent: step.parent,
+                        closed: false,
+                        step: step.step
+                    }
+                });
+
+                this.getUploadSteps();
+            } catch (err) {
+                this.$emit('err', err);
+            }
+        },
         getUpload: async function() {
             try {
                 this.loading.upload = true;
