@@ -93,12 +93,22 @@ export default {
                     .selector('[type = "cog"]').css({
                         'label': 'COG',
                         'background-image': 'https://live.staticflickr.com/1261/1413379559_412a540d29_b.jpg'
+                    })
+                    .selector('.selected').css({
+                        'border-color': '#FF0000',
+                        'border-width': 5,
+                        'border-opacity': 1
                     }),
                 layout: {
                     name: 'breadthfirst',
                     directed: true,
                     padding: 10
                 }
+            });
+
+            this.graph.on('tap', 'node', (evt) => {
+                this.graph.$('.selected').removeClass('selected');
+                evt.target.addClass('selected');
             });
         });
     }
