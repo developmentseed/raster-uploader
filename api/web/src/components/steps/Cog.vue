@@ -39,7 +39,7 @@
         <template v-if='loading.submit'>
             <Loading desc='Submitting Step'/>
         </template>
-        <template v-if='loading.info'>
+        <template v-else-if='loading.info'>
             <Loading desc='Loading Raster Metadata'/>
         </template>
         <template v-else>

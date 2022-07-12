@@ -35,7 +35,8 @@ export default {
             handler: function() {
                 if (!this.graph) return;
                 this.process();
-            },
+            }
+        }
     },
     mounted: function() {
         // Populate Nodes
