@@ -64,10 +64,17 @@ export default {
     name: 'StepCog',
     props: {
         step: Object,
+        open: Boolean
     },
     mounted: function() {
-        this.folded = this.step.closed;
+        this.folded = !(this.step.closed && this.open);
+
         this.getInfo();
+    },
+    watch: {
+        open: function() {
+            this.folded = !(this.step.closed && this.open);
+        }
     },
     data: function() {
         return {

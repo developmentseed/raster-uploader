@@ -1,6 +1,12 @@
 <template>
-<div class='col col--12'>
+<div class='col col--12 relative'>
     <div id='cy'></div>
+
+    <div class='absolute top left z5 mx6 my6'>
+        <button @click='centre' class='btn round btn--stroke color-gray color-red-on-hover'>
+            <svg class='icon'><use href='#icon-position'/></svg>
+        </button>
+    </div>
 </div>
 </template>
 
@@ -156,6 +162,9 @@ export default {
             });
 
             this.$emit('steps', ids);
+        },
+        centre: function() {
+            this.graph.fit();
         }
     }
 }

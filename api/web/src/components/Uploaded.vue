@@ -41,37 +41,46 @@
             <div class='border border--gray-light round mb60 col col--12'>
                 <StepInitial
                     :upload=upload
+                    :open='!linear.length'
                     @err='$emit("err", $event)'
                 />
 
-                <div :key='step.id' v-for='step in linear' class='col col--12'>
-                    <template v-if='loading.steps'>
-                        <Loading desc='Loading Upload Steps'/>
-                    </template>
-                    <template v-else-if='step.type === "error"'>
-                        <StepError
-                            :step='step'
-                            @err='$emit("err", $event)'
-                        />
-                    </template>
-                    <template v-else-if='step.type === "selection"'>
-                        <StepSelection
-                            :step='step'
-                            @step='getUploadSteps'
-                            @err='$emit("err", $event)'
-                        />
-                    </template>
-                    <template v-else-if='step.type === "cog"'>
-                        <StepCog
-                            :step='step'
-                            @step='getUploadSteps'
-                            @err='$emit("err", $event)'
-                        />
-                    </template>
-                    <template v-else>
-                        Unknown Step
-                    </template>
-                </div>
+                <template v-if='loading.steps'>
+                    <Loading desc='Loading Upload Steps'/>
+                </template>
+                <template v-else>
+                    <div :key='step.id' v-for='(step, step_it) in linear' class='col col--12'>
+                        <template v-if='step.type === "error"'>
+                            <StepError
+                                :key='step.id'
+                                :step='step'
+                                :open='!polling.steps && step_it === linear.length-1'
+                                @err='$emit("err", $event)'
+                            />
+                        </template>
+                        <template v-else-if='step.type === "selection"'>
+                            <StepSelection
+                                :key='step.id'
+                                :step='step'
+                                :open='!polling.steps && step_it === linear.length-1'
+                                @step='getUploadSteps'
+                                @err='$emit("err", $event)'
+                            />
+                        </template>
+                        <template v-else-if='step.type === "cog"'>
+                            <StepCog
+                                :key='step.id'
+                                :step='step'
+                                :open='!polling.steps && step_it === linear.length-1'
+                                @step='getUploadSteps'
+                                @err='$emit("err", $event)'
+                            />
+                        </template>
+                        <template v-else>
+                            Unknown Step
+                        </template>
+                    </div>
+                </template>
 
                 <template v-if='polling.steps'>
                     <StepLoading/>
@@ -86,7 +95,7 @@
 
 <script>
 import Loading from './util/Loading.vue';
-import UploadedGraph from './steps/Graph.vue';
+import UploadedGraph from './uploaded/Graph.vue';
 import StepSelection from './steps/Selection.vue';
 import StepLoading from './steps/Loading.vue';
 import StepCog from './steps/Cog.vue';

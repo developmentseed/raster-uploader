@@ -47,9 +47,15 @@ export default {
     name: 'StepError',
     props: {
         step: Object,
+        open: Boolean
     },
     mounted: function() {
-        this.folded = this.step.closed;
+        this.folded = !(this.step.closed && this.open);
+    },
+    watch: {
+        open: function() {
+            this.folded = !(this.step.closed && this.open);
+        }
     },
     data: function() {
         return {

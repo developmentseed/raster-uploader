@@ -59,10 +59,16 @@ export default {
     name: 'StepSelection',
     props: {
         step: Object,
+        open: Boolean
     },
     mounted: function() {
-        this.folded = this.step.closed;
+        this.folded = !(this.step.closed && this.open);
         if (this.step.step.selection) this.selection = this.step.step.selection;
+    },
+    watch: {
+        open: function() {
+            this.folded = !(this.step.closed && this.open);
+        }
     },
     data: function() {
         return {
