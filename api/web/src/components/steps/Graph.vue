@@ -4,13 +4,6 @@
 </div>
 </template>
 
-<style>
-#cy {
-    height: 500px;
-    width: 100%;
-}
-</style>
-
 <script>
 import Cytoscape from 'cytoscape';
 
@@ -23,6 +16,7 @@ export default {
         return {
             map: new Map(),
             graph: null,
+            selected: null,
             processed: {
                 nodes: [],
                 edges: []
@@ -35,7 +29,13 @@ export default {
             handler: function() {
                 if (!this.graph) return;
                 this.process();
+                this.parents()
             }
+        },
+        selected: function() {
+            this.graph.$('.selected').removeClass('selected');
+            this.selected.addClass('selected');
+            this.parents()
         }
     },
     mounted: function() {
@@ -118,38 +118,33 @@ export default {
                 }
             });
 
-            const latest = this.steps.upload_steps[this.steps.upload_steps.length - 1];
-            const node = this.graph.$id(latest.id)
-            node.addClass('selected');
-            this.parents(node)
+            this.selected = this.graph.$id(this.steps.upload_steps[this.steps.upload_steps.length - 1].id)
 
             this.graph.on('tap', 'node', (evt) => {
-                this.graph.$('.selected').removeClass('selected');
-                evt.target.addClass('selected');
-                this.parents(evt.target)
+                this.selected = evt.target;
             });
         });
     },
     methods: {
         process: function() {
             for (const step of this.steps.upload_steps) {
-                if (this.map.has(step.id)) {
-                    this.map.set(step.id, step);
-                } else {
+                if (!this.map.has(step.id)) {
                     this.map.set(step.id, step);
                     this.graph.add([
                         { group: 'nodes', data: { id: step.id } },
                         { group: 'edges', data: { source: step.parent, target: step.id } }
                     ]);
                 }
+
+                this.map.set(step.id, step);
             }
 
             this.graph.fit();
         },
-        parents: function(node) {
+        parents: function() {
             let ids = [];
-            ids.push(node.id());
-            for (const parent of node.predecessors()) {
+            ids.push(this.selected.id());
+            for (const parent of this.selected.predecessors()) {
                 if (!parent.isNode()) continue;
                 ids.push(parent.id());
             }
@@ -165,3 +160,11 @@ export default {
     }
 }
 </script>
+
+<style>
+#cy {
+    height: 500px;
+    width: 100%;
+}
+</style>
+
