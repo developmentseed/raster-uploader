@@ -22,12 +22,18 @@ export default {
     data: function() {
         return {
             map: new Map(),
-            graph: {},
+            graph: null,
             processed: {
                 nodes: [],
                 edges: []
             }
         };
+    },
+    watch: {
+        steps: function() {
+            if (!this.graph) return;
+            this.process();
+        }
     },
     mounted: function() {
         // Populate Nodes
@@ -122,6 +128,19 @@ export default {
         });
     },
     methods: {
+        process: function() {
+            for (const step of this.steps.upload_steps) {
+                if (this.map.has(step.id)) continue;
+
+                this.map.set(step.id, step);
+                this.graph.add([
+                    { group: 'nodes', data: { id: step.id } },
+                    { group: 'edges', data: { source: step.parent, target: step.id } }
+                ]);
+            }
+
+            this.graph.fit();
+        },
         parents: function(node) {
             let ids = [];
             ids.push(node.id());
