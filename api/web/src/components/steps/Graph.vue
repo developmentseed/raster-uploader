@@ -30,10 +30,12 @@ export default {
         };
     },
     watch: {
-        steps: function() {
-            if (!this.graph) return;
-            this.process();
-        }
+        steps: {
+            deep: true,
+            handler: function() {
+                if (!this.graph) return;
+                this.process();
+            },
     },
     mounted: function() {
         // Populate Nodes
