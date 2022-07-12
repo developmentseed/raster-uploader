@@ -109,6 +109,19 @@ export default {
             this.graph.on('tap', 'node', (evt) => {
                 this.graph.$('.selected').removeClass('selected');
                 evt.target.addClass('selected');
+
+                let ids = [];
+                ids.push(evt.target.id());
+                for (const parent of evt.target.predecessors()) {
+                    if (!parent.isNode()) continue;
+                    ids.push(parent.id());
+                }
+
+                ids.pop(); // remove initial
+                ids.reverse();
+                ids = ids.map(id => parseInt(id));
+
+                this.$emit('steps', ids);
             });
         });
     }
