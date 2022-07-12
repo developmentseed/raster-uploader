@@ -133,13 +133,15 @@ export default {
     methods: {
         process: function() {
             for (const step of this.steps.upload_steps) {
-                if (this.map.has(step.id)) continue;
-
-                this.map.set(step.id, step);
-                this.graph.add([
-                    { group: 'nodes', data: { id: step.id } },
-                    { group: 'edges', data: { source: step.parent, target: step.id } }
-                ]);
+                if (this.map.has(step.id)) {
+                    this.map.set(step.id, step);
+                } else {
+                    this.map.set(step.id, step);
+                    this.graph.add([
+                        { group: 'nodes', data: { id: step.id } },
+                        { group: 'edges', data: { source: step.parent, target: step.id } }
+                    ]);
+                }
             }
 
             this.graph.fit();
