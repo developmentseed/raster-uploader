@@ -97,7 +97,6 @@ export default {
                     method: 'POST',
                     body: {
                         type: `cog:${this.operation}`,
-                        parent: this.step.id,
                         transform: { }
                     }
                 });

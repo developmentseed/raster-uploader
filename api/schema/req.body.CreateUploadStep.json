@@ -1,16 +1,12 @@
 {
     "type": "object",
     "required": [
-        "parent",
         "step",
         "config",
         "type"
     ],
     "additionalProperties": false,
     "properties": {
-        "parent": {
-            "type": ["integer", "null"]
-        },
         "step": {
             "type": "object"
         },

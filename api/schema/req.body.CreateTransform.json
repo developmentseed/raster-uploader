@@ -9,9 +9,6 @@
                 "cog:flip"
             ]
         },
-        "parent": {
-            "type": "integer"
-        },
         "transform": {
             "type": "object"
         }
