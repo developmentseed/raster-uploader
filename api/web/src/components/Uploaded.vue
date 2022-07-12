@@ -129,6 +129,22 @@ export default {
     watch: {
         'upload.starred': function() {
             this.patchUpload();
+        },
+        linear: {
+            deep: true,
+            handler: function() {
+                const poll = !this.linear.some((step) => {
+                    return !step.closed;
+                });
+
+                if (poll && !this.polling.steps) {
+                    this.polling.steps = setInterval(() => {
+                        this.getUploadSteps(false);
+                    }, 5000);
+                } else if (!poll && this.polling.steps) {
+                    clearInterval(this.polling.steps);
+                }
+            }
         }
     },
     methods: {
@@ -169,18 +185,6 @@ export default {
                 if (loading) this.loading.steps = true;
                 this.steps = await window.std(`/api/upload/${this.$route.params.uploadid}/step`);
                 if (loading) this.loading.steps = false;
-
-                const poll = !this.steps.upload_steps.some((step) => {
-                    return !step.closed;
-                });
-
-                if (poll && !this.polling.steps) {
-                    this.polling.steps = setInterval(() => {
-                        this.getUploadSteps(false);
-                    }, 5000);
-                } else if (!poll && this.polling.steps) {
-                    clearInterval(this.polling.steps);
-                }
             } catch (err) {
                 this.$emit('err', err);
             }
