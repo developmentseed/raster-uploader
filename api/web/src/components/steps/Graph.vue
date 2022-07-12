@@ -21,6 +21,7 @@ export default {
     },
     data: function() {
         return {
+            map: new Map(),
             graph: {},
             processed: {
                 nodes: [],
@@ -36,6 +37,8 @@ export default {
         }});
 
         for (const step of this.steps.upload_steps) {
+            this.map.set(step.id, step);
+
             this.processed.nodes.push({ data: {
                 id: String(step.id),
                 type: step.type
@@ -119,7 +122,9 @@ export default {
 
                 ids.pop(); // remove initial
                 ids.reverse();
-                ids = ids.map(id => parseInt(id));
+                ids = ids.map((id) => {
+                    return this.map.get(parseInt(id));
+                });
 
                 this.$emit('steps', ids);
             });
