@@ -33,6 +33,7 @@
                 <div class='border border--gray-light round mb12 col col--12'>
                     <UploadedGraph
                         :steps='steps'
+                        @steps='linear = $event'
                     />
                 </div>
             </template>
@@ -43,7 +44,7 @@
                     @err='$emit("err", $event)'
                 />
 
-                <div :key='step.id' v-for='step in steps.upload_steps' class='col col--12'>
+                <div :key='step.id' v-for='step in linear' class='col col--12'>
                     <template v-if='loading.steps'>
                         <Loading desc='Loading Upload Steps'/>
                     </template>
@@ -110,6 +111,7 @@ export default {
                 total: 0,
                 upload_steps: []
             },
+            linear: [],
             upload: {
                 id: false,
                 starred: false
