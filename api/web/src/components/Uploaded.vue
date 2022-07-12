@@ -29,13 +29,13 @@
                 </div>
             </div>
 
-            <div class='border border--gray-light round mb12 col col--12'>
-                <template v-if='steps.upload_steps.length > 0'>
+            <template v-if='steps.upload_steps.length > 0'>
+                <div class='border border--gray-light round mb12 col col--12'>
                     <UploadedGraph
                         :steps='steps'
                     />
-                </template>
-            </div>
+                </div>
+            </template>
 
             <div class='border border--gray-light round mb60 col col--12'>
                 <StepInitial
