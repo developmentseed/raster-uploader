@@ -3,8 +3,6 @@ import BaseMap from '../lib/types/basemap.js';
 import Auth from '../lib/auth.js';
 
 export default async function router(schema, config) {
-    const sqs = new SQS(config.SigningSecret);
-
     /**
      * @api {get} /api/basemap List BaseMap
      * @apiVersion 1.0.0
@@ -78,7 +76,7 @@ export default async function router(schema, config) {
      * @apiSchema {jsonschema=../schema/res.BaseMap.json} apiSuccess
      */
     await schema.post('/basemap', {
-        body: 'req.body.CreateBaseMap.json'
+        body: 'req.body.CreateBaseMap.json',
         res: 'res.BaseMap.json'
     }, async (req, res) => {
         try {
