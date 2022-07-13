@@ -133,19 +133,37 @@ export default {
     },
     methods: {
         process: function() {
+            let selected = null;
             for (const step of this.steps.upload_steps) {
                 if (!this.map.has(step.id)) {
-                    this.map.set(step.id, step);
+                    selected = step.id;
+
                     this.graph.add([
-                        { group: 'nodes', data: { id: step.id } },
-                        { group: 'edges', data: { source: step.parent, target: step.id } }
+                        { group: 'nodes', data: { id: step.id, type: step.type } },
+                        { group: 'edges', data: { source: step.parent ? step.parent : 'initial', target: step.id } }
                     ]);
                 }
 
                 this.map.set(step.id, step);
             }
 
+            const layout = this.graph.layout({
+                name: 'breadthfirst',
+                directed: true,
+                padding: 10
+            });
+            layout.run();
+
             this.graph.fit();
+
+            if (selected) {
+                this.$nextTick(() => {
+                    selected = this.graph.$id(selected.id);
+
+                    console.error(selected);
+                    this.selected = selected;
+                });
+            }
         },
         parents: function() {
             let ids = [];

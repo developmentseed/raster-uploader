@@ -1,98 +1,98 @@
 <template>
-    <div class='col col--12 grid pt12'>
-        <template v-if='loading.upload'>
-            <Loading desc='Loading Upload'/>
-        </template>
-        <template v-else-if='loading.delete'>
-            <Loading desc='Deleting Upload'/>
-        </template>
-        <template v-else>
-            <div class='col col--12 clearfix py6'>
-                <h2 class='fl cursor-default'>
-                    <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/")'>Uploads</span>
-                    &gt;
-                    <span v-text='upload.id'></span>
-                </h2>
+<div class='col col--12 grid pt12'>
+    <template v-if='loading.upload'>
+        <Loading desc='Loading Upload'/>
+    </template>
+    <template v-else-if='loading.delete'>
+        <Loading desc='Deleting Upload'/>
+    </template>
+    <template v-else>
+        <div class='col col--12 clearfix py6'>
+            <h2 class='fl cursor-default'>
+                <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/")'>Uploads</span>
+                &gt;
+                <span v-text='upload.id'></span>
+            </h2>
 
-                <div class='fr'>
-                    <button @click='upload.starred = !upload.starred' class='mx6 btn btn--stroke round' :class='{
-                        "color-blue": upload.starred,
-                        "color-gray-light": !upload.starred,
-                        "color-gray-on-hover": !upload.starred
-                    }'>
-                        <svg class='icon'><use href='#icon-star'/></svg>
-                    </button>
+            <div class='fr'>
+                <button @click='upload.starred = !upload.starred' class='mx6 btn btn--stroke round' :class='{
+                    "color-blue": upload.starred,
+                    "color-gray-light": !upload.starred,
+                    "color-gray-on-hover": !upload.starred
+                }'>
+                    <svg class='icon'><use href='#icon-star'/></svg>
+                </button>
 
-                    <button @click='deleteUpload' class='btn round btn--stroke color-gray color-red-on-hover'>
-                        <svg class='icon'><use href='#icon-trash'/></svg>
-                    </button>
-                </div>
+                <button @click='deleteUpload' class='btn round btn--stroke color-gray color-red-on-hover'>
+                    <svg class='icon'><use href='#icon-trash'/></svg>
+                </button>
             </div>
+        </div>
 
-            <template v-if='steps.upload_steps.length > 0'>
-                <div class='border border--gray-light round mb12 col col--12'>
-                    <UploadedGraph
-                        :steps='steps'
-                        @steps='linear = $event'
-                    />
+        <template v-if='steps.upload_steps.length > 0'>
+            <div class='border border--gray-light round mb12 col col--12'>
+                <UploadedGraph
+                    :steps='steps'
+                    @steps='linear = $event'
+                />
+            </div>
+        </template>
+
+        <div class='border border--gray-light round mb60 col col--12'>
+            <StepInitial
+                :upload=upload
+                :open='!linear.length'
+                @err='$emit("err", $event)'
+            />
+
+            <template v-if='loading.steps'>
+                <Loading desc='Loading Upload Steps'/>
+            </template>
+            <template v-else>
+                <div :key='step.id' v-for='(step, step_it) in linear' class='col col--12'>
+                    <template v-if='step.type === "error"'>
+                        <StepError
+                            :key='step.id'
+                            :step='step'
+                            :open='!polling.steps && step_it === linear.length-1'
+                            @err='$emit("err", $event)'
+                        />
+                    </template>
+                    <template v-else-if='step.type === "selection"'>
+                        <StepSelection
+                            :key='step.id'
+                            :step='step'
+                            :open='!polling.steps && step_it === linear.length-1'
+                            @step='getUploadSteps'
+                            @split='postStep($event)'
+                            @err='$emit("err", $event)'
+                        />
+                    </template>
+                    <template v-else-if='step.type === "cog"'>
+                        <StepCog
+                            :key='step.id'
+                            :step='step'
+                            :open='!polling.steps && step_it === linear.length-1'
+                            @step='getUploadSteps'
+                            @split='postStep($event)'
+                            @err='$emit("err", $event)'
+                        />
+                    </template>
+                    <template v-else>
+                        Unknown Step
+                    </template>
                 </div>
             </template>
 
-            <div class='border border--gray-light round mb60 col col--12'>
-                <StepInitial
-                    :upload=upload
-                    :open='!linear.length'
-                    @err='$emit("err", $event)'
-                />
-
-                <template v-if='loading.steps'>
-                    <Loading desc='Loading Upload Steps'/>
-                </template>
-                <template v-else>
-                    <div :key='step.id' v-for='(step, step_it) in linear' class='col col--12'>
-                        <template v-if='step.type === "error"'>
-                            <StepError
-                                :key='step.id'
-                                :step='step'
-                                :open='!polling.steps && step_it === linear.length-1'
-                                @err='$emit("err", $event)'
-                            />
-                        </template>
-                        <template v-else-if='step.type === "selection"'>
-                            <StepSelection
-                                :key='step.id'
-                                :step='step'
-                                :open='!polling.steps && step_it === linear.length-1'
-                                @step='getUploadSteps'
-                                @split='postSplit($event)'
-                                @err='$emit("err", $event)'
-                            />
-                        </template>
-                        <template v-else-if='step.type === "cog"'>
-                            <StepCog
-                                :key='step.id'
-                                :step='step'
-                                :open='!polling.steps && step_it === linear.length-1'
-                                @step='getUploadSteps'
-                                @split='postSplit($event)'
-                                @err='$emit("err", $event)'
-                            />
-                        </template>
-                        <template v-else>
-                            Unknown Step
-                        </template>
-                    </div>
-                </template>
-
-                <template v-if='polling.steps'>
-                    <StepLoading/>
-                </template>
-                <template v-else-if='upload.obtain && !upload.uploaded'>
-                    <Loading desc='Waiting for Obtain Script to Complete'/>
-                </template>
-            </div>
-        </template>
-    </div>
+            <template v-if='polling.steps'>
+                <StepLoading/>
+            </template>
+            <template v-else-if='upload.obtain && !upload.uploaded'>
+                <Loading desc='Waiting for Obtain Script to Complete'/>
+            </template>
+        </div>
+    </template>
+</div>
 </template>
 
 <script>
@@ -144,9 +144,7 @@ export default {
         linear: {
             deep: true,
             handler: function() {
-                const poll = this.linear.every((step) => {
-                    return step.closed;
-                });
+                const poll = this.linear.length ? this.linear[this.linear.length - 1].closed : false;
 
                 if (poll && !this.polling.steps) {
                     this.polling.steps = setInterval(() => {
@@ -160,7 +158,7 @@ export default {
         }
     },
     methods: {
-        postSplit: async function(step) {
+        postStep: async function(step) {
             try {
                 await window.std(`/api/upload/${this.$route.params.uploadid}/step`, {
                     method: 'POST',

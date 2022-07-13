@@ -57,10 +57,6 @@ export default {
                 });
 
                 this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
-
-                this.map.on('load', () => {
-
-                });
             } catch (err) {
                 this.$emit('err', err);
             }
