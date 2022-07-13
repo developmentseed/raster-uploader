@@ -37,10 +37,16 @@ export default {
     name: 'StepInitial',
     props: {
         upload: Object,
+        open: Boolean
     },
     data: function() {
         return {
             folded: true
+        }
+    },
+    watch: {
+        open: function() {
+            this.folded = !this.open;
         }
     },
     components: {

@@ -11,8 +11,8 @@ import wkx from 'wkx';
 import bbox from '@turf/bbox';
 import minimist from 'minimist';
 
-import User from './lib/user.js';
-import Token from './lib/token.js';
+import User from './lib/types/user.js';
+import Token from './lib/types/token.js';
 import Config from './lib/config.js';
 
 const pkg = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url)));

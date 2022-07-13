@@ -29,4 +29,4 @@ RUN cd web \
 
 CMD service nginx restart \
     && ./node_modules/.bin/knex migrate:latest \
-    && npm run start
+    && npm run prod

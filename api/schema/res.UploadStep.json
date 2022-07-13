@@ -22,7 +22,7 @@
             "$ref": "./util/created.json"
         },
         "parent": {
-            "type": "integer"
+            "type": ["integer", "null"]
         },
         "step": {
             "type": "object"

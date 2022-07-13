@@ -18,6 +18,7 @@ def error(event, err):
 
     return step({
         'upload': event["config"]["upload"],
+        'parent': event["parent"] ,
         'type': 'error',
         'config': event["config"],
         'step': {
@@ -57,6 +58,7 @@ def handler(event, context):
 
     final = step({
         'upload': event["config"]["upload"],
+        'parent': event["parent"] ,
         'type': 'cog',
         'config': event["config"],
         'step': {}

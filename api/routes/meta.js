@@ -1,6 +1,6 @@
 import { Err } from '@openaddresses/batch-schema';
 import Auth from '../lib/auth.js';
-import Meta from '../lib/meta.js';
+import Meta from '../lib/types/meta.js';
 import Settings from '../lib/settings.js';
 
 export default async function router(schema, config) {

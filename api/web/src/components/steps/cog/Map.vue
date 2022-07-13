@@ -35,8 +35,6 @@ export default {
                 url.searchParams.append('access', this.info.token)
                 url = String(url).replace(/coord.png/, '{z}/{x}/{y}.png');
 
-                console.error(url)
-
                 this.map = new mapboxgl.Map({
                     container: 'map',
                     style: {
@@ -59,10 +57,6 @@ export default {
                 });
 
                 this.map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
-
-                this.map.on('load', () => {
-
-                });
             } catch (err) {
                 this.$emit('err', err);
             }

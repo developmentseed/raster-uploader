@@ -1,6 +1,6 @@
 import { Err } from '@openaddresses/batch-schema';
-import Upload from '../lib/upload.js';
-import UploadStep from '../lib/upload-step.js';
+import Upload from '../lib/types/upload.js';
+import UploadStep from '../lib/types/upload-step.js';
 import Auth from '../lib/auth.js';
 import Tile from '../lib/tile.js';
 import S3 from '../lib/s3.js';
@@ -47,7 +47,7 @@ export default async function router(schema, config) {
             req.body.upload = upload.id;
             req.body.step = step.id;
 
-            await sqs.transform(step.config, req.body, req.auth.id);
+            await sqs.transform(step.config, req.body, req.auth.id, step.id);
 
             step.closed = true;
             await step.commit(config.pool);

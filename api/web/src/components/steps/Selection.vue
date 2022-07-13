@@ -14,6 +14,14 @@
                 <svg v-else class='icon'><use xlink:href='#icon-chevron-right'/></svg>
             </button>
 
+            <button
+                @click='$emit("split", step)'
+                class='fr btn btn--stroke btn--s color-gray color-black-on-hover round mr12'
+                style='height: 21px;'
+            >
+                <svg class='icon'><use xlink:href='#icon-uncombine'/></svg>
+            </button>
+
             <div class='fr bg-gray-faint color-gray inline-block px6 py3 round txt-xs txt-bold mr12'>
                 <span v-text='new Date(step.created).toISOString()'/>
             </div>
@@ -25,7 +33,7 @@
             >Submit</button>
         </template>
     </div>
-    <template v-if='!folded'>
+    <template v-if='!step.closed || !folded'>
         <div class='col col--12 border border--gray-light round grid mx12 my12 px12 py12'>
             <template v-if='loading.submit'>
                 <Loading desc='Submitting Step'/>
@@ -59,10 +67,16 @@ export default {
     name: 'StepSelection',
     props: {
         step: Object,
+        open: Boolean
     },
     mounted: function() {
-        this.folded = this.step.closed;
+        this.folded = !(this.step.closed && this.open);
         if (this.step.step.selection) this.selection = this.step.step.selection;
+    },
+    watch: {
+        open: function() {
+            this.folded = !(this.step.closed && this.open);
+        }
     },
     data: function() {
         return {

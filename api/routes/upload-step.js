@@ -1,6 +1,6 @@
 import { Err } from '@openaddresses/batch-schema';
-import Upload from '../lib/upload.js';
-import UploadStep from '../lib/upload-step.js';
+import Upload from '../lib/types/upload.js';
+import UploadStep from '../lib/types/upload-step.js';
 import Auth from '../lib/auth.js';
 import SQS from '../lib/sqs.js';
 
@@ -150,7 +150,7 @@ export default async function router(schema, config) {
             await step.commit(config.pool, null, req.body);
 
             if (req.body.closed === true) {
-                await sqs.send(req.params.upload, step.compile(), req.auth.id);
+                await sqs.send(req.params.upload, step.compile(), req.auth.id, step.id);
             }
 
             return res.json(step.serialize());
@@ -229,7 +229,7 @@ export default async function router(schema, config) {
             const step = await UploadStep.from(config.pool, req.params.step);
             step.permission(step);
 
-            await sqs.send(req.params.upload, step.compile(), req.auth.id);
+            await sqs.send(req.params.upload, step.compile(), req.auth.id, step.id);
 
             return res.json(step.serialize());
         } catch (err) {

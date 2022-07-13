@@ -36,7 +36,7 @@
                         "type": "integer"
                     },
                     "parent": {
-                        "type": "integer"
+                        "type": ["integer", "null"]
                     },
                     "step": {
                         "type": "object"

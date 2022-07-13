@@ -26,6 +26,9 @@ export default class Config {
 
                 process.env.ASSET_BUCKET = 'test';
                 this.Bucket = process.env.ASSET_BUCKET;
+
+                this.Frontend = process.env.FRONTEND_DOMAIN || 'http://localhost:4999';
+                this.FromEmailAddress = process.env.FROM_EMAIL_ADDRESS;
             } else {
                 if (!process.env.StackName) throw new Error('StackName env must be set');
                 if (!process.env.SigningSecret) throw new Error('SigningSecret env must be set');

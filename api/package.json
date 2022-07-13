@@ -10,7 +10,7 @@
         "test": "tape test/**.test.js",
         "lint": "eslint index.js routes/**.js lib/**.js test/**.js",
         "doc": "apidoc -i ./ -f index.js -f ./routes/ -e node_modules -e web --private",
-        "start": "node index.js",
+        "prod": "node index.js --email",
         "dev": "nodemon index.js"
     },
     "repository": {

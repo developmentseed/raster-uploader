@@ -28,6 +28,7 @@ def nc(pth, event):
 
         step({
             'upload': event["config"]["upload"],
+            'parent': event["parent"],
             'type': 'selection',
             'config': event["config"],
             'step': {
@@ -52,6 +53,7 @@ def nc(pth, event):
 
         step({
             'upload': event["config"]["upload"],
+            'parent': event["parent"],
             'type': 'selection',
             'config': event["config"],
             'step': {
