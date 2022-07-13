@@ -72,7 +72,7 @@ export default async function router(schema, config) {
      * @apiVersion 1.0.0
      * @apiName CreateUpload
      * @apiGroup Upload
-     t @apiPermission user
+     * @apiPermission user
      *
      * @apiDescription
      *     Create a new upload

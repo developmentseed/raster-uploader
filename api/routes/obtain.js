@@ -11,7 +11,7 @@ export default async function router(schema, config) {
      * @apiVersion 1.0.0
      * @apiName CreateObtain
      * @apiGroup Obtain
-     t @apiPermission user
+     * @apiPermission user
      *
      * @apiDescription
      *     Create a new obtain

@@ -67,7 +67,7 @@ export default async function router(schema, config) {
      * @apiVersion 1.0.0
      * @apiName CreateBaseMap
      * @apiGroup BaseMap
-     t @apiPermission user
+     * @apiPermission user
      *
      * @apiDescription
      *     Create a new basemap
