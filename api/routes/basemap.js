@@ -101,7 +101,7 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Update information about a given basemap
      *
-     * @apiParam {Number} basemap The ID of the basemap 
+     * @apiParam {Number} basemap The ID of the basemap
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.PatchBaseMap.json} apiParam
      * @apiSchema {jsonschema=../schema/res.BaseMap.json} apiSuccess
