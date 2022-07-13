@@ -1,0 +1,19 @@
+{
+    "type": "object",
+    "required": [
+        "name",
+        "url"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "uid": {
+            "type": "integer"
+        },
+        "name": {
+            "type": "string"
+        },
+        "url": {
+            "type": "string"
+        }
+    }
+}

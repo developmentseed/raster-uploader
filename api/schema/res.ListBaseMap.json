@@ -1,0 +1,46 @@
+{
+    "type": "object",
+    "required": [
+        "total",
+        "users"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "total": {
+            "type": "integer",
+            "description": "Total number of basemaps with the service"
+        },
+        "basemap": {
+            "type": "object",
+            "required": [
+                "id",
+                "uid",
+                "created",
+                "updated",
+                "name",
+                "url"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "uid": {
+                    "type": "integer"
+                },
+                "created": {
+                    "$ref": "./util/created.json"
+                },
+                "updated": {
+                    "$ref": "./util/updated.json"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
