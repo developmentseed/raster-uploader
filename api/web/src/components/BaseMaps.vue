@@ -1,7 +1,7 @@
 <template>
     <div class='col col--12'>
         <div class='col col--12 clearfix py6'>
-            <h2 @click='$router.push({ path: "/" })' class='dropdown fl cursor-default'>
+            <h2 @click='$router.push({ path: "/basemap" })' class='dropdown fl cursor-default'>
                 <svg class='icon inline'><use href='#icon-chevron-down'/></svg>
                 BaseMaps
 

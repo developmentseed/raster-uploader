@@ -35,7 +35,8 @@ export default class BaseMap extends Generic {
                     uid,
                     created,
                     updated,
-                    name
+                    name,
+                    url
                 FROM
                     basemap
                 WHERE
