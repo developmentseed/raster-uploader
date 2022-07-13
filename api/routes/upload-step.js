@@ -163,7 +163,7 @@ export default async function router(schema, config) {
      * @api {delete} /api/upload/:upload/step/:step Delete Step
      * @apiVersion 1.0.0
      * @apiName DeleteUploadStep
-     * @apiGroup UploadStep
+     * @apiGroup Steps
      * @apiPermission user
      *
      * @apiDescription

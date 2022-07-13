@@ -59,10 +59,7 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-
-            if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
-                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            }
+            upload.permission(req.auth);
 
             res.json(upload.serialize());
         } catch (err) {
@@ -75,7 +72,7 @@ export default async function router(schema, config) {
      * @apiVersion 1.0.0
      * @apiName CreateUpload
      * @apiGroup Upload
-     t @apiPermission user
+     * @apiPermission user
      *
      * @apiDescription
      *     Create a new upload
@@ -187,10 +184,7 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-
-            if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
-                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            }
+            upload.permission(req.auth);
 
             await upload.commit(config.pool, null, req.body);
 
@@ -230,10 +224,7 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-
-            if (req.auth.access !== 'admin' && req.auth.id !== upload.uid) {
-                throw new Err(401, null, 'Cannot access an upload you didn\'t create');
-            }
+            upload.permission(req.auth);
 
             await upload.delete(config.pool);
 
