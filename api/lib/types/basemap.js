@@ -7,7 +7,7 @@ import { sql } from 'slonik';
  * @class
  */
 export default class BaseMap extends Generic {
-    static _table = 'uploads';
+    static _table = 'basemap';
     static _patch = JSON.parse(fs.readFileSync(new URL('../../schema/req.body.PatchBaseMap.json', import.meta.url)));
     static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.BaseMap.json', import.meta.url)));
 
@@ -35,7 +35,7 @@ export default class BaseMap extends Generic {
                     uid,
                     created,
                     updated,
-                    name,
+                    name
                 FROM
                     basemap
                 WHERE
@@ -51,7 +51,7 @@ export default class BaseMap extends Generic {
 
             return this.deserialize_list(pgres);
         } catch (err) {
-            throw new Err(500, err, 'Failed to list uploads');
+            throw new Err(500, err, 'Failed to list basemaps');
         }
     }
 

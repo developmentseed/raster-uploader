@@ -59,7 +59,7 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             const upload = await Upload.from(config.pool, req.params.upload);
-            upload.permission(req.auth0);
+            upload.permission(req.auth);
 
             res.json(upload.serialize());
         } catch (err) {
