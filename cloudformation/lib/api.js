@@ -128,7 +128,24 @@ const stack = {
                                 'secretsmanager:Get*',
                                 'secretsmanager:List*'
                             ],
-                            Resource: [cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '/*' ])]
+                            Resource: [
+                                cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '/*' ]),
+                            ]
+                        },{
+                            Effect: 'Allow',
+                            Action: [
+                                "secretsmanager:Create*",
+                                "secretsmanager:Put*",
+                                "secretsmanager:Update*",
+                                "secretsmanager:Delete*",
+                                "secretsmanager:Restore*",
+                                'secretsmanager:Describe*',
+                                'secretsmanager:Get*',
+                                'secretsmanager:List*'
+                            ],
+                            Resource: [
+                                cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '-*' ])
+                            ]
                         },{
                             Effect: 'Allow',
                             Action: [
