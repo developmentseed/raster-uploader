@@ -2,8 +2,10 @@
     <div class="col col--12">
         <div class='col col--12 clearfix py6'>
             <h2 class='fl cursor-default'>
-                <span v-if='$route.params.basemapid'>Update BaseMap</span>
-                <span v-else>Add BaseMap</span>
+                <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/basemap")'>BaseMaps</span>
+                &gt;
+                <span v-if='$route.params.basemapid' v-text='basemap.id'/>
+                <span v-else>New</span>
             </h2>
 
             <button @click='$router.go(-1)' class='btn fr round btn--stroke color-gray color-black-on-hover'>
