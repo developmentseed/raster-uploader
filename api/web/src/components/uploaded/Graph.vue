@@ -84,10 +84,7 @@ export default {
                     .selector('node').css({
                         'height': 80,
                         'width': 80,
-                        'background-fit': 'cover',
-                        'border-color': '#000',
-                        'border-width': 3,
-                        'border-opacity': 0.5
+                        'background-color': '#fff',
                     })
                     .selector('edge').css({
                         'curve-style': 'bezier',
@@ -98,19 +95,19 @@ export default {
                     })
                     .selector('[type = "initial"]').css({
                         'label': 'Initial',
-                        'background-image': 'https://live.staticflickr.com/1261/1413379559_412a540d29_b.jpg'
+                        'background-image': '/svgs/info.svg.png'
                     })
                     .selector('[type = "error"]').css({
                         'label': 'Error',
-                        'background-image': 'https://live.staticflickr.com/1261/1413379559_412a540d29_b.jpg'
+                        'background-image': '/svgs/alert.svg.png'
                     })
                     .selector('[type = "selection"]').css({
                         'label': 'Selection',
-                        'background-image': 'https://live.staticflickr.com/1261/1413379559_412a540d29_b.jpg'
+                        'background-image': '/svgs/cursor.svg.png'
                     })
                     .selector('[type = "cog"]').css({
                         'label': 'COG',
-                        'background-image': 'https://live.staticflickr.com/1261/1413379559_412a540d29_b.jpg'
+                        'background-image': '/svgs/picture.svg.png'
                     })
                     .selector('.selected').css({
                         'border-color': '#FF0000',
@@ -123,6 +120,7 @@ export default {
                     padding: 10
                 }
             });
+            this.graph.fit(50);
 
             this.selected = this.graph.$id(this.steps.upload_steps[this.steps.upload_steps.length - 1].id)
 
@@ -133,11 +131,8 @@ export default {
     },
     methods: {
         process: function() {
-            let selected = null;
             for (const step of this.steps.upload_steps) {
                 if (!this.map.has(step.id)) {
-                    selected = step.id;
-
                     this.graph.add([
                         { group: 'nodes', data: { id: step.id, type: step.type } },
                         { group: 'edges', data: { source: step.parent ? step.parent : 'initial', target: step.id } }
@@ -154,16 +149,7 @@ export default {
             });
             layout.run();
 
-            this.graph.fit();
-
-            if (selected) {
-                this.$nextTick(() => {
-                    selected = this.graph.$id(selected.id);
-
-                    console.error(selected);
-                    this.selected = selected;
-                });
-            }
+            this.graph.fit(50);
         },
         parents: function() {
             let ids = [];
@@ -182,7 +168,7 @@ export default {
             this.$emit('steps', ids);
         },
         centre: function() {
-            this.graph.fit();
+            this.graph.fit(50);
         }
     }
 }
