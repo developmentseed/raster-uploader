@@ -21,6 +21,7 @@ import Admin from './components/Admin.vue';
 import Upload from './components/Upload.vue';
 import Uploaded from './components/Uploaded.vue';
 import BaseMaps from './components/BaseMaps.vue';
+import BaseMap from './components/BaseMap.vue';
 
 const router = new VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),
@@ -37,6 +38,8 @@ const router = new VueRouter.createRouter({
         { path: '/upload/:uploadid', name: 'upload', component: Uploaded },
 
         { path: '/basemap', name: 'basemaps', component: BaseMaps },
+        { path: '/basemap/new', name: 'newbasemap', component: BaseMap },
+        { path: '/basemap/:basemapid', name: 'basemap', component: BaseMap },
 
         { path: '/profile', name: 'profile', component: Profile },
 

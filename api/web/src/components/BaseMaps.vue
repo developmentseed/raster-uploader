@@ -46,7 +46,7 @@
                 </div>
             </template>
             <template v-else>
-                <div @click='$router.push({ name: "basemap", params: { basemapid: basemap.id } })' :key='basemap.id' v-for='basemap in basemap.slice(page * 10, page * 10 + 10)'>
+                <div @click='$router.push({ name: "basemap", params: { basemapid: basemap.id } })' :key='basemap.id' v-for='basemap in basemaps.slice(page * 10, page * 10 + 10)'>
                     <div class='cursor-pointer bg-darken10-on-hover col col--12 py12'>
                         <div class='col col--12 grid py6 px12'>
                             <div class='col col--6'>
