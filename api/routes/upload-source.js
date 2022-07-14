@@ -1,6 +1,9 @@
 import { Err } from '@openaddresses/batch-schema';
 import UploadSource from '../lib/types/upload-source.js';
 import Auth from '../lib/auth.js';
+import { SecretsManager } from 'aws-sdk';
+
+const sm = new SecretsManager({ region: process.env.AWS_DEFAULT_REGION });
 
 export default async function router(schema, config) {
     /**
@@ -56,6 +59,12 @@ export default async function router(schema, config) {
             const source = await UploadSource.from(config.pool, req.params.source);
             source.permission(req.auth);
 
+            const smres = await sm.getSecretValue({
+                SecretId: `${config.StackName}-source-${source.id}`
+            }).promise();
+
+            source.secrets = JSON.parse(smres.SecretString);
+
             res.json(source.serialize());
         } catch (err) {
             return Err.respond(err, res);
@@ -84,6 +93,12 @@ export default async function router(schema, config) {
 
             req.body.uid = req.auth.id;
             const source = await UploadSource.generate(config.pool, req.body);
+
+            await sm.createSecret({
+                Name: `${config.StackName}-source-${source.id}`,
+                Description: `${config.StackName} Source: ${source.id}`,
+                SecretString: JSON.stringify(req.body.secrets)
+            }).promise();
 
             return res.json(source.serialize());
         } catch (err) {
@@ -118,6 +133,11 @@ export default async function router(schema, config) {
             source.permission(req.auth);
 
             await source.commit(config.pool, null, req.body);
+
+            await sm.putSecretValue({
+                SecretId: `${config.StackName}-source-${source.id}`,
+                SecretString: JSON.stringify(req.body.secrets)
+            }).promise();
 
             return res.json(source.serialize());
         } catch (err) {
