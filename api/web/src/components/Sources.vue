@@ -1,13 +1,13 @@
 <template>
     <div class='col col--12'>
         <div class='col col--12 clearfix py6'>
-            <h2 @click='$router.push({ path: "/basemap" })' class='dropdown fl cursor-default'>
+            <h2 @click='$router.push({ path: "/source" })' class='dropdown fl cursor-default'>
                 <svg class='icon inline'><use href='#icon-chevron-down'/></svg>
-                BaseMaps
+                Sources
 
                 <div class='round dropdown-content color-black' style='top: 24px;'>
                     <div @click.stop='$router.push({ path: "/" })' class='round bg-gray-light-on-hover cursor-pointer px12'>Uploads</div>
-                    <div @click.stop='$router.push({ path: "/source" })' class='round bg-gray-light-on-hover cursor-pointer px12'>Sources</div>
+                    <div @click.stop='$router.push({ path: "/basemap" })' class='round bg-gray-light-on-hover cursor-pointer px12'>BaseMaps</div>
                 </div>
             </h2>
 
@@ -18,7 +18,7 @@
                 <button @click='refresh' class='btn round btn--stroke color-gray color-blue-on-hover mr12'>
                     <svg class='icon'><use href='#icon-refresh'/></svg>
                 </button>
-                <button @click='$router.push({ name: "newbasemap" })' class='btn round btn--stroke color-gray color-green-on-hover'>
+                <button @click='$router.push({ name: "newsource" })' class='btn round btn--stroke color-gray color-green-on-hover'>
                     <svg class='icon'><use href='#icon-plus'/></svg>
                 </button>
             </div>
@@ -34,30 +34,30 @@
                     </div>
                 </div>
             </template>
-            <template v-if='loading.basemaps'>
-                <Loading desc='Loading BaseMaps'/>
+            <template v-if='loading.sources'>
+                <Loading desc='Loading Sources'/>
             </template>
-            <template v-else-if='basemaps.length === 0'>
+            <template v-else-if='sources.length === 0'>
                 <div class='flex flex--center-main pt36'>
                     <svg class='flex-child icon w60 h60 color--gray'><use href='#icon-info'/></svg>
                 </div>
 
                 <div class='flex flex--center-main pt12 pb36'>
-                    <h1 class='flex-child txt-h4 cursor-default'>No BaseMaps Found</h1>
+                    <h1 class='flex-child txt-h4 cursor-default'>No Upload Sources Found</h1>
                 </div>
             </template>
             <template v-else>
-                <div @click='$router.push({ name: "basemap", params: { basemapid: basemap.id } })' :key='basemap.id' v-for='basemap in basemaps.slice(page * 10, page * 10 + 10)'>
+                <div @click='$router.push({ name: "source", params: { sourceid: source.id } })' :key='source.id' v-for='source in sources.slice(page * 10, page * 10 + 10)'>
                     <div class='cursor-pointer bg-darken10-on-hover col col--12 py12'>
                         <div class='col col--12 grid py6 px12'>
                             <div class='col col--6'>
                                 <div class='col col--12 clearfix'>
-                                    <h3 class='txt-h4 fl' v-text='basemap.name'></h3>
+                                    <h3 class='txt-h4 fl' v-text='source.name'></h3>
                                 </div>
                             </div>
                             <div class='col col--6'>
                                 <div class='fr bg-gray-faint color-gray inline-block px6 py3 round txt-xs txt-bold mr12'>
-                                    <span v-text='new Date(basemap.created).toISOString()'/>
+                                    <span v-text='new Date(source.created).toISOString()'/>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +66,7 @@
 
                 <Pager
                     @page='page = $event'
-                    :total='basemaps.length'
+                    :total='sources.length'
                     perpage='10'
                 />
             </template>
@@ -79,7 +79,7 @@ import Pager from './util/Pager.vue';
 import Loading from './util/Loading.vue';
 
 export default {
-    name: 'BaseMaps',
+    name: 'Sources',
     props: ['meta'],
     data: function() {
         return {
@@ -87,9 +87,9 @@ export default {
             showSearch: false,
             search: '',
             archived: false,
-            basemaps: [],
+            sources: [],
             loading: {
-                basemaps: true
+                sources: true
             }
         }
     },
@@ -125,22 +125,22 @@ export default {
     methods: {
         refresh: function() {
             this.page = 0;
-            this.getBaseMaps();
+            this.getSources();
         },
         external: function(url) {
             if (!url) return;
             window.open(url, "_blank")
         },
-        getBaseMaps: async function() {
-            this.loading.basemaps = true;
+        getSources: async function() {
+            this.loading.sources = true;
 
             try {
-                const url = new URL('/api/basemap', window.api);
+                const url = new URL('/api/source', window.api);
                 url.searchParams.append('filter', this.search);
-                const basemaps = await window.std(url);
+                const sources = await window.std(url);
 
-                this.basemaps = basemaps.basemap;
-                this.loading.basemaps = false;
+                this.sources = sources.upload_sources;
+                this.loading.sources = false;
             } catch (err) {
                 this.$emit('err', err);
             }
