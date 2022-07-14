@@ -17,6 +17,7 @@
                 "required": [
                     "id",
                     "uid",
+                    "type",
                     "created",
                     "updated",
                     "name",
@@ -26,6 +27,13 @@
                 "properties": {
                     "id": {
                         "type": "integer"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "http",
+                            "s3"
+                        ]   
                     },
                     "uid": {
                         "type": "integer"

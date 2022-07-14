@@ -23,7 +23,8 @@
                 "id",
                 "uid",
                 "created",
-                "username",
+                "updated",
+                "type",
                 "name",
                 "url"
             ],

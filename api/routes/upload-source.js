@@ -59,12 +59,6 @@ export default async function router(schema, config) {
             const source = await UploadSource.from(config.pool, req.params.source);
             source.permission(req.auth);
 
-            const smres = await sm.getSecretValue({
-                SecretId: `${config.StackName}-source-${source.id}`
-            }).promise();
-
-            source.secrets = JSON.parse(smres.SecretString);
-
             res.json(source.serialize());
         } catch (err) {
             return Err.respond(err, res);
@@ -135,12 +129,15 @@ export default async function router(schema, config) {
             const source = await UploadSource.from(config.pool, req.params.source);
             source.permission(req.auth);
 
+            const secrets = req.body.secrets;
+            delete req.body.secrets;
+
             await source.commit(config.pool, null, req.body);
 
-            if (req.body.secrets) {
+            if (secrets) {
                 await sm.putSecretValue({
                     SecretId: `${config.StackName}-source-${source.id}`,
-                    SecretString: JSON.stringify(req.body.secrets)
+                    SecretString: JSON.stringify(secrets)
                 }).promise();
             }
 

@@ -34,56 +34,72 @@
                         <InputError v-if='errors.url' desc='Invalid URL'/>
                     </div>
                 </div>
+                <template v-if='!showsecrets && $route.params.sourceid'>
+                    <div class='border border--gray-light round col col--12 px12 py12 grid clearfix'>
+                        <div class='col col--12 flex flex--center-main'>
+                            Stored secrets cannot be retrieved
+                        </div>
+                        <div class='col col--12 flex flex--center-main'>
+                            To modify, resubmit all secrets
+                        </div>
 
-                <div class='col col--12 flex flex--center-main mb3 mt12'>
-                    <div class='toggle-group mr18'>
-                        <label class='toggle-container'>
-                            <input v-model='uploadtype' id='http' value='http' name='upload-type' type='radio' />
-                            <div class='toggle toggle--s round'>HTTP</div>
-                        </label>
-                        <label class='toggle-container'>
-                            <input v-model='uploadtype' id='s3' value='s3' name='upload-type' type='radio' />
-                            <div class='toggle toggle--s round'>AWS S3</div>
-                        </label>
-                    </div>
-                </div>
-
-                <template v-if='uploadtype === "http"'>
-                    <div class='col col--12 grid'>
-                        <label class='w-full'>Headers</label>
-
-                        <div class='border border--gray-light round col col--12 px12 py12 grid clearfix'>
-                            <div v-if='secrets.headers.length' class='col col--6'>Key</div>
-                            <div v-if='secrets.headers.length' class='col col--6'>Value</div>
-                            <div :key='header.key' v-for='(header, h_it) in secrets.headers' class='col col--12 grid grid--gut12 mt6'>
-                                <div class='col col--5'>
-                                    <input type='text' v-model='header.key' class='input w-full'/>
-                                </div>
-                                <div class='col col--6'>
-                                    <input type='text' v-model='header.value' class='input w-full'/>
-                                </div>
-                                <div class='col col--1'>
-                                    <button @click='secrets.headers.splice(h_it, 1)' class='btn btn--stroke round color-gray color-red-on-hover h36'>
-                                        <svg class='icon'><use href='#icon-trash'/></svg>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class='col col--12 flex flex--center-main mb3 mt12'>
-                                <button @click='secrets.headers.push({ key: "", value: "" })' class='btn btn--stroke round color-gray-light color-green-on-hover'>Add Header</button>
-                            </div>
+                        <div class='col col--12 flex flex--center-main mt12 mb6'>
+                            <button @click='showsecrets = true' class='btn btn--stroke round fr color-gray color-red-on-hover'>Reset Secrets</button>
                         </div>
                     </div>
                 </template>
-                <template v-else-if='uploadtype === "s3"'>
-                    <div class='col col--12 py6'>
-                        <label>AWS Access Key ID</label>
-                        <input type='text' v-model='secrets.access_key_id' class='input w-full'/>
+                <template v-else>
+
+                    <div class='col col--12 flex flex--center-main mb3 mt12'>
+                        <div class='toggle-group mr18'>
+                            <label class='toggle-container'>
+                                <input v-model='uploadtype' id='http' value='http' name='upload-type' type='radio' />
+                                <div class='toggle toggle--s round'>HTTP</div>
+                            </label>
+                            <label class='toggle-container'>
+                                <input v-model='uploadtype' id='s3' value='s3' name='upload-type' type='radio' />
+                                <div class='toggle toggle--s round'>AWS S3</div>
+                            </label>
+                        </div>
                     </div>
-                    <div class='col col--12 py6'>
-                        <label>AWS Secret Access Key</label>
-                        <input type='text' v-model='secrets.secret_access_key' class='input w-full'/>
-                    </div>
+
+                   <template v-if='uploadtype === "http"'>
+                        <div class='col col--12 grid'>
+                            <label class='w-full'>Headers</label>
+
+                            <div class='border border--gray-light round col col--12 px12 py12 grid clearfix'>
+                                <div v-if='secrets.headers.length' class='col col--6'>Key</div>
+                                <div v-if='secrets.headers.length' class='col col--6'>Value</div>
+                                <div :key='header.key' v-for='(header, h_it) in secrets.headers' class='col col--12 grid grid--gut12 mt6'>
+                                    <div class='col col--5'>
+                                        <input type='text' v-model='header.key' class='input w-full'/>
+                                    </div>
+                                    <div class='col col--6'>
+                                        <input type='text' v-model='header.value' class='input w-full'/>
+                                    </div>
+                                    <div class='col col--1'>
+                                        <button @click='secrets.headers.splice(h_it, 1)' class='btn btn--stroke round color-gray color-red-on-hover h36'>
+                                            <svg class='icon'><use href='#icon-trash'/></svg>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class='col col--12 flex flex--center-main mb3 mt12'>
+                                    <button @click='secrets.headers.push({ key: "", value: "" })' class='btn btn--stroke round color-gray-light color-green-on-hover'>Add Header</button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else-if='uploadtype === "s3"'>
+                        <div class='col col--12 py6'>
+                            <label>AWS Access Key ID</label>
+                            <input type='text' v-model='secrets.access_key_id' class='input w-full'/>
+                        </div>
+                        <div class='col col--12 py6'>
+                            <label>AWS Secret Access Key</label>
+                            <input type='text' v-model='secrets.secret_access_key' class='input w-full'/>
+                        </div>
+                    </template>
                 </template>
 
                 <div class='col col--12 py12'>
@@ -118,6 +134,7 @@ export default {
             },
             loading: false,
             uploadtype: 'http',
+            showsecrets: false,
             secrets: {
                 secret_access_key: '',
                 access_key_id: '',
@@ -163,24 +180,29 @@ export default {
                 return;
             }
 
-            const secrets = {};
+            const body = {
+                name: this.source.name,
+                url: this.source.url,
+                type: this.uploadtype,
+            }
+
             if (this.uploadtype === 'http') {
-                secrets.headers = this.secrets.headers;
+                body.secrets = {
+                    headers: this.secrets.headers
+                }
             } else if (this.uploadtype === 's3') {
-                secrets.secret_access_key = this.secrets.secret_access_key;
-                secrets.access_key_id = this.secrets.access_key_id;
+                body.secrets = {
+                    secret_access_key: this.secrets.secret_access_key,
+                    access_key_id: this.secrets.access_key_id
+                }
             }
 
             this.loading = true;
+
             try {
                 await window.std(window.api + `/api/source${this.$route.params.sourceid ? '/' + this.$route.params.sourceid : ''}`, {
                     method: this.$route.params.sourceid ? 'PATCH' : 'POST',
-                    body: {
-                        name: this.source.name,
-                        url: this.source.url,
-                        type: this.uploadtype,
-                        secrets
-                    }
+                    body: body
                 });
 
                 this.$emit('refresh');

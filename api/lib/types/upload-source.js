@@ -36,6 +36,7 @@ export default class UploadSource extends Generic {
                     name,
                     url,
                     uid,
+                    type,
                     created,
                     updated
                 FROM

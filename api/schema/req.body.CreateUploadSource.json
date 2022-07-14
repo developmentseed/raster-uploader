@@ -3,7 +3,8 @@
     "required": [
         "name",
         "url",
-        "secrets"
+        "secrets",
+        "type"
     ],
     "additionalProperties": false,
     "properties": {
@@ -15,6 +16,13 @@
         },
         "secrets": {
             "type": "object"
+        },
+        "type": {
+            "type": "string",
+            "enum": [
+                "http",
+                "s3"
+            ]   
         }
     }
 }
