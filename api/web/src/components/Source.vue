@@ -53,17 +53,17 @@
                     <div class='col col--12 flex flex--center-main mb3 mt12'>
                         <div class='toggle-group mr18'>
                             <label class='toggle-container'>
-                                <input v-model='uploadtype' id='http' value='http' name='upload-type' type='radio' />
+                                <input v-model='source.type' id='http' value='http' name='upload-type' type='radio' />
                                 <div class='toggle toggle--s round'>HTTP</div>
                             </label>
                             <label class='toggle-container'>
-                                <input v-model='uploadtype' id='s3' value='s3' name='upload-type' type='radio' />
+                                <input v-model='source.type' id='s3' value='s3' name='upload-type' type='radio' />
                                 <div class='toggle toggle--s round'>AWS S3</div>
                             </label>
                         </div>
                     </div>
 
-                   <template v-if='uploadtype === "http"'>
+                   <template v-if='source.type === "http"'>
                         <div class='col col--12 grid'>
                             <label class='w-full'>Headers</label>
 
@@ -90,7 +90,7 @@
                             </div>
                         </div>
                     </template>
-                    <template v-else-if='uploadtype === "s3"'>
+                    <template v-else-if='source.type === "s3"'>
                         <div class='col col--12 py6'>
                             <label>AWS Access Key ID</label>
                             <input type='text' v-model='secrets.access_key_id' class='input w-full'/>
@@ -133,7 +133,6 @@ export default {
                 url: false,
             },
             loading: false,
-            uploadtype: 'http',
             showsecrets: false,
             secrets: {
                 secret_access_key: '',
@@ -144,6 +143,7 @@ export default {
                 }]
             },
             source: {
+                type: 'http',
                 name: '',
                 url: ''
             }
@@ -182,15 +182,15 @@ export default {
 
             const body = {
                 name: this.source.name,
+                type: this.source.type,
                 url: this.source.url,
-                type: this.uploadtype,
             }
 
-            if (this.uploadtype === 'http') {
+            if (this.source.type === 'http') {
                 body.secrets = {
                     headers: this.secrets.headers
                 }
-            } else if (this.uploadtype === 's3') {
+            } else if (this.source.type === 's3') {
                 body.secrets = {
                     secret_access_key: this.secrets.secret_access_key,
                     access_key_id: this.secrets.access_key_id

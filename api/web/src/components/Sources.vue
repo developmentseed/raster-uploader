@@ -7,7 +7,7 @@
 
                 <div class='round dropdown-content color-black' style='top: 24px;'>
                     <div @click.stop='$router.push({ path: "/" })' class='round bg-gray-light-on-hover cursor-pointer px12'>Uploads</div>
-                    <div @click.stop='$router.push({ path: "/basemap" })' class='round bg-gray-light-on-hover cursor-pointer px12'>BaseMaps</div>
+                    <div @click.stop='$router.push({ path: "/basemap" })' class='round bg-gray-light-on-hover cursor-pointer px12'>Sources</div>
                 </div>
             </h2>
 
@@ -30,7 +30,7 @@
                         <div class='absolute flex flex--center-cross flex--center-main w36 h36'>
                             <svg class='icon'><use xlink:href='#icon-search'></use></svg>
                         </div>
-                        <input ref='search' v-model='search' class='input pl36' placeholder='BaseMap Name'>
+                        <input ref='search' v-model='search' class='input pl36' placeholder='Source Name'>
                     </div>
                 </div>
             </template>
