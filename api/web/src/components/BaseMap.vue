@@ -17,29 +17,34 @@
             </button>
         </div>
         <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
-            <div class='grid grid--gut12'>
-                <div class='col col--12 py6'>
-                    <label>BaseMap Name</label>
-                    <input v-model='basemap.name' class='input' placeholder='BaseMap Name'/>
-                </div>
+            <template v-if='loading'>
+                <Loading desc='Loading BaseMap'/>
+            </template>
+            <template v-else>
+                <div class='grid grid--gut12'>
+                    <div class='col col--12 py6'>
+                        <label>BaseMap Name</label>
+                        <input v-model='basemap.name' class='input' placeholder='BaseMap Name'/>
+                    </div>
 
-                <div class='col col--12 py6'>
-                    <label>BaseMap Url</label>
-                    <input v-model='basemap.url' class='input' placeholder='BaseMap Name'/>
+                    <div class='col col--12 py6'>
+                        <label>BaseMap Url</label>
+                        <input v-model='basemap.url' class='input' placeholder='BaseMap Name'/>
 
-                    <InputError v-if='errors.url' desc='Invalid URL'/>
-                    <InputError v-if='errors.wms' desc='WMS Endpoint must have {z}, {x}, {y} variables'/>
-                </div>
+                        <InputError v-if='errors.url' desc='Invalid URL'/>
+                        <InputError v-if='errors.wms' desc='WMS Endpoint must have {z}, {x}, {y} variables'/>
+                    </div>
 
-                <div class='col col--12 py12'>
-                    <template v-if='$route.params.basemapid'>
-                        <button @click='postBaseMap' class='btn btn--stroke round fr color-blue-light color-green-on-hover'>Update BaseMap</button>
-                    </template>
-                    <template v-else>
-                        <button @click='postBaseMap' class='btn btn--stroke round fr color-green-light color-green-on-hover'>Add BaseMap</button>
-                    </template>
+                    <div class='col col--12 py12'>
+                        <template v-if='$route.params.basemapid'>
+                            <button @click='postBaseMap' class='btn btn--stroke round fr color-blue-light color-green-on-hover'>Update BaseMap</button>
+                        </template>
+                        <template v-else>
+                            <button @click='postBaseMap' class='btn btn--stroke round fr color-green-light color-green-on-hover'>Add BaseMap</button>
+                        </template>
+                    </div>
                 </div>
-            </div>
+            </template>
         </div>
     </div>
 
@@ -47,6 +52,7 @@
 
 <script>
 import InputError from './util/InputError.vue';
+import Loading from './util/Loading.vue';
 
 export default {
     name: 'BaseMap',
@@ -57,6 +63,7 @@ export default {
     },
     data: function() {
         return {
+            loading: false,
             errors: {
                 url: false,
             },
@@ -69,12 +76,15 @@ export default {
     methods: {
         getBaseMap: async function() {
             try {
+                this.loading = true;
                 this.basemap = await window.std(`/api/basemap/${this.$route.params.basemapid}`);
             } catch (err) {
                 this.$emit('err', err);
             }
+            this.loading = false;
         },
         deleteBaseMap: async function() {
+            this.loading = true;
             try {
                 await window.std(window.api + `/api/basemap/${this.$route.params.basemapid}`, {
                     method: 'DELETE'
@@ -84,8 +94,10 @@ export default {
             } catch (err) {
                 this.$emit('err', err);
             }
+            this.loading = false;
         },
         postBaseMap: async function() {
+            this.loading = true;
             try {
                 new URL(this.basemap.url);
                 this.errors.url = false;
@@ -115,9 +127,11 @@ export default {
             } catch (err) {
                 this.$emit('err', err);
             }
+            this.loading = false;
         }
     },
     components: {
+        Loading,
         InputError
     }
 }
