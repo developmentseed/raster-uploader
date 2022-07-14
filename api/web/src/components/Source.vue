@@ -28,17 +28,67 @@
                     <input v-model='source.url' class='input' placeholder='Source Url'/>
 
                     <InputError v-if='errors.url' desc='Invalid URL'/>
-                    <InputError v-if='errors.wms' desc='WMS Endpoint must have {z}, {x}, {y} variables'/>
                 </div>
+            </div>
 
-                <div class='col col--12 py12'>
-                    <template v-if='$route.params.sourceid'>
-                        <button @click='postSource' class='btn btn--stroke round fr color-blue-light color-green-on-hover'>Update Source</button>
-                    </template>
-                    <template v-else>
-                        <button @click='postSource' class='btn btn--stroke round fr color-green-light color-green-on-hover'>Add Source</button>
-                    </template>
+            <div class='col col--12 flex flex--center-main mb3 mt12'>
+                <div class='toggle-group mr18'>
+                    <label class='toggle-container'>
+                        <input v-model='uploadtype' id='http' value='http' name='upload-type' type='radio' />
+                        <div class='toggle toggle--s round'>HTTP</div>
+                    </label>
+                    <label class='toggle-container'>
+                        <input v-model='uploadtype' id='s3' value='s3' name='upload-type' type='radio' />
+                        <div class='toggle toggle--s round'>AWS S3</div>
+                    </label>
                 </div>
+            </div>
+
+            <template v-if='uploadtype === "http"'>
+                <div class='col col--12 grid'>
+                    <label class='w-full'>Headers</label>
+
+                    <div class='border border--gray-light round col col--12 px12 py12 grid clearfix'>
+                        <div v-if='secrets.headers.length' class='col col--6'>Key</div>
+                        <div v-if='secrets.headers.length' class='col col--6'>Value</div>
+                        <div :key='header.key' v-for='(header, h_it) in secrets.headers' class='col col--12 grid grid--gut12 mt6'>
+                            <div class='col col--5'>
+                                <input type='text' v-model='header.key' class='input w-full'/>
+                            </div>
+                            <div class='col col--6'>
+                                <input type='text' v-model='header.value' class='input w-full'/>
+                            </div>
+                            <div class='col col--1'>
+                                <button @click='secrets.headers.splice(h_it, 1)' class='btn btn--stroke round color-gray color-red-on-hover h36'>
+                                    <svg class='icon'><use href='#icon-trash'/></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class='col col--12 flex flex--center-main mb3 mt12'>
+                            <button @click='secrets.headers.push({ key: "", value: "" })' class='btn btn--stroke round color-gray-light color-green-on-hover'>Add Header</button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-else-if='uploadtype === "s3"'>
+                <div class='col col--12 py6'>
+                    <label>AWS Access Key ID</label>
+                    <input type='text' v-model='secrets.access_key_id' class='input w-full'/>
+                </div>
+                <div class='col col--12 py6'>
+                    <label>AWS Secret Access Key</label>
+                    <input type='text' v-model='secrets.secret_access_key' class='input w-full'/>
+                </div>
+            </template>
+
+            <div class='col col--12 py12'>
+                <template v-if='$route.params.sourceid'>
+                    <button @click='postSource' class='btn btn--stroke round fr color-blue-light color-green-on-hover'>Update Source</button>
+                </template>
+                <template v-else>
+                    <button @click='postSource' class='btn btn--stroke round fr color-green-light color-green-on-hover'>Add Source</button>
+                </template>
             </div>
         </div>
     </div>
@@ -49,7 +99,7 @@
 import InputError from './util/InputError.vue';
 
 export default {
-    name: 'Source',
+    name: 'UploadSource',
     mounted: function() {
         if (this.$route.params.sourceid) {
             this.getSource();
@@ -59,6 +109,15 @@ export default {
         return {
             errors: {
                 url: false,
+            },
+            uploadtype: 'http',
+            secrets: {
+                secret_access_key: '',
+                access_key_id: '',
+                headers: [{
+                    key: '',
+                    value: ''
+                }]
             },
             source: {
                 name: '',
@@ -94,11 +153,12 @@ export default {
                 return;
             }
 
-            if (!this.source.url.includes('{z}') || !this.source.url.includes('{x}') || !this.source.url.includes('{y}')) {
-                this.errors.wms = true;
-                return;
-            } else {
-                this.errors.wms = false;
+            const secrets = {};
+            if (this.uploadtype === 'http') {
+                secrets.headers = this.secrets.headers;
+            } else if (this.uploadtype === 's3') {
+                secrets.secret_access_key = this.secrets.secret_access_key;
+                secrets.access_key_id = this.secrets.access_key_id;
             }
 
             try {
@@ -106,7 +166,9 @@ export default {
                     method: this.$route.params.sourceid ? 'PATCH' : 'POST',
                     body: {
                         name: this.source.name,
-                        url: this.source.url
+                        url: this.source.url,
+                        type: this.uploadtype,
+                        secrets
                     }
                 });
 

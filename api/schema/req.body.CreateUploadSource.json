@@ -3,7 +3,6 @@
     "required": [
         "name",
         "url",
-        "source",
         "secrets"
     ],
     "additionalProperties": false,
@@ -13,9 +12,6 @@
         },
         "url": {
             "type": "string"
-        },
-        "source": {
-            "type": "object"
         },
         "secrets": {
             "type": "object"
