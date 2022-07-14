@@ -1,0 +1,25 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "url": {
+            "type": "string"
+        },
+        "source": {
+            "type": "object"
+        },
+        "secrets": {
+            "type": "object"
+        },
+        "type": {
+            "type": "string",
+            "enum": [
+                "http",
+                "s3"
+            ]
+        }
+    }
+}

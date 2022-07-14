@@ -1,0 +1,43 @@
+{
+    "type": "object",
+    "required": [
+        "id",
+        "type",
+        "uid",
+        "created",
+        "updated",
+        "name",
+        "url"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "uid": {
+            "type": "integer"
+        },
+        "type": {
+            "type": "string",
+            "enum": [
+                "http",
+                "s3"
+            ]
+        },
+        "created": {
+            "$ref": "./util/created.json"
+        },
+        "updated": {
+            "$ref": "./util/updated.json"
+        },
+        "name": {
+            "type": "string"
+        },
+        "url": {
+            "type": "string"
+        },
+        "secrets": {
+            "type": "object"
+        }
+    }
+}

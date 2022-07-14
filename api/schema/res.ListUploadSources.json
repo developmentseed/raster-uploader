@@ -1,0 +1,57 @@
+{
+    "type": "object",
+    "required": [
+        "total",
+        "upload_sources"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "total": {
+            "type": "integer",
+            "description": "Total number of sources"
+        },
+        "tokens": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "uid",
+                    "type",
+                    "created",
+                    "updated",
+                    "name",
+                    "url"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "http",
+                            "s3"
+                        ]   
+                    },
+                    "uid": {
+                        "type": "integer"
+                    },
+                    "created": {
+                        "$ref": "./util/created.json"
+                    },
+                    "updated": {
+                        "$ref": "./util/updated.json"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -11,7 +11,7 @@ export default class SQS {
         this.secret = secret;
     }
 
-    async send(upload, config, uid, parent=null) {
+    async send(upload, config, uid, parent = null) {
         if (!process.env.QUEUE) throw new Err(400, null, 'QUEUE not set');
 
         try {
@@ -35,7 +35,7 @@ export default class SQS {
         }
     }
 
-    async transform(config, transform, uid, parent=null) {
+    async transform(config, transform, uid, parent = null) {
         if (!process.env.TRANSFORM_QUEUE) throw new Err(400, null, 'TRANSFORM_QUEUE not set');
 
         try {

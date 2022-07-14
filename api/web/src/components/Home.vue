@@ -7,6 +7,7 @@
 
                 <div class='round dropdown-content color-black' style='top: 24px;'>
                     <div @click.stop='$router.push({ path: "/basemap" })' class='round bg-gray-light-on-hover cursor-pointer px12'>BaseMaps</div>
+                    <div @click.stop='$router.push({ path: "/source" })' class='round bg-gray-light-on-hover cursor-pointer px12'>Sources</div>
                 </div>
             </h2>
 
