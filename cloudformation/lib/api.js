@@ -11,6 +11,10 @@ const stack = {
             Type: 'String',
             Description: 'Email address to be used to send emails'
         },
+        CertificateARN: {
+            Type: 'String',
+            Description: 'SSL Certificate ARN'
+        },
         FrontEndDomain: {
             Type: 'String',
             Description: 'Domain at which the frontend resides'
@@ -44,27 +48,41 @@ const stack = {
                 SecurityGroupIngress: [{
                     CidrIp: '0.0.0.0/0',
                     IpProtocol: 'tcp',
-                    FromPort: 80,
-                    ToPort: 80
-                },{
-                    CidrIp: '0.0.0.0/0',
-                    IpProtocol: 'tcp',
                     FromPort: 443,
                     ToPort: 443
                 }],
                 VpcId: cf.ref('VPC')
             }
         },
-        HTTPListener: {
+        HttpListener: {
+            Type: 'AWS::ElasticLoadBalancingV2::Listener',
+            Properties: {
+                DefaultActions: [{
+                    Type: 'redirect',
+                    RedirectConfig: {
+                        Protocol: 'HTTPS',
+                        StatusCode: 'HTTP_301',
+                        Port: 443
+                    }
+                }],
+                LoadBalancerArn: cf.ref('ELB'),
+                Port: 80,
+                Protocol: 'HTTP'
+            }
+        },
+        HttpsListener: {
             Type: 'AWS::ElasticLoadBalancingV2::Listener',
             Properties: {
                 DefaultActions: [{
                     Type: 'forward',
                     TargetGroupArn: cf.ref('TargetGroup')
                 }],
+                Certificates: [{
+                    CertificateArn: cf.ref('CertificateARN')
+                }],
                 LoadBalancerArn: cf.ref('ELB'),
-                Port: 80,
-                Protocol: 'HTTP'
+                Port: 443,
+                Protocol: 'HTTPS'
             }
         },
         TargetGroup: {
