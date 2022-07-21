@@ -124,6 +124,14 @@ const stack = {
                         },{
                             Effect: 'Allow',
                             Action: [
+                                'ses:SendEmail'
+                            ],
+                            Resource: [
+                                cf.join(['arn:aws:ses:', cf.region, ':', cf.accountId, ':identity/*'])
+                            ]
+                        },{
+                            Effect: 'Allow',
+                            Action: [
                                 'secretsmanager:Describe*',
                                 'secretsmanager:Get*',
                                 'secretsmanager:List*'
