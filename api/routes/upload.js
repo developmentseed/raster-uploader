@@ -119,7 +119,6 @@ export default async function router(schema, config) {
                 meta.name = blob.filename;
                 meta.path = `uploads/${upload.id}/${blob.filename}`;
                 files.push(S3.put(meta.path, file));
-
             }).on('field', (name, val) => {
                 fields[name] = val;
             }).on('error', (err) => {
@@ -188,7 +187,6 @@ export default async function router(schema, config) {
 
             await upload.commit(config.pool, null, req.body);
 
-            console.error('LOG', upload.obtain, req.body.uploaded);
             if (upload.obtain && req.body.uploaded) {
                 await sqs.send(upload.id, {
                     upload: upload.id,

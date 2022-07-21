@@ -72,10 +72,11 @@ test('POST: api/upload - Missing Content-Type', async (t) => {
 });
 
 test('POST: api/upload', async (t) => {
+    process.env.QUEUE = 'queue';
     try {
         AWS.stub('S3', 'upload', async function(params) {
             t.equal(params.Bucket, 'test');
-            t.equal(params.Key, '1/package.json');
+            t.equal(params.Key, 'uploads/1/blob');
 
             await pipeline(
                 params.Body,
@@ -83,6 +84,38 @@ test('POST: api/upload', async (t) => {
             );
 
             return this.request.promise.returns(Promise.resolve({}));
+        });
+
+        AWS.stub('S3', 'headObject', async function(params) {
+            t.equal(params.Bucket, 'test');
+            t.equal(params.Key, 'uploads/1/blob');
+            return this.request.promise.returns(Promise.resolve({
+                ContentLength: 321
+            }));
+        });
+
+        AWS.stub('SQS', 'sendMessage', async function(params) {
+            t.equal(params.QueueUrl, 'queue');
+            const body = JSON.parse(params.MessageBody);
+
+            t.ok(body.token);
+            delete body.token;
+
+            t.deepEquals(body, {
+                upload: 1,
+                parent: null,
+                config: {
+                    upload: 1,
+                    cog: {
+                        overview: null,
+                        blocksize: 512,
+                        compression: 'deflate'
+                    }
+                }
+            });
+
+            return this.request.promise.returns(Promise.resolve({
+            }));
         });
 
         const body = new FormData();
@@ -101,15 +134,21 @@ test('POST: api/upload', async (t) => {
         t.deepEquals(res.body, {
             id: 1,
             uid: 1,
-            size: null,
+            size: 321,
             status: 'Pending',
-            name: null
+            name: 'blob',
+            obtain: false,
+            uploaded: true,
+            archived: false,
+            starred: false,
+            config: { cog: { overview: null, blocksize: 512, compression: 'deflate' } }
         });
     } catch (err) {
         t.error(err, 'no error');
     }
 
     AWS.S3.restore();
+    AWS.SQS.restore();
     t.end();
 });
 
@@ -121,9 +160,23 @@ test('GET: api/upload', async (t) => {
             }
         }, t);
 
+        t.ok(res.body.uploads[0].created);
+        delete res.body.uploads[0].created;
+        t.ok(res.body.uploads[0].updated);
+        delete res.body.uploads[0].updated;
+
         t.deepEquals(res.body, {
-            total: 0,
-            uploads: []
+            total: 1,
+            uploads: [{
+                id: 1,
+                uid: 1,
+                size: 321,
+                status: 'Pending',
+                name: 'blob',
+                obtain: false,
+                uploaded: true,
+                starred: false
+            }]
         });
     } catch (err) {
         t.error(err, 'no error');
