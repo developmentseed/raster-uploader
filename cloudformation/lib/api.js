@@ -70,7 +70,7 @@ const stack = {
                 Protocol: 'HTTP'
             }
         },
-        HTTPSListener: {
+        HttpsListener: {
             Type: 'AWS::ElasticLoadBalancingV2::Listener',
             Properties: {
                 DefaultActions: [{
@@ -82,7 +82,7 @@ const stack = {
                 }],
                 LoadBalancerArn: cf.ref('ELB'),
                 Port: 443,
-                Protocol: 'HTTP'
+                Protocol: 'HTTPS'
             }
         },
         TargetGroup: {
