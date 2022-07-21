@@ -4,6 +4,31 @@
         "query": true,
         "res": true
     },
+    "GET /basemap": {
+        "body": false,
+        "query": true,
+        "res": true
+    },
+    "GET /basemap/:basemap": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "POST /basemap": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "PATCH /basemap/:basemap": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "DELETE /basemap/:basemap": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
     "GET /login": {
         "body": false,
         "query": false,
@@ -29,6 +54,36 @@
         "query": false,
         "res": true
     },
+    "GET /map": {
+        "body": false,
+        "query": false,
+        "res": false
+    },
+    "GET /meta": {
+        "body": false,
+        "query": true,
+        "res": true
+    },
+    "POST /meta": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "PATCH /meta/:key": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "DELETE /meta/:key": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "POST /obtain": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
     "GET /token": {
         "body": false,
         "query": true,
@@ -45,6 +100,86 @@
         "res": true
     },
     "DELETE /token/:token_id": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "GET /upload/:upload/download": {
+        "body": false,
+        "query": true,
+        "res": false
+    },
+    "GET /source": {
+        "body": false,
+        "query": true,
+        "res": true
+    },
+    "GET /source/:source": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "POST /source": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "PATCH /source/:source": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "DELETE /source/:source": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "POST /upload/:upload/step/:step/cog/transform": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "GET /upload/:upload/step/:step/cog/download": {
+        "body": false,
+        "query": true,
+        "res": false
+    },
+    "GET /upload/:upload/step/:step/cog/info": {
+        "body": false,
+        "query": false,
+        "res": false
+    },
+    "GET /cog/:z/:x/:y.png": {
+        "body": false,
+        "query": true,
+        "res": false
+    },
+    "GET /upload/:upload/step": {
+        "body": false,
+        "query": true,
+        "res": true
+    },
+    "GET /upload/:upload/step/:step": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "POST /upload/:upload/step": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "PATCH /upload/:upload/step/:step": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "DELETE /upload/:upload/step/:step": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "PUT /upload/:upload/step/:step": {
         "body": false,
         "query": false,
         "res": true
