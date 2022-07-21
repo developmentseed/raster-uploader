@@ -7,7 +7,6 @@ import jwt from 'jsonwebtoken';
  */
 export default class SQS {
     constructor(secret) {
-        this.sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION });
         this.secret = secret;
     }
 
@@ -21,7 +20,8 @@ export default class SQS {
                 expiresIn: '15m'
             });
 
-            await this.sqs.sendMessage({
+            const sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION });
+            await sqs.sendMessage({
                 QueueUrl: process.env.QUEUE,
                 MessageBody: JSON.stringify({
                     upload,
@@ -47,7 +47,8 @@ export default class SQS {
 
             if (!config.transform) config.transform = [];
 
-            await this.sqs.sendMessage({
+            const sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION });
+            await sqs.sendMessage({
                 QueueUrl: process.env.TRANSFORM_QUEUE,
                 MessageBody: JSON.stringify({
                     parent,
@@ -71,7 +72,8 @@ export default class SQS {
                 expiresIn: '15m'
             });
 
-            await this.sqs.sendMessage({
+            const sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION });
+            await sqs.sendMessage({
                 QueueUrl: process.env.OBTAIN_QUEUE,
                 MessageBody: JSON.stringify({
                     token,
