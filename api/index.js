@@ -192,7 +192,7 @@ async function server(args, config) {
                 if (parse.ext) {
                     return context.parsedUrl.pathname;
                 } else {
-                    return '/'
+                    return '/';
                 }
             }
         }]
