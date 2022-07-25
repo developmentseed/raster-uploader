@@ -1,9 +1,11 @@
 import fs from 'fs';
+import path from 'path';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import morgan from 'morgan';
 import express from 'express';
 import minify from 'express-minify';
+import history from 'connect-history-api-fallback';
 import bodyparser from 'body-parser';
 import { Schema, Err } from '@openaddresses/batch-schema';
 import { Pool } from '@openaddresses/batch-generic';
@@ -66,8 +68,6 @@ async function server(args, config) {
     }));
 
     app.use(minify());
-
-    app.use(express.static('web/dist'));
 
     /**
      * @api {get} /api Get Metadata
@@ -178,6 +178,27 @@ async function server(args, config) {
     );
     schema.not_found();
     schema.error();
+
+    app.use(history({
+        rewrites: [{
+            from: /.*\/js\/.*$/,
+            to: function(context) {
+                return context.parsedUrl.pathname.replace(/.*\/js\//, '/js/');
+            }
+        },{
+            from: /.*$/,
+            to: function(context) {
+                const parse = path.parse(context.parsedUrl.path);
+                if (parse.ext) {
+                    return context.parsedUrl.pathname;
+                } else {
+                    return '/'
+                }
+            }
+        }]
+    }));
+    app.use(express.static('web/dist'));
+
 
     return new Promise((resolve, reject) => {
         const srv = app.listen(4999, (err) => {
