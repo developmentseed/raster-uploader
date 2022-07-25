@@ -26,7 +26,7 @@ import Sources from './components/Sources.vue';
 import Source from './components/Source.vue';
 
 const router = new VueRouter.createRouter({
-    history: VueRouter.createWebHashHistory(),
+    history: VueRouter.createWebHistory(),
     routes: [
         { path: '/', name: 'home', component: Home },
 
