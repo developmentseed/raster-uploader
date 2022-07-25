@@ -6,9 +6,7 @@ import express from 'express';
 import minify from 'express-minify';
 import bodyparser from 'body-parser';
 import { Schema, Err } from '@openaddresses/batch-schema';
-import { sql, createPool, createTypeParserPreset } from 'slonik';
-import wkx from 'wkx';
-import bbox from '@turf/bbox';
+import { Pool } from '@openaddresses/batch-generic';
 import minimist from 'minimist';
 
 import User from './lib/types/user.js';
@@ -48,51 +46,11 @@ export default async function configure(args, cb) {
  */
 
 async function server(args, config) {
-    let postgres = process.env.POSTGRES;
-
-    if (args.postgres) {
-        postgres = args.postgres;
-    } else if (!postgres) {
-        postgres = 'postgres://postgres@localhost:5432/uploader';
-    }
-
-    let pool = false;
-    let retry = 5;
-    do {
-        try {
-            pool = createPool(postgres, {
-                typeParsers: [
-                    ...createTypeParserPreset(), {
-                        name: 'geometry',
-                        parse: (value) => {
-                            const geom = wkx.Geometry.parse(Buffer.from(value, 'hex')).toGeoJSON();
-
-                            geom.bounds = bbox(geom);
-
-                            return geom;
-                        }
-                    }
-                ]
-            });
-
-            await pool.query(sql`SELECT NOW()`);
-        } catch (err) {
-            console.error(err);
-            pool = false;
-
-            if (retry === 0) {
-                console.error('not ok - terminating due to lack of postgres connection');
-                return process.exit(1);
-            }
-
-            retry--;
-            console.error('not ok - unable to get postgres connection');
-            console.error(`ok - retrying... (${5 - retry}/5)`);
-            await sleep(5000);
+    config.pool = await Pool.connect(process.env.POSTGRES || args.postgres || 'postgres://postgres@localhost:5432/uploader', {
+        parsing: {
+            geometry: true
         }
-    } while (!pool);
-
-    config.pool = pool;
+    });
 
     const app = express();
 
@@ -228,11 +186,5 @@ async function server(args, config) {
             if (!config.silent) console.log('ok - http://localhost:4999');
             return resolve([srv, config]);
         });
-    });
-}
-
-function sleep(ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
     });
 }
