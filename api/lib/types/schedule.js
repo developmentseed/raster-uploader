@@ -31,12 +31,7 @@ export default class Schedule extends Generic {
             const pgres = await pool.query(sql`
                 SELECT
                     count(*) OVER() AS count,
-                    id,
-                    uid,
-                    created,
-                    updated,
-                    name,
-                    cron
+                    *
                 FROM
                     schedules
                 WHERE
@@ -53,6 +48,12 @@ export default class Schedule extends Generic {
             return this.deserialize_list(pgres);
         } catch (err) {
             throw new Err(500, err, 'Failed to list schdules');
+        }
+    }
+
+    permission(auth) {
+        if (this.uid !== auth.id && auth.access !== 'admin') {
+            throw new Err(401, null, 'Schedule does not belong to user');
         }
     }
 }
