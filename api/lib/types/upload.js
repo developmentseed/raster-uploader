@@ -29,6 +29,7 @@ export default class Upload extends Generic {
         if (!query.archived) query.archived = false;
         if (!query.uploaded) query.uploaded = null;
         if (!query.starred) query.starred = null;
+        if (!query.schedule) query.schedule = null;
 
         try {
             const pgres = await pool.query(sql`
@@ -53,6 +54,7 @@ export default class Upload extends Generic {
                     AND (${query.archived}::BOOLEAN IS NULL OR archived = ${query.archived})
                     AND (${query.starred}::BOOLEAN IS NULL OR starred = ${query.starred})
                     AND (${query.uploaded}::BOOLEAN IS NULL OR uploaded = ${query.uploaded})
+                    AND (${query.schedule}::BOOLEAN IS NULL OR schedule_id = ${query.schedule})
                 ORDER BY
                     id DESC
                 LIMIT
