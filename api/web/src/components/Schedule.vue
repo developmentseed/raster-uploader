@@ -17,7 +17,7 @@
             </button>
         </div>
         <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
-            <template v-if='loading'>
+            <template v-if='loading.schedule'>
                 <Loading desc='Loading Schedule'/>
             </template>
             <template v-else>
@@ -42,6 +42,20 @@
                     </div>
                 </div>
             </template>
+
+            <div v-if='$route.params.scheduleid' class='border border--gray-light round col col--12 px12 py12 clearfix'>
+                <template v-if='loading.uploads'>
+                    <Loading desc='Loading Uploads'/>
+                </template>
+                <template v-else-if='uploads.total === 0'>
+                    <None name='Uploads'/>
+                </template>
+                <template v-else>
+                    <div :key='upload.id' v-for='upload in uploads.uploads' class='col col--12'>
+                        <UploadItem :upload='upload'/>
+                    </div>
+                </template>
+            </div>
         </div>
     </div>
 
@@ -49,19 +63,29 @@
 
 <script>
 import Loading from './util/Loading.vue';
+import UploadItem from './util/UploadItem.vue';
+import None from './util/None.vue';
 
 export default {
     name: 'Schedule',
     mounted: function() {
         if (this.$route.params.scheduleid) {
             this.getSchedule();
+            this.getUploads();
         }
     },
     data: function() {
         return {
-            loading: false,
+            loading: {
+                schedule: false,
+                uploads: false
+            },
             errors: {
                 url: false,
+            },
+            uploads: {
+                total: 0,
+                uploads: []
             },
             schedule: {
                 name: '',
@@ -70,17 +94,26 @@ export default {
         };
     },
     methods: {
+        getUploads: async function() {
+            try {
+                this.loading.uploads = true;
+                this.uploads = await window.std(`/api/upload?schedule=${this.$route.params.scheduleid}`);
+            } catch (err) {
+                this.$emit('err', err);
+            }
+            this.loading.uploads = false;
+        },
         getSchedule: async function() {
             try {
-                this.loading = true;
+                this.loading.schedule = true;
                 this.schedule = await window.std(`/api/schedule/${this.$route.params.scheduleid}`);
             } catch (err) {
                 this.$emit('err', err);
             }
-            this.loading = false;
+            this.loading.schedule = false;
         },
         deleteSchedule: async function() {
-            this.loading = true;
+            this.loading.schedule = true;
             try {
                 await window.std(window.api + `/api/schedule/${this.$route.params.scheduleid}`, {
                     method: 'DELETE'
@@ -90,10 +123,10 @@ export default {
             } catch (err) {
                 this.$emit('err', err);
             }
-            this.loading = false;
+            this.loading.schedule = false;
         },
         postSchedule: async function() {
-            this.loading = true;
+            this.loading.schedule = true;
 
             try {
                 await window.std(window.api + `/api/schedule${this.$route.params.scheduleid ? '/' + this.$route.params.scheduleid : ''}`, {
@@ -109,11 +142,13 @@ export default {
             } catch (err) {
                 this.$emit('err', err);
             }
-            this.loading = false;
+            this.loading.schedule = false;
         }
     },
     components: {
-        Loading
+        None,
+        Loading,
+        UploadItem
     }
 }
 </script>

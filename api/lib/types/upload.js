@@ -54,7 +54,7 @@ export default class Upload extends Generic {
                     AND (${query.archived}::BOOLEAN IS NULL OR archived = ${query.archived})
                     AND (${query.starred}::BOOLEAN IS NULL OR starred = ${query.starred})
                     AND (${query.uploaded}::BOOLEAN IS NULL OR uploaded = ${query.uploaded})
-                    AND (${query.schedule}::BOOLEAN IS NULL OR schedule_id = ${query.schedule})
+                    AND (${query.schedule}::BIGINT IS NULL OR schedule_id = ${query.schedule})
                 ORDER BY
                     id DESC
                 LIMIT

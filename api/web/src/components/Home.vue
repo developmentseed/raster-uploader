@@ -36,37 +36,11 @@
                 <Loading desc='Loading Uploads'/>
             </template>
             <template v-else-if='uploads.length === 0'>
-                <div class='flex flex--center-main pt36'>
-                    <svg class='flex-child icon w60 h60 color--gray'><use href='#icon-info'/></svg>
-                </div>
-
-                <div class='flex flex--center-main pt12 pb36'>
-                    <h1 class='flex-child txt-h4 cursor-default'>No Uploads Found</h1>
-                </div>
+                <None name='Uploads'/>
             </template>
             <template v-else>
-                <div @click='$router.push({ name: "upload", params: { uploadid: upload.id } })' :key='upload.id' v-for='upload in uploads.slice(page * 10, page * 10 + 10)'>
-                    <div class='cursor-pointer bg-darken10-on-hover col col--12 py12'>
-                        <div class='col col--12 grid py6 px12'>
-                            <div class='col col--6'>
-                                <div class='col col--12 clearfix'>
-                                    <svg v-if='upload.starred' class='fl icon color-blue h24 w24 mr6'><use xlink:href='#icon-star'/></svg>
-                                    <h3 class='txt-h4 fl' v-text='upload.name'></h3>
-                                </div>
-                                <div class='col col--12'>
-                                    <h3 class='txt-xs' v-text='upload.source'></h3>
-                                </div>
-                            </div>
-                            <div class='col col--6'>
-                                <div v-if='upload.archived' class='fr bg-gray-faint bg-gray-on-hover color-white-on-hover color-gray inline-block px6 py3 round txt-xs txt-bold mr3'>
-                                    Archived
-                                </div>
-                                <div class='fr bg-gray-faint color-gray inline-block px6 py3 round txt-xs txt-bold mr12'>
-                                    <span v-text='new Date(upload.created).toISOString()'/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div :key='upload.id' v-for='upload in uploads.slice(page * 10, page * 10 + 10)'>
+                    <UploadItem :upload='upload'/>
                 </div>
 
                 <Pager
@@ -82,7 +56,9 @@
 <script>
 import Pager from './util/Pager.vue';
 import RasterMenu from './util/Menu.vue';
+import UploadItem from './util/UploadItem.vue';
 import Loading from './util/Loading.vue';
+import None from './util/None.vue';
 
 export default {
     name: 'Home',
@@ -157,7 +133,9 @@ export default {
     components: {
         Loading,
         RasterMenu,
-        Pager
+        UploadItem,
+        Pager,
+        None
     }
 }
 </script>

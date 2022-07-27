@@ -47,12 +47,7 @@
             <Loading/>
         </template>
         <template v-else-if='!users.length'>
-            <div class='flex flex--center-main w-full'>
-                <div class='flex-child py24'>
-                    <svg class='icon h60 w60 color-gray'><use href='#icon-info'/></svg>
-                </div>
-            </div>
-            <div class='w-full align-center txt-bold'>No Users Found</div>
+            <None name='Users'/>
         </template>
         <template v-else>
             <div :key='user.id' v-for='user in users' class='col col--12 grid'>
@@ -80,6 +75,7 @@
 
 <script>
 import Pager from '../util/Pager.vue';
+import None from '../util/None.vue';
 import Loading from '../util/Loading.vue';
 import CreateUser from './CreateUser.vue';
 
@@ -141,7 +137,8 @@ export default {
     components: {
         CreateUser,
         Loading,
-        Pager
+        Pager,
+        None
     }
 }
 </script>

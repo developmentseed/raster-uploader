@@ -30,13 +30,7 @@
                 <Loading desc='Loading Sources'/>
             </template>
             <template v-else-if='sources.length === 0'>
-                <div class='flex flex--center-main pt36'>
-                    <svg class='flex-child icon w60 h60 color--gray'><use href='#icon-info'/></svg>
-                </div>
-
-                <div class='flex flex--center-main pt12 pb36'>
-                    <h1 class='flex-child txt-h4 cursor-default'>No Upload Sources Found</h1>
-                </div>
+                <None name='Upload Sources'/>
             </template>
             <template v-else>
                 <div @click='$router.push({ name: "source", params: { sourceid: source.id } })' :key='source.id' v-for='source in sources.slice(page * 10, page * 10 + 10)'>
@@ -68,6 +62,7 @@
 
 <script>
 import Pager from './util/Pager.vue';
+import None from './util/None.vue';
 import Loading from './util/Loading.vue';
 import RasterMenu from './util/Menu.vue';
 
@@ -140,6 +135,7 @@ export default {
         }
     },
     components: {
+        None,
         Loading,
         RasterMenu,
         Pager
