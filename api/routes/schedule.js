@@ -82,10 +82,10 @@ export default async function router(schema, config) {
         try {
             await Auth.is_auth(req);
 
-            delete req.body.secrets;
-
             req.body.uid = req.auth.id;
             const schedule = await Schedule.generate(config.pool, req.body);
+
+
 
             return res.json(schedule.serialize());
         } catch (err) {
