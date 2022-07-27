@@ -1,7 +1,7 @@
 import { Err } from '@openaddresses/batch-schema';
 import Upload from '../lib/types/upload.js';
 import Auth from '../lib/auth.js';
-import S3 from '../lib/s3.js';
+import S3 from '../lib/aws/s3.js';
 
 export default async function router(schema, config) {
     /**

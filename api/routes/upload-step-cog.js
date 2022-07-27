@@ -3,8 +3,8 @@ import Upload from '../lib/types/upload.js';
 import UploadStep from '../lib/types/upload-step.js';
 import Auth from '../lib/auth.js';
 import Tile from '../lib/tile.js';
-import S3 from '../lib/s3.js';
-import SQS from '../lib/sqs.js';
+import S3 from '../lib/aws/s3.js';
+import SQS from '../lib/aws/sqs.js';
 
 export default async function router(schema, config) {
     const tile = new Tile(config.SigningSecret);

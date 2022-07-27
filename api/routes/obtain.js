@@ -1,7 +1,7 @@
 import { Err } from '@openaddresses/batch-schema';
 import Upload from '../lib/types/upload.js';
 import Auth from '../lib/auth.js';
-import SQS from '../lib/sqs.js';
+import SQS from '../lib/aws/sqs.js';
 
 export default async function router(schema, config) {
     const sqs = new SQS(config.SigningSecret);
