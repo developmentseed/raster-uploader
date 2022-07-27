@@ -5,8 +5,9 @@ import { Err } from '@openaddresses/batch-schema';
  * @class
  */
 export default class EventRule {
-    constructor(stack) {
+    constructor(stack, sqs) {
         this.stack = stack;
+        this.sqs = sqs;
     }
 
     async create(schedule) {
@@ -29,7 +30,7 @@ export default class EventRule {
                 Rule: `${this.stack}-schedule-${schedule.id}`,
                 Targets: [{
                     Id: 'default',
-                    Arn: `arn:aws:lambda:us-east-1:123456789012:function:MyFunction`
+                    Arn: this.sqs['obtain-queue'].arn
                 }]
             }).promise();
         } catch (err) {

@@ -1,8 +1,11 @@
 import { Err } from '@openaddresses/batch-schema';
 import Schedule from '../lib/types/schedule.js';
 import Auth from '../lib/auth.js';
+import Rule from '../lib/aws/rule.js';
 
 export default async function router(schema, config) {
+    const rule = new Rule(config.StackName, config.sqs);
+
     /**
      * @api {get} /api/schedule List Schedules
      * @apiVersion 1.0.0
@@ -85,7 +88,7 @@ export default async function router(schema, config) {
             req.body.uid = req.auth.id;
             const schedule = await Schedule.generate(config.pool, req.body);
 
-
+            await rule.create(schedule);
 
             return res.json(schedule.serialize());
         } catch (err) {
@@ -121,6 +124,8 @@ export default async function router(schema, config) {
 
             await schedule.commit(config.pool, null, req.body);
 
+            await rule.update(schedule);
+
             return res.json(schedule.serialize());
         } catch (err) {
             return Err.respond(err, res);
@@ -152,6 +157,8 @@ export default async function router(schema, config) {
             schedule.permission(req.auth);
 
             await schedule.delete(config.pool);
+
+            await rule.delete(schedule);
 
             return res.json({
                 status: 200,
