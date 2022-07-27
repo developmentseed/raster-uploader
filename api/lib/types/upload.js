@@ -43,7 +43,8 @@ export default class Upload extends Generic {
                     name,
                     obtain,
                     uploaded,
-                    starred
+                    starred,
+                    schedule_id
                 FROM
                     uploads
                 WHERE
