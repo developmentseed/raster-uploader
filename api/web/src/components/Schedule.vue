@@ -43,19 +43,22 @@
                 </div>
             </template>
 
-            <div v-if='$route.params.scheduleid' class='border border--gray-light round col col--12 px12 py12 clearfix'>
-                <template v-if='loading.uploads'>
-                    <Loading desc='Loading Uploads'/>
-                </template>
-                <template v-else-if='uploads.total === 0'>
-                    <None name='Uploads'/>
-                </template>
-                <template v-else>
-                    <div :key='upload.id' v-for='upload in uploads.uploads' class='col col--12'>
-                        <UploadItem :upload='upload'/>
-                    </div>
-                </template>
-            </div>
+            <template v-if='$route.params.scheduleid'>
+                <h2 class='mb3'>Uploads</h2>
+                <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
+                    <template v-if='loading.uploads'>
+                        <Loading desc='Loading Uploads'/>
+                    </template>
+                    <template v-else-if='uploads.total === 0'>
+                        <None name='Uploads'/>
+                    </template>
+                    <template v-else>
+                        <div :key='upload.id' v-for='upload in uploads.uploads' class='col col--12'>
+                            <UploadItem :upload='upload'/>
+                        </div>
+                    </template>
+                </div>
+            </template>
         </div>
     </div>
 
