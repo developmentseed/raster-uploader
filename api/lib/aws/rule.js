@@ -11,9 +11,9 @@ export default class EventRule {
     }
 
     async create(schedule) {
-        try {
-            const eb = new AWS.EventBridge({ region: process.env.AWS_DEFAULT_REGION });
+        const eb = new AWS.EventBridge({ region: process.env.AWS_DEFAULT_REGION });
 
+        try {
             await eb.putRule({
                 Name: `${this.stack}-schedule-${schedule.id}`,
                 Description: `${this.stack} Schedule: ${schedule.id}`,

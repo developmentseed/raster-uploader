@@ -80,10 +80,14 @@ import cron from 'cronstrue';
 
 export default {
     name: 'Schedule',
-    mounted: function() {
+    mounted: async function() {
         if (this.$route.params.scheduleid) {
-            this.getSchedule();
+            await this.getSchedule();
+            this.setHuman();
+
             this.getUploads();
+        } else {
+            this.setHuman();
         }
     },
     data: function() {
@@ -102,7 +106,7 @@ export default {
             },
             schedule: {
                 name: '',
-                cron: '1 12 * * MON-FRI'
+                cron: '1 12 ? * MON-FRI *'
             }
         };
     },
@@ -137,8 +141,6 @@ export default {
             } catch (err) {
                 this.$emit('err', err);
             }
-
-            this.setHuman();
             this.loading.schedule = false;
         },
         deleteSchedule: async function() {
