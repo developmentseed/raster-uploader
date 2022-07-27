@@ -28,8 +28,15 @@
                     </div>
 
                     <div class='col col--12 py6'>
-                        <label>Schedule Url</label>
+                        <label>Schedule Cron</label>
                         <input v-model='schedule.cron' class='input' placeholder='Schedule Cron'/>
+
+                        <template v-if='errors.cron'>
+                            <InputError :desc='human'/>
+                        </template>
+                        <template v-else>
+                            <span v-text='human'/>
+                        </template>
                     </div>
 
                     <div class='col col--12 py12'>
@@ -68,6 +75,8 @@
 import Loading from './util/Loading.vue';
 import UploadItem from './util/UploadItem.vue';
 import None from './util/None.vue';
+import InputError from './util/InputError.vue';
+import cron from 'cronstrue';
 
 export default {
     name: 'Schedule',
@@ -83,8 +92,9 @@ export default {
                 schedule: false,
                 uploads: false
             },
+            human: '',
             errors: {
-                url: false,
+                cron: false
             },
             uploads: {
                 total: 0,
@@ -92,11 +102,25 @@ export default {
             },
             schedule: {
                 name: '',
-                cron: ''
+                cron: '1 12 * * MON-FRI'
             }
         };
     },
+    watch: {
+        'schedule.cron': function() {
+            this.setHuman()
+        }
+    },
     methods: {
+        setHuman: function() {
+            try {
+                this.errors.cron = false;
+                this.human = cron.toString(this.schedule.cron)
+            } catch (err) {
+                this.errors.cron = true;
+                this.human = String(err);
+            }
+        },
         getUploads: async function() {
             try {
                 this.loading.uploads = true;
@@ -113,6 +137,8 @@ export default {
             } catch (err) {
                 this.$emit('err', err);
             }
+
+            this.setHuman();
             this.loading.schedule = false;
         },
         deleteSchedule: async function() {
@@ -132,7 +158,7 @@ export default {
             this.loading.schedule = true;
 
             try {
-                await window.std(window.api + `/api/schedule${this.$route.params.scheduleid ? '/' + this.$route.params.scheduleid : ''}`, {
+                this.schedule = await window.std(window.api + `/api/schedule${this.$route.params.scheduleid ? '/' + this.$route.params.scheduleid : ''}`, {
                     method: this.$route.params.scheduleid ? 'PATCH' : 'POST',
                     body: {
                         name: this.schedule.name,
@@ -140,8 +166,10 @@ export default {
                     }
                 });
 
-                this.$emit('refresh');
-                this.$router.go(-1);
+                if (!this.$route.params.scheduleid) {
+                    this.$emit('refresh');
+                    this.$router.go(-1);
+                }
             } catch (err) {
                 this.$emit('err', err);
             }
@@ -151,7 +179,8 @@ export default {
     components: {
         None,
         Loading,
-        UploadItem
+        UploadItem,
+        InputError
     }
 }
 </script>
