@@ -54,9 +54,18 @@ export default class EventRule {
     }
 
     async delete(schedule) {
-        try {
-            const eb = new AWS.EventBridge({ region: process.env.AWS_DEFAULT_REGION });
+        const eb = new AWS.EventBridge({ region: process.env.AWS_DEFAULT_REGION });
 
+        try {
+            await eb.removeTargets({
+                Rule: `${this.stack}-schedule-${schedule.id}`,
+                Ids: ['default']
+            }).promise();
+        } catch (err) {
+            throw new Err(500, new Error(err), 'Failed to remove targets from rule');
+        }
+
+        try {
             await eb.deleteRule({
                 Name: `${this.stack}-schedule-${schedule.id}`,
             }).promise();

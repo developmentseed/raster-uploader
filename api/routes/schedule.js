@@ -156,9 +156,9 @@ export default async function router(schema, config) {
             const schedule = await Schedule.from(config.pool, req.params.schedule);
             schedule.permission(req.auth);
 
-            await schedule.delete(config.pool);
-
             await rule.delete(schedule);
+
+            await schedule.delete(config.pool);
 
             return res.json({
                 status: 200,
