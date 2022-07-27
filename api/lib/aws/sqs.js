@@ -6,13 +6,22 @@ import jwt from 'jsonwebtoken';
  * @class
  */
 export default class SQS {
-    constructor(secret) {
+    constructor(secret, sqs) {
         this.secret = secret;
+        this.sqs = sqs;
+    }
+
+    static async getQueueURL(name) {
+        const sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION });
+
+        const res = await sqs.getQueueUrl({
+            QueueName: name
+        }).promise()
+
+        return res.QueueURL;
     }
 
     async send(upload, config, uid, parent = null) {
-        if (!process.env.QUEUE) throw new Err(400, null, 'QUEUE not set');
-
         try {
             const token = jwt.sign({
                 u: uid
@@ -22,7 +31,7 @@ export default class SQS {
 
             const sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION });
             await sqs.sendMessage({
-                QueueUrl: process.env.QUEUE,
+                QueueUrl: this.sqs['queue'].url,
                 MessageBody: JSON.stringify({
                     upload,
                     parent,
@@ -36,8 +45,6 @@ export default class SQS {
     }
 
     async transform(config, transform, uid, parent = null) {
-        if (!process.env.TRANSFORM_QUEUE) throw new Err(400, null, 'TRANSFORM_QUEUE not set');
-
         try {
             const token = jwt.sign({
                 u: uid
@@ -49,7 +56,7 @@ export default class SQS {
 
             const sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION });
             await sqs.sendMessage({
-                QueueUrl: process.env.TRANSFORM_QUEUE,
+                QueueUrl: this.sqs['transform-queue'].url,
                 MessageBody: JSON.stringify({
                     parent,
                     token,
@@ -63,8 +70,6 @@ export default class SQS {
     }
 
     async obtain(config, uid) {
-        if (!process.env.OBTAIN_QUEUE) throw new Err(400, null, 'OBTAIN_QUEUE not set');
-
         try {
             const token = jwt.sign({
                 u: uid
@@ -74,7 +79,7 @@ export default class SQS {
 
             const sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION });
             await sqs.sendMessage({
-                QueueUrl: process.env.OBTAIN_QUEUE,
+                QueueUrl: this.sqs['obtain-queue'].url,
                 MessageBody: JSON.stringify({
                     token,
                     config

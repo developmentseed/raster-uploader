@@ -27,7 +27,9 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
 export default async function configure(args, cb) {
     try {
-        return server(args, await Config.env(args), cb);
+        const config = Config.env(args);
+        await config.load();
+        return server(args, config, cb);
     } catch (err) {
         console.error(err);
         process.exit(1);

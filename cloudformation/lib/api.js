@@ -284,9 +284,6 @@ const stack = {
                                 '/uploader'
                             ])
                         },
-                        { Name: 'QUEUE', Value: cf.ref('Queue') },
-                        { Name: 'OBTAIN_QUEUE', Value: cf.ref('ObtainQueue') },
-                        { Name: 'TRANSFORM_QUEUE', Value: cf.ref('TransformQueue') },
                         { Name: 'SecretARN', Value: cf.ref('APISecrets') },
                         { Name: 'ASSET_BUCKET', Value: cf.ref('Bucket') },
                         { Name: 'SigningSecret', Value: cf.ref('SigningSecret') },

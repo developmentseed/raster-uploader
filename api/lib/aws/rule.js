@@ -5,13 +5,17 @@ import { Err } from '@openaddresses/batch-schema';
  * @class
  */
 export default class EventRule {
+    constructor(stack) {
+        this.stack = stack;
+    }
+
     async create(schedule) {
         try {
             const eb = new AWS.EventBridge({ region: process.env.AWS_DEFAULT_REGION });
 
             await eb.putRule({
-                Name: ``
-                Description: ``
+                Name: `${this.stack}-schedule-${schedule.id}`,
+                Description: `${this.stack} Schedule: ${schedule.id}`,
                 ScheduleExpression: `cron(${schedule.cron})`,
                 State: 'ENABLED'
             }).promise();
@@ -22,9 +26,10 @@ export default class EventRule {
 
         try {
             await eb.putTargets({
-                Rule: ``,
+                Rule: `${this.stack}-schedule-${schedule.id}`,
                 Targets: [{
-
+                    Id: 'default',
+                    Arn: `arn:aws:lambda:us-east-1:123456789012:function:MyFunction`
                 }]
             }).promise();
         } catch (err) {
@@ -37,8 +42,8 @@ export default class EventRule {
             const eb = new AWS.EventBridge({ region: process.env.AWS_DEFAULT_REGION });
 
             await eb.putRule({
-                Name: ``
-                Description: ``
+                Name: `${this.stack}-schedule-${schedule.id}`,
+                Description: `${this.stack} Schedule: ${schedule.id}`,
                 ScheduleExpression: `cron(${schedule.cron})`,
                 State: 'ENABLED'
             }).promise();
@@ -52,7 +57,7 @@ export default class EventRule {
             const eb = new AWS.EventBridge({ region: process.env.AWS_DEFAULT_REGION });
 
             await eb.deleteRule({
-                Name: ``
+                Name: `${this.stack}-schedule-${schedule.id}`,
             }).promise();
         } catch (err) {
             throw new Err(500, new Error(err), 'Failed to disable rule');
@@ -64,7 +69,7 @@ export default class EventRule {
             const eb = new AWS.EventBridge({ region: process.env.AWS_DEFAULT_REGION });
 
             await eb.disableRule({
-                Name: ``
+                Name: `${this.stack}-schedule-${schedule.id}`,
             }).promise();
         } catch (err) {
             throw new Err(500, new Error(err), 'Failed to disable rule');
@@ -76,7 +81,7 @@ export default class EventRule {
             const eb = new AWS.EventBridge({ region: process.env.AWS_DEFAULT_REGION });
 
             await eb.enableRule({
-                Name: ``
+                Name: `${this.stack}-schedule-${schedule.id}`,
             }).promise();
         } catch (err) {
             throw new Err(500, new Error(err), 'Failed to disable rule');
