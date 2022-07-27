@@ -1,7 +1,7 @@
 <template>
     <div class='col col--12'>
         <div class='col col--12 clearfix py6'>
-            <RasterMenu item='Sources'/>
+            <RasterMenu item='Schedules'/>
 
             <div class='fr'>
                 <button @click='showSearch = !showSearch' class='btn round btn--stroke color-gray color-blue-on-hover mr12'>
@@ -10,7 +10,7 @@
                 <button @click='refresh' class='btn round btn--stroke color-gray color-blue-on-hover mr12'>
                     <svg class='icon'><use href='#icon-refresh'/></svg>
                 </button>
-                <button @click='$router.push({ name: "newsource" })' class='btn round btn--stroke color-gray color-green-on-hover'>
+                <button @click='$router.push({ name: "newschedule" })' class='btn round btn--stroke color-gray color-green-on-hover'>
                     <svg class='icon'><use href='#icon-plus'/></svg>
                 </button>
             </div>
@@ -22,34 +22,34 @@
                         <div class='absolute flex flex--center-cross flex--center-main w36 h36'>
                             <svg class='icon'><use xlink:href='#icon-search'></use></svg>
                         </div>
-                        <input ref='search' v-model='search' class='input pl36' placeholder='Source Name'>
+                        <input ref='search' v-model='search' class='input pl36' placeholder='Schedule Name'>
                     </div>
                 </div>
             </template>
-            <template v-if='loading.sources'>
-                <Loading desc='Loading Sources'/>
+            <template v-if='loading.schedules'>
+                <Loading desc='Loading Schedules'/>
             </template>
-            <template v-else-if='sources.length === 0'>
+            <template v-else-if='schedules.length === 0'>
                 <div class='flex flex--center-main pt36'>
                     <svg class='flex-child icon w60 h60 color--gray'><use href='#icon-info'/></svg>
                 </div>
 
                 <div class='flex flex--center-main pt12 pb36'>
-                    <h1 class='flex-child txt-h4 cursor-default'>No Upload Sources Found</h1>
+                    <h1 class='flex-child txt-h4 cursor-default'>No Schedules Found</h1>
                 </div>
             </template>
             <template v-else>
-                <div @click='$router.push({ name: "source", params: { sourceid: source.id } })' :key='source.id' v-for='source in sources.slice(page * 10, page * 10 + 10)'>
+                <div @click='$router.push({ name: "schedule", params: { scheduleid: schedule.id } })' :key='schedule.id' v-for='schedule in schedules.slice(page * 10, page * 10 + 10)'>
                     <div class='cursor-pointer bg-darken10-on-hover col col--12 py12'>
                         <div class='col col--12 grid py6 px12'>
                             <div class='col col--6'>
                                 <div class='col col--12 clearfix'>
-                                    <h3 class='txt-h4 fl' v-text='source.name'></h3>
+                                    <h3 class='txt-h4 fl' v-text='schedule.name'></h3>
                                 </div>
                             </div>
                             <div class='col col--6'>
                                 <div class='fr bg-gray-faint color-gray inline-block px6 py3 round txt-xs txt-bold mr12'>
-                                    <span v-text='new Date(source.created).toISOString()'/>
+                                    <span v-text='new Date(schedule.created).toISOString()'/>
                                 </div>
                             </div>
                         </div>
@@ -58,7 +58,7 @@
 
                 <Pager
                     @page='page = $event'
-                    :total='sources.length'
+                    :total='schedules.length'
                     perpage='10'
                 />
             </template>
@@ -72,7 +72,7 @@ import Loading from './util/Loading.vue';
 import RasterMenu from './util/Menu.vue';
 
 export default {
-    name: 'Sources',
+    name: 'Schedules',
     props: ['meta'],
     data: function() {
         return {
@@ -80,9 +80,9 @@ export default {
             showSearch: false,
             search: '',
             archived: false,
-            sources: [],
+            schedules: [],
             loading: {
-                sources: true
+                schedules: true
             }
         }
     },
@@ -118,22 +118,22 @@ export default {
     methods: {
         refresh: function() {
             this.page = 0;
-            this.getSources();
+            this.getSchedules();
         },
         external: function(url) {
             if (!url) return;
             window.open(url, "_blank")
         },
-        getSources: async function() {
-            this.loading.sources = true;
+        getSchedules: async function() {
+            this.loading.schedules = true;
 
             try {
-                const url = new URL('/api/source', window.api);
+                const url = new URL('/api/schedule', window.api);
                 url.searchParams.append('filter', this.search);
-                const sources = await window.std(url);
+                const schedules = await window.std(url);
 
-                this.sources = sources.upload_sources;
-                this.loading.sources = false;
+                this.schedules = schedules.schedules;
+                this.loading.schedules = false;
             } catch (err) {
                 this.$emit('err', err);
             }

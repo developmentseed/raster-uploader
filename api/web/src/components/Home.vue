@@ -1,15 +1,7 @@
 <template>
     <div class='col col--12'>
         <div class='col col--12 clearfix py6'>
-            <h2 @click='$router.push({ path: "/" })' class='dropdown fl cursor-default'>
-                <svg class='icon inline'><use href='#icon-chevron-down'/></svg>
-                Uploads
-
-                <div class='round dropdown-content color-black' style='top: 24px;'>
-                    <div @click.stop='$router.push({ path: "/basemap" })' class='round bg-gray-light-on-hover cursor-pointer px12'>BaseMaps</div>
-                    <div @click.stop='$router.push({ path: "/source" })' class='round bg-gray-light-on-hover cursor-pointer px12'>Sources</div>
-                </div>
-            </h2>
+            <RasterMenu item='Uploads'/>
 
             <div class='fr'>
                 <label class='switch-container px6'>
@@ -89,6 +81,7 @@
 
 <script>
 import Pager from './util/Pager.vue';
+import RasterMenu from './util/Menu.vue';
 import Loading from './util/Loading.vue';
 
 export default {
@@ -163,6 +156,7 @@ export default {
     },
     components: {
         Loading,
+        RasterMenu,
         Pager
     }
 }
