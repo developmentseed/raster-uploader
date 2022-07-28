@@ -12,7 +12,8 @@
         "uploaded",
         "archived",
         "starred",
-        "config"
+        "config",
+        "schedule_id"
     ],
     "additionalProperties": false,
     "properties": {
@@ -52,6 +53,9 @@
         },
         "config": {
             "type": "object"
+        },
+        "schedule_id": {
+            "type": ["null", "integer"]
         }
     }
 }

@@ -28,6 +28,10 @@
             "description": "Filter by filename",
             "default": ""
         },
+        "schedule": {
+            "type": "integer",
+            "description": "Filter by schedule ID"
+        },
         "sort": {
             "type": "string",
             "default": "created",

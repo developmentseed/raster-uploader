@@ -55,12 +55,7 @@
             <Loading/>
         </template>
         <template v-else-if='!metas.length'>
-            <div class='flex flex--center-main w-full'>
-                <div class='flex-child py24'>
-                    <svg class='icon h60 w60 color-gray'><use href='#icon-info'/></svg>
-                </div>
-            </div>
-            <div class='w-full align-center txt-bold'>No Metadata Found</div>
+            <None name='metadata'/>
         </template>
         <template v-else>
             <div :key='meta.key' v-for='meta in metas' class='col col--12 grid'>
@@ -85,6 +80,7 @@
 
 <script>
 import Pager from '../util/Pager.vue';
+import None from '../util/None.vue';
 import Loading from '../util/Loading.vue';
 import MetadataSingle from './Metadata.vue';
 
@@ -148,7 +144,8 @@ export default {
     components: {
         MetadataSingle,
         Loading,
-        Pager
+        Pager,
+        None
     }
 }
 </script>

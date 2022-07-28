@@ -72,7 +72,6 @@ test('POST: api/upload - Missing Content-Type', async (t) => {
 });
 
 test('POST: api/upload', async (t) => {
-    process.env.QUEUE = 'queue';
     try {
         AWS.stub('S3', 'upload', async function(params) {
             t.equal(params.Bucket, 'test');
@@ -95,7 +94,7 @@ test('POST: api/upload', async (t) => {
         });
 
         AWS.stub('SQS', 'sendMessage', async function(params) {
-            t.equal(params.QueueUrl, 'queue');
+            t.equal(params.QueueUrl, 'http://example.com/queue');
             const body = JSON.parse(params.MessageBody);
 
             t.ok(body.token);
@@ -141,6 +140,7 @@ test('POST: api/upload', async (t) => {
             uploaded: true,
             archived: false,
             starred: false,
+            schedule_id: null,
             config: { cog: { overview: null, blocksize: 512, compression: 'deflate' } }
         });
     } catch (err) {
@@ -175,7 +175,8 @@ test('GET: api/upload', async (t) => {
                 name: 'blob',
                 obtain: false,
                 uploaded: true,
-                starred: false
+                starred: false,
+                schedule_id: null
             }]
         });
     } catch (err) {

@@ -1,8 +1,11 @@
 import { Err } from '@openaddresses/batch-schema';
 import Schedule from '../lib/types/schedule.js';
 import Auth from '../lib/auth.js';
+import Rule from '../lib/aws/rule.js';
 
 export default async function router(schema, config) {
+    const rule = new Rule(config.StackName, config.sqs);
+
     /**
      * @api {get} /api/schedule List Schedules
      * @apiVersion 1.0.0
@@ -56,6 +59,8 @@ export default async function router(schema, config) {
             const schedule = await Schedule.from(config.pool, req.params.schedule);
             schedule.permission(req.auth);
 
+            schedule.paused = (await rule.describe(schedule)).State !== 'ENABLED';
+
             res.json(schedule.serialize());
         } catch (err) {
             return Err.respond(err, res);
@@ -82,10 +87,15 @@ export default async function router(schema, config) {
         try {
             await Auth.is_auth(req);
 
-            delete req.body.secrets;
-
             req.body.uid = req.auth.id;
+            const paused = req.body.paused;
+            delete req.body.paused;
             const schedule = await Schedule.generate(config.pool, req.body);
+
+            schedule.paused = paused;
+            await rule.create(schedule);
+
+            schedule.paused = (await rule.describe(schedule)).State !== 'ENABLED';
 
             return res.json(schedule.serialize());
         } catch (err) {
@@ -119,7 +129,16 @@ export default async function router(schema, config) {
             const schedule = await Schedule.from(config.pool, req.params.schedule);
             schedule.permission(req.auth);
 
+            const paused = req.body.paused;
+            delete req.body.paused;
             await schedule.commit(config.pool, null, req.body);
+
+            await rule.update(schedule);
+
+            if (paused === true) await rule.disable(schedule);
+            if (paused === false) await rule.enable(schedule);
+
+            schedule.paused = (await rule.describe(schedule)).State !== 'ENABLED';
 
             return res.json(schedule.serialize());
         } catch (err) {
@@ -150,6 +169,8 @@ export default async function router(schema, config) {
 
             const schedule = await Schedule.from(config.pool, req.params.schedule);
             schedule.permission(req.auth);
+
+            await rule.delete(schedule);
 
             await schedule.delete(config.pool);
 

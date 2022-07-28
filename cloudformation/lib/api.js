@@ -129,14 +129,14 @@ const stack = {
                     PolicyName: cf.join([cf.stackName, '-api-task']),
                     PolicyDocument: {
                         Statement: [{
-                            Effect: 'Allow',
+                            Effect: 'Allow', // Encryption & Decryption of S3 Resources
                             Action: [
                                 'kms:Decrypt',
                                 'kms:GenerateDataKey'
                             ],
                             Resource: [cf.getAtt('KMS', 'Arn')]
                         },{
-                            Effect: 'Allow',
+                            Effect: 'Allow', // Uploading/Download of Rasters
                             Action: [
                                 's3:*'
                             ],
@@ -145,7 +145,7 @@ const stack = {
                                 cf.join(['arn:aws:s3:::', cf.ref('Bucket'), '/*'])
                             ]
                         },{
-                            Effect: 'Allow',
+                            Effect: 'Allow', // Password Reset & User Validation
                             Action: [
                                 'ses:SendEmail'
                             ],
@@ -153,7 +153,7 @@ const stack = {
                                 cf.join(['arn:aws:ses:', cf.region, ':', cf.accountId, ':identity/*'])
                             ]
                         },{
-                            Effect: 'Allow',
+                            Effect: 'Allow', // API Stack Secrets
                             Action: [
                                 'secretsmanager:Describe*',
                                 'secretsmanager:Get*',
@@ -163,7 +163,7 @@ const stack = {
                                 cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '/*' ]),
                             ]
                         },{
-                            Effect: 'Allow',
+                            Effect: 'Allow', // Upload Source Secrets
                             Action: [
                                 "secretsmanager:Create*",
                                 "secretsmanager:Put*",
@@ -178,7 +178,7 @@ const stack = {
                                 cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '-*' ])
                             ]
                         },{
-                            Effect: 'Allow',
+                            Effect: 'Allow', // Performing work on rasters
                             Action: [
                                 'sqs:ChangeMessageVisibility',
                                 'sqs:DeleteMessage',
@@ -193,6 +193,21 @@ const stack = {
                                 cf.getAtt('DeadQueue', 'Arn'),
                                 cf.getAtt('ObtainQueue', 'Arn'),
                                 cf.getAtt('TransformQueue', 'Arn')
+                            ]
+                        },{
+                            Effect: 'Allow', // Create events for scheduled uploads
+                            Action: [
+                                'events:PutRule',
+                                'events:DescribeRule',
+                                'events:ListRules',
+                                'events:PutTargets',
+                                'events:RemoveTargets',
+                                'events:DisableRule',
+                                'events:EnableRule',
+                                'events:DeleteRule'
+                            ],
+                            Resource: [
+                                cf.join(['arn:aws:events:', cf.region, ':', cf.accountId, ':rule/', cf.stackName, '-*' ])
                             ]
                         }]
                     }
@@ -269,9 +284,6 @@ const stack = {
                                 '/uploader'
                             ])
                         },
-                        { Name: 'QUEUE', Value: cf.ref('Queue') },
-                        { Name: 'OBTAIN_QUEUE', Value: cf.ref('ObtainQueue') },
-                        { Name: 'TRANSFORM_QUEUE', Value: cf.ref('TransformQueue') },
                         { Name: 'SecretARN', Value: cf.ref('APISecrets') },
                         { Name: 'ASSET_BUCKET', Value: cf.ref('Bucket') },
                         { Name: 'SigningSecret', Value: cf.ref('SigningSecret') },

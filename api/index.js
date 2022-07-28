@@ -22,16 +22,9 @@ const args = minimist(process.argv, {
 });
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-    configure(args);
-}
-
-export default async function configure(args, cb) {
-    try {
-        return server(args, await Config.env(args), cb);
-    } catch (err) {
-        console.error(err);
-        process.exit(1);
-    }
+    const config = Config.env(args);
+    await config.load();
+    await server(config);
 }
 
 /**
@@ -47,7 +40,7 @@ export default async function configure(args, cb) {
  *   This API endpoint does not require authentication
  */
 
-async function server(args, config) {
+export default async function server(config) {
     config.pool = await Pool.connect(process.env.POSTGRES || args.postgres || 'postgres://postgres@localhost:5432/uploader', {
         parsing: {
             geometry: true
@@ -199,13 +192,12 @@ async function server(args, config) {
     }));
     app.use(express.static('web/dist'));
 
-
     return new Promise((resolve, reject) => {
         const srv = app.listen(4999, (err) => {
             if (err) return reject(err);
 
             if (!config.silent) console.log('ok - http://localhost:4999');
-            return resolve([srv, config]);
+            return resolve(srv);
         });
     });
 }

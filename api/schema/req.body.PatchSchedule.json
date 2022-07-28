@@ -7,6 +7,9 @@
         },
         "cron": {
             "type": "string"
+        },
+        "paused": {
+            "type": "boolean"
         }
     }
 }

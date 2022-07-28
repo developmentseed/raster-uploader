@@ -2,11 +2,11 @@ import { Err } from '@openaddresses/batch-schema';
 import busboy from 'busboy';
 import Upload from '../lib/types/upload.js';
 import Auth from '../lib/auth.js';
-import S3 from '../lib/s3.js';
-import SQS from '../lib/sqs.js';
+import S3 from '../lib/aws/s3.js';
+import SQS from '../lib/aws/sqs.js';
 
 export default async function router(schema, config) {
-    const sqs = new SQS(config.SigningSecret);
+    const sqs = new SQS(config.SigningSecret, config.sqs);
 
     /**
      * @api {get} /api/upload List Uploads

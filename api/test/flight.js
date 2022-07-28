@@ -4,6 +4,7 @@ import assert from 'assert';
 import { sql } from 'slonik';
 import fs from 'fs';
 import api from '../index.js';
+import Config from '../lib/config.js';
 import Knex from 'knex';
 import KnexConfig from '../knexfile.js';
 import drop from './drop.js';
@@ -34,6 +35,7 @@ export default class Flight {
 
     constructor() {
         this.srv;
+        this.config;
         this.base = 'http://localhost:4999';
         this.token = {};
     }
@@ -196,18 +198,26 @@ export default class Flight {
      */
     takeoff(test, custom = {}) {
         test('test server takeoff', async (t) => {
-            const res = await api(Object.assign({
+            this.config = Config.env({
                 silent: true,
+                validate: false,
                 meta: {
                     'user::registration': true
                 }
-            }, custom));
+            });
 
-            t.ok(res[0], 'server object returned');
-            t.ok(res[1], 'config object returned');
+            this.config.sqs = {};
+            for (const sqs of ['queue', 'transform-queue', 'obtain-queue']) {
+                this.config.sqs[sqs] = {
+                    url: 'http://example.com/queue',
+                    arn: 'arn:aws:example'
+                };
+            }
 
-            this.srv = res[0];
-            this.config = res[1];
+            Object.assign(this.config, custom);
+
+            console.error(this.config);
+            this.srv = await api(this.config);
 
             t.end();
         });
@@ -270,16 +280,14 @@ export default class Flight {
      * @param {Tape} test tape instance to run landing action on
      */
     landing(test) {
-        test('test server landing - api', async (t) => {
-            if (this.srv) {
-                t.ok(this.srv, 'server object returned');
-                await this.srv.close();
-            }
-
-            t.ok(this.config.pool, 'pool object returned');
-            await this.config.pool.end();
-
-            t.end();
+        test('test server landing - api', (t) => {
+            this.srv.close(async () => {
+                await this.config.pool.end();
+                delete this.config;
+                delete this.srv;
+                t.end();
+            });
         });
     }
 }
+

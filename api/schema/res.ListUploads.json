@@ -24,7 +24,8 @@
                     "obtain",
                     "uploaded",
                     "archived",
-                    "starred"
+                    "starred",
+                    "schedule_id"
                 ],
                 "additionalProperties": false,
                 "properties": {
@@ -57,6 +58,9 @@
                     },
                     "starred": {
                         "type": "boolean"
+                    },
+                    "schedule_id": {
+                        "type": ["null", "integer"]
                     }
                 }
             }
