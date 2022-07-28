@@ -36,6 +36,7 @@ export default class Config {
 
         config.args = args;
         config.silent = args.silent;
+        config.validate = args.validate !== undefined ? args.validate : true;
 
         // TODO Figure out frontend URL
         config.url = 'http://developmentseed.org';

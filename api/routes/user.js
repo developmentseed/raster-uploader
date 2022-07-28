@@ -87,7 +87,7 @@ export default async function router(schema, config) {
                 }
             }
 
-            if (!config.args.validate) {
+            if (!config.validate) {
                 usr.validated = true;
                 await usr.commit(config.pool);
             }

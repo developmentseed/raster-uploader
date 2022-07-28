@@ -4,6 +4,7 @@ import assert from 'assert';
 import { sql } from 'slonik';
 import fs from 'fs';
 import api from '../index.js';
+import Config from '../lib/config.js';
 import Knex from 'knex';
 import KnexConfig from '../knexfile.js';
 import drop from './drop.js';
@@ -196,12 +197,25 @@ export default class Flight {
      */
     takeoff(test, custom = {}) {
         test('test server takeoff', async (t) => {
-            const res = await api(Object.assign({
+            const config = Config.env({
                 silent: true,
+                validate: false,
                 meta: {
                     'user::registration': true
                 }
-            }, custom));
+            });
+
+            config.sqs = {};
+            for (const sqs of ['queue', 'transform-queue', 'obtain-queue']) {
+                config.sqs[sqs] = {
+                    url: 'http://example.com/queue',
+                    arn: 'arn:aws:example'
+                };
+            }
+
+            Object.assign(config, custom);
+
+            const res = await api(config);
 
             t.ok(res[0], 'server object returned');
             t.ok(res[1], 'config object returned');
@@ -279,7 +293,15 @@ export default class Flight {
             t.ok(this.config.pool, 'pool object returned');
             await this.config.pool.end();
 
+            await sleep(1000);
             t.end();
         });
     }
 }
+
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    }); 
+}
+
