@@ -6,7 +6,8 @@
         "created",
         "updated",
         "name",
-        "cron"
+        "cron",
+        "paused"
     ],
     "additionalProperties": false,
     "properties": {
@@ -27,6 +28,9 @@
         },
         "cron": {
             "type": "string"
+        },
+        "paused": {
+            "type": "boolean"
         }
     }
 }

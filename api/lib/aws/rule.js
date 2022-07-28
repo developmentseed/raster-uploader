@@ -38,6 +38,20 @@ export default class EventRule {
         }
     }
 
+    async describe(schedule) {
+        const eb = new AWS.EventBridge({ region: process.env.AWS_DEFAULT_REGION });
+
+        try {
+            const res = await eb.describeRule({
+                Name: `${this.stack}-schedule-${schedule.id}`,
+            }).promise();
+
+            return res;
+        } catch (err) {
+            throw new Err(500, new Error(err), 'Failed to describe rule');
+        }
+    }
+
     async update(schedule) {
         try {
             const eb = new AWS.EventBridge({ region: process.env.AWS_DEFAULT_REGION });
@@ -70,7 +84,7 @@ export default class EventRule {
                 Name: `${this.stack}-schedule-${schedule.id}`,
             }).promise();
         } catch (err) {
-            throw new Err(500, new Error(err), 'Failed to disable rule');
+            throw new Err(500, new Error(err), 'Failed to delete rule');
         }
     }
 
@@ -94,7 +108,7 @@ export default class EventRule {
                 Name: `${this.stack}-schedule-${schedule.id}`,
             }).promise();
         } catch (err) {
-            throw new Err(500, new Error(err), 'Failed to disable rule');
+            throw new Err(500, new Error(err), 'Failed to enable rule');
         }
     }
 }

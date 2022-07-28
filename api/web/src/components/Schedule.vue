@@ -106,7 +106,8 @@ export default {
             },
             schedule: {
                 name: '',
-                cron: '1 12 ? * MON-FRI *'
+                cron: '1 12 ? * MON-FRI *',
+                paused: false
             }
         };
     },
