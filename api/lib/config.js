@@ -34,8 +34,8 @@ export default class Config {
 
         config.sqs = {};
 
-        config.args = args;
         config.silent = args.silent;
+        config.email = args.email || false;
         config.validate = args.validate !== undefined ? args.validate : true;
 
         // TODO Figure out frontend URL

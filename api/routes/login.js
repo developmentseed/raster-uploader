@@ -120,7 +120,7 @@ export default async function router(schema, config) {
         try {
             const reset = await Login.forgot(config.pool, req.body.username); // Username or email
 
-            if (config.args.email) {
+            if (config.email) {
                 await email.forgot(reset);
             }
 

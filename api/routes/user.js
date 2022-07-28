@@ -67,7 +67,7 @@ export default async function router(schema, config) {
                 const forgot = await Login.forgot(config.pool, usr.username, 'verify');
                 token = forgot.token;
 
-                if (config.args.email) {
+                if (config.email) {
                     await email.verify({
                         username: usr.username,
                         email: usr.email,
@@ -78,7 +78,7 @@ export default async function router(schema, config) {
                 const forgot = await Login.forgot(config.pool, usr.username, 'reset');
                 token = forgot.token;
 
-                if (config.args.email) {
+                if (config.email) {
                     await email.forgot({
                         username: usr.username,
                         email: usr.email,
@@ -87,6 +87,7 @@ export default async function router(schema, config) {
                 }
             }
 
+            console.error('VALIDATE', config.validate);
             if (!config.validate) {
                 usr.validated = true;
                 await usr.commit(config.pool);

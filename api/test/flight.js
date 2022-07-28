@@ -35,6 +35,7 @@ export default class Flight {
 
     constructor() {
         this.srv;
+        this.config;
         this.base = 'http://localhost:4999';
         this.token = {};
     }
@@ -197,7 +198,7 @@ export default class Flight {
      */
     takeoff(test, custom = {}) {
         test('test server takeoff', async (t) => {
-            const config = Config.env({
+            this.config = Config.env({
                 silent: true,
                 validate: false,
                 meta: {
@@ -205,23 +206,18 @@ export default class Flight {
                 }
             });
 
-            config.sqs = {};
+            this.config.sqs = {};
             for (const sqs of ['queue', 'transform-queue', 'obtain-queue']) {
-                config.sqs[sqs] = {
+                this.config.sqs[sqs] = {
                     url: 'http://example.com/queue',
                     arn: 'arn:aws:example'
                 };
             }
 
-            Object.assign(config, custom);
+            Object.assign(this.config, custom);
 
-            const res = await api(config);
-
-            t.ok(res[0], 'server object returned');
-            t.ok(res[1], 'config object returned');
-
-            this.srv = res[0];
-            this.config = res[1];
+            console.error(this.config);
+            this.srv = await api(this.config);
 
             t.end();
         });
@@ -284,24 +280,14 @@ export default class Flight {
      * @param {Tape} test tape instance to run landing action on
      */
     landing(test) {
-        test('test server landing - api', async (t) => {
-            if (this.srv) {
-                t.ok(this.srv, 'server object returned');
-                await this.srv.close();
-            }
-
-            t.ok(this.config.pool, 'pool object returned');
-            await this.config.pool.end();
-
-            await sleep(1000);
-            t.end();
+        test('test server landing - api', (t) => {
+            this.srv.close(async () => {
+                await this.config.pool.end();
+                delete this.config;
+                delete this.srv;
+                t.end();
+            });
         });
     }
-}
-
-function sleep(ms) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms);
-    }); 
 }
 
