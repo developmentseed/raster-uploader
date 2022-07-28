@@ -18,7 +18,7 @@ export default class EventRule {
                 Name: `${this.stack}-schedule-${schedule.id}`,
                 Description: `${this.stack} Schedule: ${schedule.id}`,
                 ScheduleExpression: `cron(${schedule.cron})`,
-                State: 'ENABLED'
+                State: schedule.paused ? 'DISABLED' : 'ENABLED'
             }).promise();
 
         } catch (err) {

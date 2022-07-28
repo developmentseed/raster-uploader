@@ -3,7 +3,8 @@
     "additionalProperties": false,
     "required": [
         "name",
-        "cron"
+        "cron",
+        "paused"
     ],
     "properties": {
         "name": {
@@ -11,6 +12,10 @@
         },
         "cron": {
             "type": "string"
+        },
+        "paused": {
+            "type": "boolean",
+            "default": false
         }
     }
 }

@@ -88,8 +88,11 @@ export default async function router(schema, config) {
             await Auth.is_auth(req);
 
             req.body.uid = req.auth.id;
+            const paused = req.body.paused;
+            delete req.body.paused;
             const schedule = await Schedule.generate(config.pool, req.body);
 
+            schedule.paused = paused;
             await rule.create(schedule);
 
             schedule.paused = (await rule.describe(schedule)).State === 'ENABLED';
@@ -126,12 +129,14 @@ export default async function router(schema, config) {
             const schedule = await Schedule.from(config.pool, req.params.schedule);
             schedule.permission(req.auth);
 
+            const paused = req.body.paused;
+            delete req.body.paused;
             await schedule.commit(config.pool, null, req.body);
 
             await rule.update(schedule);
 
-            if (req.body.paused === true) await rule.disable(schedule);
-            if (req.body.pause === false) await rule.enable(schedule);
+            if (paused === true) await rule.disable(schedule);
+            if (paused === false) await rule.enable(schedule);
 
             schedule.paused = (await rule.describe(schedule)).State === 'ENABLED';
 

@@ -8,13 +8,23 @@
                 <span v-else>New</span>
             </h2>
 
-            <button @click='$router.go(-1)' class='btn fr round btn--stroke color-gray color-black-on-hover'>
-                <svg class='icon'><use href='#icon-close'/></svg>
-            </button>
+            <div class='fr'>
+                <button v-if='$route.params.scheduleid' @click='deleteSchedule' class='mr12 btn round btn--stroke color-gray color-red-on-hover'>
+                    <svg class='icon'><use href='#icon-trash'/></svg>
+                </button>
 
-            <button v-if='$route.params.scheduleid' @click='deleteSchedule' class='mr12 btn fr round btn--stroke color-gray color-red-on-hover'>
-                <svg class='icon'><use href='#icon-trash'/></svg>
-            </button>
+                <button @click='$router.go(-1)' class='btn round btn--stroke color-gray color-black-on-hover'>
+                    <svg class='icon'><use href='#icon-close'/></svg>
+                </button>
+
+                <div class='mr12 fl'>
+                    <span class='mx3'>Paused</span>
+                    <label class='switch-container'>
+                        <input v-model='schedule.paused' type='checkbox' />
+                        <div class='switch'></div>
+                    </label>
+                </div>
+            </div>
         </div>
         <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
             <template v-if='loading.schedule'>
@@ -48,23 +58,23 @@
                         </template>
                     </div>
                 </div>
-            </template>
 
-            <template v-if='$route.params.scheduleid'>
-                <h2 class='mb3'>Uploads</h2>
-                <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
-                    <template v-if='loading.uploads'>
-                        <Loading desc='Loading Uploads'/>
-                    </template>
-                    <template v-else-if='uploads.total === 0'>
-                        <None name='Uploads'/>
-                    </template>
-                    <template v-else>
-                        <div :key='upload.id' v-for='upload in uploads.uploads' class='col col--12'>
-                            <UploadItem :upload='upload'/>
-                        </div>
-                    </template>
-                </div>
+                <template v-if='$route.params.scheduleid'>
+                    <h2 class='mb3'>Uploads</h2>
+                    <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
+                        <template v-if='loading.uploads'>
+                            <Loading desc='Loading Uploads'/>
+                        </template>
+                        <template v-else-if='uploads.total === 0'>
+                            <None name='Uploads'/>
+                        </template>
+                        <template v-else>
+                            <div :key='upload.id' v-for='upload in uploads.uploads' class='col col--12'>
+                                <UploadItem :upload='upload'/>
+                            </div>
+                        </template>
+                    </div>
+                </template>
             </template>
         </div>
     </div>
@@ -165,7 +175,8 @@ export default {
                     method: this.$route.params.scheduleid ? 'PATCH' : 'POST',
                     body: {
                         name: this.schedule.name,
-                        cron: this.schedule.cron
+                        cron: this.schedule.cron,
+                        paused: this.schedule.paused
                     }
                 });
 
