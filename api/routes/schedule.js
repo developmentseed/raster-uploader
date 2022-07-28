@@ -59,7 +59,7 @@ export default async function router(schema, config) {
             const schedule = await Schedule.from(config.pool, req.params.schedule);
             schedule.permission(req.auth);
 
-            schedule.paused = (await rule.describe(schedule)).State === 'ENABLED';
+            schedule.paused = (await rule.describe(schedule)).State !== 'ENABLED';
 
             res.json(schedule.serialize());
         } catch (err) {
@@ -95,7 +95,7 @@ export default async function router(schema, config) {
             schedule.paused = paused;
             await rule.create(schedule);
 
-            schedule.paused = (await rule.describe(schedule)).State === 'ENABLED';
+            schedule.paused = (await rule.describe(schedule)).State !== 'ENABLED';
 
             return res.json(schedule.serialize());
         } catch (err) {
@@ -138,7 +138,7 @@ export default async function router(schema, config) {
             if (paused === true) await rule.disable(schedule);
             if (paused === false) await rule.enable(schedule);
 
-            schedule.paused = (await rule.describe(schedule)).State === 'ENABLED';
+            schedule.paused = (await rule.describe(schedule)).State !== 'ENABLED';
 
             return res.json(schedule.serialize());
         } catch (err) {
