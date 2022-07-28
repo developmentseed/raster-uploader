@@ -198,7 +198,7 @@ const stack = {
                             Effect: 'Allow', // Create events for scheduled uploads
                             Action: [
                                 'events:PutRule',
-                                'events:DiscribeRule',
+                                'events:DescribeRule',
                                 'events:ListRules',
                                 'events:PutTargets',
                                 'events:RemoveTargets',
@@ -207,7 +207,7 @@ const stack = {
                                 'events:DeleteRule'
                             ],
                             Resource: [
-                                cf.join(['arn:aws:events:', cf.region, ':', cf.accountId, ':rule/*/', cf.stackName, '-*' ])
+                                cf.join(['arn:aws:events:', cf.region, ':', cf.accountId, ':rule/', cf.stackName, '-*' ])
                             ]
                         }]
                     }
