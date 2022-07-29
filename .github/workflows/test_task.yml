@@ -1,4 +1,4 @@
-name: Test
+name: Test Tasks
 
 on:
     pull_request:
@@ -26,7 +26,7 @@ jobs:
                   ref: ${{ github.event.pull_request.head.sha }}
 
             - name: Install
-            - run: |
+              run: |
                 cd tasks/${{matrix.task}}
                 python3 -m venv venv
                 source venv/bin/activate
