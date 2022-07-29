@@ -77,7 +77,9 @@ export default class EventRule {
                 Ids: ['default']
             }).promise();
         } catch (err) {
-            throw new Err(500, new Error(err), 'Failed to remove targets from rule');
+            if (!err.message.match(/does not exist/)) {
+                throw new Err(500, new Error(err), 'Failed to remove targets from rule');
+            }
         }
 
         try {

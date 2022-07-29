@@ -1,100 +1,107 @@
 <template>
-    <div class="col col--12">
-        <div class='col col--12 clearfix py6'>
-            <h2 class='fl cursor-default'>
-                <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/schedule")'>Schedules</span>
-                &gt;
-                <span v-if='$route.params.scheduleid' v-text='schedule.id'/>
-                <span v-else>New</span>
-            </h2>
+<div class="col col--12">
+    <div class='col col--12 clearfix py6'>
+        <h2 class='fl cursor-default'>
+            <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/schedule")'>Schedules</span>
+            &gt;
+            <span v-if='$route.params.scheduleid' v-text='schedule.id'/>
+            <span v-else>New</span>
+        </h2>
 
-            <div class='fr'>
-                <button v-if='$route.params.scheduleid' @click='deleteSchedule' class='mr12 btn round btn--stroke color-gray color-red-on-hover'>
-                    <svg class='icon'><use href='#icon-trash'/></svg>
-                </button>
+        <div class='fr'>
+            <button v-if='$route.params.scheduleid' @click='deleteSchedule' class='mr12 btn round btn--stroke color-gray color-red-on-hover'>
+                <svg class='icon'><use href='#icon-trash'/></svg>
+            </button>
 
-                <button @click='$router.go(-1)' class='btn round btn--stroke color-gray color-black-on-hover'>
-                    <svg class='icon'><use href='#icon-close'/></svg>
-                </button>
+            <button @click='$router.go(-1)' class='btn round btn--stroke color-gray color-black-on-hover'>
+                <svg class='icon'><use href='#icon-close'/></svg>
+            </button>
 
-                <div class='mr12 fl'>
-                    <span class='mx3'>Paused</span>
-                    <label class='switch-container'>
-                        <input v-model='schedule.paused' type='checkbox' />
-                        <div class='switch'></div>
-                    </label>
-                </div>
+            <div class='mr12 fl'>
+                <span class='mx3'>Paused</span>
+                <label class='switch-container'>
+                    <input v-model='schedule.paused' type='checkbox' />
+                    <div class='switch'></div>
+                </label>
             </div>
         </div>
-        <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
-            <template v-if='loading.schedule'>
-                <Loading desc='Loading Schedule'/>
-            </template>
-            <template v-else>
-                <div class='grid grid--gut12'>
-                    <div class='col col--12 py6'>
-                        <label>Schedule Name</label>
-                        <input v-model='schedule.name' class='input' placeholder='Schedule Name'/>
-                    </div>
-
-                    <div class='col col--12 py6'>
-                        <label>Schedule Cron</label>
-                        <input v-model='schedule.cron' class='input' placeholder='Schedule Cron'/>
-
-                        <template v-if='errors.cron'>
-                            <InputError :desc='human'/>
-                        </template>
-                        <template v-else>
-                            <span v-text='human'/>
-                        </template>
-                    </div>
-
-                    <template v-if='loading.sources'>
-                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
-                            <Loading desc='Loading Upload Sources'/>
-                        </div>
-                    </template>
-                    <template v-else-if='sources.total === 0'>
-                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
-                            <None name='Upload Sources' :create='true'/>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <Selection
-                            :selections='sources.upload_sources'
-                        />
-                    </template>
-
-                    <div class='col col--12 py12'>
-                        <template v-if='$route.params.scheduleid'>
-                            <button @click='postSchedule' class='btn btn--stroke round fr color-blue-light color-green-on-hover'>Update Schedule</button>
-                        </template>
-                        <template v-else>
-                            <button @click='postSchedule' class='btn btn--stroke round fr color-green-light color-green-on-hover'>Add Schedule</button>
-                        </template>
-                    </div>
+    </div>
+    <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
+        <template v-if='loading.schedule'>
+            <Loading desc='Loading Schedule'/>
+        </template>
+        <template v-else>
+            <div class='grid grid--gut12'>
+                <div class='col col--12 py6'>
+                    <label>Schedule Name</label>
+                    <input v-model='schedule.name' class='input' placeholder='Schedule Name'/>
                 </div>
 
-                <template v-if='$route.params.scheduleid'>
-                    <h2 class='mb3'>Uploads</h2>
-                    <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
-                        <template v-if='loading.uploads'>
-                            <Loading desc='Loading Uploads'/>
-                        </template>
-                        <template v-else-if='uploads.total === 0'>
-                            <None name='Uploads'/>
-                        </template>
-                        <template v-else>
-                            <div :key='upload.id' v-for='upload in uploads.uploads' class='col col--12'>
-                                <UploadItem :upload='upload'/>
-                            </div>
-                        </template>
+                <div class='col col--12 py6'>
+                    <label>Schedule Cron</label>
+                    <input v-model='schedule.cron' class='input' placeholder='Schedule Cron'/>
+
+                    <template v-if='errors.cron'>
+                        <InputError :desc='human'/>
+                    </template>
+                    <template v-else>
+                        <span v-text='human'/>
+                    </template>
+                </div>
+
+                <template v-if='loading.sources'>
+                    <div class='col col--12 ml12 mt12 border border--gray-light round'>
+                        <Loading desc='Loading Upload Sources'/>
                     </div>
                 </template>
+                <template v-else-if='sources.total === 0'>
+                    <div class='col col--12 ml12 mt12 border border--gray-light round'>
+                        <None
+                            name='Upload Sources'
+                            :create='true'
+                            @create='modal.source=true'
+                        />
+                    </div>
+                </template>
+                <template v-else>
+                    <Selection
+                        :selections='sources.upload_sources'
+                    />
+                </template>
+
+                <div class='col col--12 py12'>
+                    <template v-if='$route.params.scheduleid'>
+                        <button @click='postSchedule' class='btn btn--stroke round fr color-blue-light color-green-on-hover'>Update Schedule</button>
+                    </template>
+                    <template v-else>
+                        <button @click='postSchedule' class='btn btn--stroke round fr color-green-light color-green-on-hover'>Add Schedule</button>
+                    </template>
+                </div>
+            </div>
+
+            <template v-if='$route.params.scheduleid'>
+                <h2 class='mb3'>Uploads</h2>
+                <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
+                    <template v-if='loading.uploads'>
+                        <Loading desc='Loading Uploads'/>
+                    </template>
+                    <template v-else-if='uploads.total === 0'>
+                        <None name='Uploads'/>
+                    </template>
+                    <template v-else>
+                        <div :key='upload.id' v-for='upload in uploads.uploads' class='col col--12'>
+                            <UploadItem :upload='upload'/>
+                        </div>
+                    </template>
+                </div>
             </template>
-        </div>
+        </template>
     </div>
 
+    <Modal v-if='modal.source'>
+
+    </Modal>
+</div>
 </template>
 
 <script>
@@ -103,6 +110,7 @@ import UploadItem from './util/UploadItem.vue';
 import InputError from './util/InputError.vue';
 import Selection from './util/Selection.vue';
 import None from './util/None.vue';
+import Modal from './util/Modal.vue';
 import cron from 'cronstrue';
 
 export default {
@@ -129,6 +137,9 @@ export default {
             human: '',
             errors: {
                 cron: false
+            },
+            modal: {
+                source: false
             },
             uploads: {
                 total: 0,
@@ -221,6 +232,7 @@ export default {
     },
     components: {
         None,
+        Modal,
         Loading,
         UploadItem,
         InputError,
