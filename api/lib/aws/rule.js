@@ -45,7 +45,6 @@ export default class EventRule {
             const res = await eb.describeRule({
                 Name: `${this.stack}-schedule-${schedule.id}`,
             }).promise();
-            console.error(res);
 
             return res;
         } catch (err) {

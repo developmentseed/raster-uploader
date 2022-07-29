@@ -163,7 +163,6 @@ export default async function router(schema, config) {
                 message: 'User Reset'
             });
         } catch (err) {
-            console.error(err);
             return Err.respond(err, res);
         }
     });
