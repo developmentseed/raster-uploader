@@ -1,5 +1,6 @@
 import { Err } from '@openaddresses/batch-schema';
 import Collection from '../lib/types/collection.js';
+import UploadSource from '../lib/types/upload-source.js';
 import Auth from '../lib/auth.js';
 import Rule from '../lib/aws/rule.js';
 
@@ -90,6 +91,10 @@ export default async function router(schema, config) {
             req.body.uid = req.auth.id;
             const paused = req.body.paused;
             delete req.body.paused;
+
+            const source = await UploadSource.from(config.pool, req.body.source_id);
+            source.permission(req.auth);
+
             const collection = await Collection.generate(config.pool, req.body);
 
             collection.paused = paused;
