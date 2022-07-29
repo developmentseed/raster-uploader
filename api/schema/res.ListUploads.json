@@ -25,7 +25,7 @@
                     "uploaded",
                     "archived",
                     "starred",
-                    "schedule_id"
+                    "collection_id"
                 ],
                 "additionalProperties": false,
                 "properties": {
@@ -59,7 +59,7 @@
                     "starred": {
                         "type": "boolean"
                     },
-                    "schedule_id": {
+                    "collection_id": {
                         "type": ["null", "integer"]
                     }
                 }

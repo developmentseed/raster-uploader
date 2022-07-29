@@ -28,9 +28,9 @@
             "description": "Filter by filename",
             "default": ""
         },
-        "schedule": {
+        "collection": {
             "type": "integer",
-            "description": "Filter by schedule ID"
+            "description": "Filter by collection ID"
         },
         "sort": {
             "type": "string",

@@ -2,14 +2,14 @@
 <div class="col col--12">
     <div class='col col--12 clearfix py6'>
         <h2 class='fl cursor-default'>
-            <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/schedule")'>Schedules</span>
+            <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/collection")'>Collections</span>
             &gt;
-            <span v-if='$route.params.scheduleid' v-text='schedule.id'/>
+            <span v-if='$route.params.collectionid' v-text='collection.id'/>
             <span v-else>New</span>
         </h2>
 
         <div class='fr'>
-            <button v-if='$route.params.scheduleid' @click='deleteSchedule' class='mr12 btn round btn--stroke color-gray color-red-on-hover'>
+            <button v-if='$route.params.collectionid' @click='deleteCollection' class='mr12 btn round btn--stroke color-gray color-red-on-hover'>
                 <svg class='icon'><use href='#icon-trash'/></svg>
             </button>
 
@@ -20,26 +20,26 @@
             <div class='mr12 fl'>
                 <span class='mx3'>Paused</span>
                 <label class='switch-container'>
-                    <input v-model='schedule.paused' type='checkbox' />
+                    <input v-model='collection.paused' type='checkbox' />
                     <div class='switch'></div>
                 </label>
             </div>
         </div>
     </div>
     <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
-        <template v-if='loading.schedule'>
-            <Loading desc='Loading Schedule'/>
+        <template v-if='loading.collection'>
+            <Loading desc='Loading Collection'/>
         </template>
         <template v-else>
             <div class='grid grid--gut12'>
                 <div class='col col--12 py6'>
-                    <label>Schedule Name</label>
-                    <input v-model='schedule.name' class='input' placeholder='Schedule Name'/>
+                    <label>Collection Name</label>
+                    <input v-model='collection.name' class='input' placeholder='Collection Name'/>
                 </div>
 
                 <div class='col col--12 py6'>
-                    <label>Schedule Cron</label>
-                    <input v-model='schedule.cron' class='input' placeholder='Schedule Cron'/>
+                    <label>Collection Cron</label>
+                    <input v-model='collection.cron' class='input' placeholder='Collection Cron'/>
 
                     <template v-if='errors.cron'>
                         <InputError :desc='human'/>
@@ -66,21 +66,21 @@
                 <template v-else>
                     <Selection
                         :selections='sources.upload_sources'
-                        @selection='schedule.source_id = $event'
+                        @selection='collection.source_id = $event'
                     />
                 </template>
 
                 <div class='col col--12 py12'>
-                    <template v-if='$route.params.scheduleid'>
-                        <button @click='postSchedule' class='btn btn--stroke round fr color-blue-light color-green-on-hover'>Update Schedule</button>
+                    <template v-if='$route.params.collectionid'>
+                        <button @click='postCollection' class='btn btn--stroke round fr color-blue-light color-green-on-hover'>Update Collection</button>
                     </template>
                     <template v-else>
-                        <button @click='postSchedule' class='btn btn--stroke round fr color-green-light color-green-on-hover'>Add Schedule</button>
+                        <button @click='postCollection' class='btn btn--stroke round fr color-green-light color-green-on-hover'>Add Collection</button>
                     </template>
                 </div>
             </div>
 
-            <template v-if='$route.params.scheduleid'>
+            <template v-if='$route.params.collectionid'>
                 <h2 class='mb3'>Uploads</h2>
                 <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
                     <template v-if='loading.uploads'>
@@ -116,10 +116,10 @@ import UploadSource from './Source.vue';
 import cron from 'cronstrue';
 
 export default {
-    name: 'Schedule',
+    name: 'Collection',
     mounted: async function() {
-        if (this.$route.params.scheduleid) {
-            await this.getSchedule();
+        if (this.$route.params.collectionid) {
+            await this.getCollection();
             this.setHuman();
 
             this.getUploads();
@@ -132,7 +132,7 @@ export default {
     data: function() {
         return {
             loading: {
-                schedule: false,
+                collection: false,
                 uploads: true,
                 sources: true
             },
@@ -147,7 +147,7 @@ export default {
                 total: 0,
                 uploads: []
             },
-            schedule: {
+            collection: {
                 name: '',
                 cron: '1 12 ? * MON-FRI *',
                 source_id: null,
@@ -156,7 +156,7 @@ export default {
         };
     },
     watch: {
-        'schedule.cron': function() {
+        'collection.cron': function() {
             this.setHuman()
         }
     },
@@ -164,7 +164,7 @@ export default {
         setHuman: function() {
             try {
                 this.errors.cron = false;
-                this.human = cron.toString(this.schedule.cron)
+                this.human = cron.toString(this.collection.cron)
             } catch (err) {
                 this.errors.cron = true;
                 this.human = String(err);
@@ -182,25 +182,25 @@ export default {
         getUploads: async function() {
             try {
                 this.loading.uploads = true;
-                this.uploads = await window.std(`/api/upload?schedule=${this.$route.params.scheduleid}`);
+                this.uploads = await window.std(`/api/upload?collection=${this.$route.params.collectionid}`);
             } catch (err) {
                 this.$emit('err', err);
             }
             this.loading.uploads = false;
         },
-        getSchedule: async function() {
+        getCollection: async function() {
             try {
-                this.loading.schedule = true;
-                this.schedule = await window.std(`/api/schedule/${this.$route.params.scheduleid}`);
+                this.loading.collection = true;
+                this.collection = await window.std(`/api/collection/${this.$route.params.collectionid}`);
             } catch (err) {
                 this.$emit('err', err);
             }
-            this.loading.schedule = false;
+            this.loading.collection = false;
         },
-        deleteSchedule: async function() {
-            this.loading.schedule = true;
+        deleteCollection: async function() {
+            this.loading.collection = true;
             try {
-                await window.std(window.api + `/api/schedule/${this.$route.params.scheduleid}`, {
+                await window.std(window.api + `/api/collection/${this.$route.params.collectionid}`, {
                     method: 'DELETE'
                 });
                 this.$emit('refresh');
@@ -208,35 +208,35 @@ export default {
             } catch (err) {
                 this.$emit('err', err);
             }
-            this.loading.schedule = false;
+            this.loading.collection = false;
         },
-        postSchedule: async function() {
-            this.loading.schedule = true;
+        postCollection: async function() {
+            this.loading.collection = true;
 
             const body = {
-                name: this.schedule.name,
-                cron: this.schedule.cron,
-                paused: this.schedule.paused
+                name: this.collection.name,
+                cron: this.collection.cron,
+                paused: this.collection.paused
             };
 
-            if (!this.$route.params.scheduleid) {
-                body.source_id = this.schedule.source_id;
+            if (!this.$route.params.collectionid) {
+                body.source_id = this.collection.source_id;
             }
 
             try {
-                this.schedule = await window.std(window.api + `/api/schedule${this.$route.params.scheduleid ? '/' + this.$route.params.scheduleid : ''}`, {
-                    method: this.$route.params.scheduleid ? 'PATCH' : 'POST',
+                this.collection = await window.std(window.api + `/api/collection${this.$route.params.collectionid ? '/' + this.$route.params.collectionid : ''}`, {
+                    method: this.$route.params.collectionid ? 'PATCH' : 'POST',
                     body
                 });
 
-                if (!this.$route.params.scheduleid) {
+                if (!this.$route.params.collectionid) {
                     this.$emit('refresh');
                     this.$router.go(-1);
                 }
             } catch (err) {
                 this.$emit('err', err);
             }
-            this.loading.schedule = false;
+            this.loading.collection = false;
         }
     },
     components: {

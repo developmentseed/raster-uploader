@@ -6,13 +6,13 @@ import { sql } from 'slonik';
 /**
  * @class
  */
-export default class Schedule extends Generic {
-    static _table = 'schedules';
-    static _patch = JSON.parse(fs.readFileSync(new URL('../../schema/req.body.PatchSchedule.json', import.meta.url)));
-    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.Schedule.json', import.meta.url)));
+export default class Collection extends Generic {
+    static _table = 'collections';
+    static _patch = JSON.parse(fs.readFileSync(new URL('../../schema/req.body.PatchCollection.json', import.meta.url)));
+    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.Collection.json', import.meta.url)));
 
     /**
-     * List & Filter Schedules
+     * List & Filter Collections
      *
      * @param {Pool} pool - Postgres Pool instance
      * @param {Object} query - Query object
@@ -33,7 +33,7 @@ export default class Schedule extends Generic {
                     count(*) OVER() AS count,
                     *
                 FROM
-                    schedules
+                    collections
                 WHERE
                     name ~ ${query.filter}
                     AND (${query.uid}::BIGINT IS NULL OR uid = ${query.uid})
@@ -53,7 +53,7 @@ export default class Schedule extends Generic {
 
     permission(auth) {
         if (this.uid !== auth.id && auth.access !== 'admin') {
-            throw new Err(401, null, 'Schedule does not belong to user');
+            throw new Err(401, null, 'Collection does not belong to user');
         }
     }
 }

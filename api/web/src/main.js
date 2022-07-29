@@ -24,8 +24,8 @@ import BaseMaps from './components/BaseMaps.vue';
 import BaseMap from './components/BaseMap.vue';
 import Sources from './components/Sources.vue';
 import Source from './components/Source.vue';
-import Schedules from './components/Schedules.vue';
-import Schedule from './components/Schedule.vue';
+import Collections from './components/Collections.vue';
+import Collection from './components/Collection.vue';
 
 const router = new VueRouter.createRouter({
     history: VueRouter.createWebHistory(),
@@ -49,9 +49,9 @@ const router = new VueRouter.createRouter({
         { path: '/source/new', name: 'newsource', component: Source },
         { path: '/source/:sourceid', name: 'source', component: Source },
 
-        { path: '/schedule', name: 'schedules', component: Schedules },
-        { path: '/schedule/new', name: 'newschedule', component: Schedule },
-        { path: '/schedule/:scheduleid', name: 'schedule', component: Schedule },
+        { path: '/collection', name: 'collections', component: Collections },
+        { path: '/collection/new', name: 'newcollection', component: Collection },
+        { path: '/collection/:collectionid', name: 'collection', component: Collection },
 
         { path: '/profile', name: 'profile', component: Profile },
 

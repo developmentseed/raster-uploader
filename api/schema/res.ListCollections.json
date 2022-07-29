@@ -2,18 +2,18 @@
     "type": "object",
     "required": [
         "total",
-        "schedules"
+        "collections"
     ],
     "additionalProperties": false,
     "properties": {
         "total": {
             "type": "integer",
-            "description": "Total number of schedules"
+            "description": "Total number of collections"
         },
-        "schedules": {
+        "collections": {
             "type": "array",
             "items": {
-                "$ref": "./res.Schedule.json"
+                "$ref": "./res.Collection.json"
             }
         }
     }
