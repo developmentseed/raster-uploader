@@ -49,25 +49,33 @@
                     </template>
                 </div>
 
-                <template v-if='loading.sources'>
-                    <div class='col col--12 ml12 mt12 border border--gray-light round'>
-                        <Loading desc='Loading Upload Sources'/>
-                    </div>
-                </template>
-                <template v-else-if='sources.total === 0'>
-                    <div class='col col--12 ml12 mt12 border border--gray-light round'>
-                        <None
-                            name='Upload Sources'
-                            :create='true'
-                            @create='modal.source=true'
-                        />
+                <template v-if='$route.params.collectionid'>
+                    <label class='ml12'>Upload Source:</label>
+                    <div @click='$router.push(`/source/${source.id}`)' class='flex flex--center-main col col--12 border border--gray-light border--gray-on-hover cursor-pointer ml12 round py6'>
+                        <div v-text='source.name'></div>
                     </div>
                 </template>
                 <template v-else>
-                    <Selection
-                        :selections='sources.upload_sources'
-                        @selection='collection.source_id = $event'
-                    />
+                    <template v-if='loading.sources'>
+                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
+                            <Loading desc='Loading Upload Sources'/>
+                        </div>
+                    </template>
+                    <template v-else-if='sources.total === 0'>
+                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
+                            <None
+                                name='Upload Sources'
+                                :create='true'
+                                @create='modal.source=true'
+                            />
+                        </div>
+                    </template>
+                    <template v-else>
+                        <Selection
+                            :selections='sources.upload_sources'
+                            @selection='collection.source_id = $event'
+                        />
+                    </template>
                 </template>
 
                 <div class='col col--12 py12'>
@@ -120,6 +128,7 @@ export default {
     mounted: async function() {
         if (this.$route.params.collectionid) {
             await this.getCollection();
+            this.getSource(this.collection.source_id);
             this.setHuman();
 
             this.getUploads();
@@ -147,6 +156,7 @@ export default {
                 total: 0,
                 uploads: []
             },
+            source: {},
             collection: {
                 name: '',
                 cron: '1 12 ? * MON-FRI *',
@@ -168,6 +178,13 @@ export default {
             } catch (err) {
                 this.errors.cron = true;
                 this.human = String(err);
+            }
+        },
+        getSource: async function(source_id) {
+            try {
+                this.source = await window.std(`/api/source/${source_id}`);
+            } catch (err) {
+                this.$emit('err', err);
             }
         },
         getSources: async function() {
