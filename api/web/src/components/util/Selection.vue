@@ -37,6 +37,9 @@ export default {
                 id: null
             }
         };
+    },
+    mounted: function() {
+        this.selection = this.selections[0];
     }
 }
 </script>

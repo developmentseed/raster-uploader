@@ -108,7 +108,7 @@
     </div>
 
     <Modal v-if='modal.source' @close='modal.source = false'>
-        <UploadSource @err='emit("err", $event)' :close='false'/>
+        <UploadSource @err='emit("err", $event)' :modal='true' @close='modal.source = false'/>
     </Modal>
 </div>
 </template>
@@ -166,6 +166,9 @@ export default {
         };
     },
     watch: {
+        'modal.source': function() {
+            if (this.modal.source === false) this.getSources();
+        },
         'collection.cron': function() {
             this.setHuman()
         }
