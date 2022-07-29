@@ -49,6 +49,22 @@
                         </template>
                     </div>
 
+                    <template v-if='loading.sources'>
+                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
+                            <Loading desc='Loading Upload Sources'/>
+                        </div>
+                    </template>
+                    <template v-else-if='sources.total === 0'>
+                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
+                            <None name='Upload Sources' :create='true'/>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <Selection
+                            :selections='sources.upload_sources'
+                        />
+                    </template>
+
                     <div class='col col--12 py12'>
                         <template v-if='$route.params.scheduleid'>
                             <button @click='postSchedule' class='btn btn--stroke round fr color-blue-light color-green-on-hover'>Update Schedule</button>
@@ -84,8 +100,9 @@
 <script>
 import Loading from './util/Loading.vue';
 import UploadItem from './util/UploadItem.vue';
-import None from './util/None.vue';
 import InputError from './util/InputError.vue';
+import Selection from './util/Selection.vue';
+import None from './util/None.vue';
 import cron from 'cronstrue';
 
 export default {
@@ -99,12 +116,15 @@ export default {
         } else {
             this.setHuman();
         }
+
+        this.getSources();
     },
     data: function() {
         return {
             loading: {
                 schedule: false,
-                uploads: false
+                uploads: true,
+                sources: true
             },
             human: '',
             errors: {
@@ -135,6 +155,15 @@ export default {
                 this.errors.cron = true;
                 this.human = String(err);
             }
+        },
+        getSources: async function() {
+            try {
+                this.loading.sources = true;
+                this.sources = await window.std(`/api/source`);
+            } catch (err) {
+                this.$emit('err', err);
+            }
+            this.loading.sources = false;
         },
         getUploads: async function() {
             try {
@@ -194,7 +223,8 @@ export default {
         None,
         Loading,
         UploadItem,
-        InputError
+        InputError,
+        Selection
     }
 }
 </script>
