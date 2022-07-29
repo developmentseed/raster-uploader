@@ -6,27 +6,26 @@ import requests
 from urllib.parse import urlparse
 from io import BytesIO, SEEK_SET, SEEK_END
 
-ru_s3 = boto3.client("s3")
-
-
 def handler(event, context):
     event = json.loads(event["Records"][0]["body"])
 
-    print(event)
-
     if event["config"].get("type") == "s3":
-        o = urlparse(event["config"].get("url"), allow_fragments=False)
+        try:
+            o = urlparse(event["config"].get("url"), allow_fragments=False)
 
-        s3_client = boto3.client(
-            "s3",
-            aws_access_key_id=event["config"].get("aws_access_key_id"),
-            aws_secret_access_key=event["config"].get("aws_secret_access_key"),
-        )
+            s3_client = boto3.client(
+                "s3",
+                aws_access_key_id=event["config"].get("aws_access_key_id"),
+                aws_secret_access_key=event["config"].get("aws_secret_access_key"),
+            )
 
-        s3res = s3_client.get_object(Bucket=o.netloc, Key=o.path.lstrip("/"))
+            s3res = s3_client.get_object(Bucket=o.netloc, Key=o.path.lstrip("/"))
 
-        handler = io.BytesIO(s3res["Body"].read())
-        file = os.path.basename(urlparse(event["config"].get("url")).path)
+            handler = io.BytesIO(s3res["Body"].read())
+            file = os.path.basename(urlparse(event["config"].get("url")).path)
+        except Exception as e: # TODO Post Error Step
+            raise e
+
     elif event["config"].get("type") == "http":
         res = requests.get(event["config"].get("url"), stream=True)
         res.raise_for_status()
@@ -36,6 +35,8 @@ def handler(event, context):
     else:
         print("Unknown Obtain Type")
         exit()
+
+    ru_s3 = boto3.client("s3")
 
     ru_s3.put_object(
         Bucket=os.environ["BUCKET"],
