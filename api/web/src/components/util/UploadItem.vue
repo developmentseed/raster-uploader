@@ -6,7 +6,7 @@
                 <div class='col col--12 clearfix'>
                     <svg v-if='upload.starred' class='fl icon color-blue h24 w24 mr6'><use xlink:href='#icon-star'/></svg>
                     <h3 class='txt-h4 fl' v-text='upload.name'></h3>
-                    <svg @click.stop='$router.push(`/schedule/${upload.schedule_id}`)' v-if='$route.name !== "schedule" && upload.schedule_id' class='fl icon color-gray color-black-on-hover h24 w24 mx6'><use xlink:href='#icon-clock'></use></svg>
+                    <svg @click.stop='$router.push(`/collection/${upload.collection_id}`)' v-if='$route.name !== "collection" && upload.collection_id' class='fl icon color-gray color-black-on-hover h24 w24 mx6'><use xlink:href='#icon-clock'></use></svg>
                 </div>
                 <div class='col col--12'>
                     <h3 class='txt-xs' v-text='upload.source'></h3>

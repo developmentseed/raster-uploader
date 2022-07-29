@@ -4,7 +4,8 @@
     "required": [
         "name",
         "cron",
-        "paused"
+        "paused",
+        "source_id"
     ],
     "properties": {
         "name": {
@@ -12,6 +13,9 @@
         },
         "cron": {
             "type": "string"
+        },
+        "source_id": {
+            "type": "integer"
         },
         "paused": {
             "type": "boolean",

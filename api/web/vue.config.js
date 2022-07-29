@@ -1,7 +1,7 @@
 const Assembly = require('@mapbox/assembly');
 
 module.exports = {
-    publicPath: './',
+    publicPath: '/',
     chainWebpack: () => {
         Assembly.buildUserAssets('public/')
     }

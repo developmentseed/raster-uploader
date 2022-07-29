@@ -87,7 +87,6 @@ export default async function router(schema, config) {
                 }
             }
 
-            console.error('VALIDATE', config.validate);
             if (!config.validate) {
                 usr.validated = true;
                 await usr.commit(config.pool);

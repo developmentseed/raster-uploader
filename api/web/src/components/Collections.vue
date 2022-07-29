@@ -1,7 +1,7 @@
 <template>
     <div class='col col--12'>
         <div class='col col--12 clearfix py6'>
-            <RasterMenu item='Schedules'/>
+            <RasterMenu item='Collections'/>
 
             <div class='fr'>
                 <button @click='showSearch = !showSearch' class='btn round btn--stroke color-gray color-blue-on-hover mr12'>
@@ -10,7 +10,7 @@
                 <button @click='refresh' class='btn round btn--stroke color-gray color-blue-on-hover mr12'>
                     <svg class='icon'><use href='#icon-refresh'/></svg>
                 </button>
-                <button @click='$router.push({ name: "newschedule" })' class='btn round btn--stroke color-gray color-green-on-hover'>
+                <button @click='$router.push({ name: "newcollection" })' class='btn round btn--stroke color-gray color-green-on-hover'>
                     <svg class='icon'><use href='#icon-plus'/></svg>
                 </button>
             </div>
@@ -22,28 +22,28 @@
                         <div class='absolute flex flex--center-cross flex--center-main w36 h36'>
                             <svg class='icon'><use xlink:href='#icon-search'></use></svg>
                         </div>
-                        <input ref='search' v-model='search' class='input pl36' placeholder='Schedule Name'>
+                        <input ref='search' v-model='search' class='input pl36' placeholder='Collection Name'>
                     </div>
                 </div>
             </template>
-            <template v-if='loading.schedules'>
-                <Loading desc='Loading Schedules'/>
+            <template v-if='loading.collections'>
+                <Loading desc='Loading Collections'/>
             </template>
-            <template v-else-if='schedules.length === 0'>
-                <None name='Schedules'/>
+            <template v-else-if='collections.length === 0'>
+                <None name='Collections'/>
             </template>
             <template v-else>
-                <div @click='$router.push({ name: "schedule", params: { scheduleid: schedule.id } })' :key='schedule.id' v-for='schedule in schedules.slice(page * 10, page * 10 + 10)'>
+                <div @click='$router.push({ name: "collection", params: { collectionid: collection.id } })' :key='collection.id' v-for='collection in collections.slice(page * 10, page * 10 + 10)'>
                     <div class='cursor-pointer bg-darken10-on-hover col col--12 py12'>
                         <div class='col col--12 grid py6 px12'>
                             <div class='col col--6'>
                                 <div class='col col--12 clearfix'>
-                                    <h3 class='txt-h4 fl' v-text='schedule.name'></h3>
+                                    <h3 class='txt-h4 fl' v-text='collection.name'></h3>
                                 </div>
                             </div>
                             <div class='col col--6'>
                                 <div class='fr bg-gray-faint color-gray inline-block px6 py3 round txt-xs txt-bold mr12'>
-                                    <span v-text='new Date(schedule.created).toISOString()'/>
+                                    <span v-text='new Date(collection.created).toISOString()'/>
                                 </div>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
 
                 <Pager
                     @page='page = $event'
-                    :total='schedules.length'
+                    :total='collections.length'
                     perpage='10'
                 />
             </template>
@@ -67,7 +67,7 @@ import Loading from './util/Loading.vue';
 import RasterMenu from './util/Menu.vue';
 
 export default {
-    name: 'Schedules',
+    name: 'Collections',
     props: ['meta'],
     data: function() {
         return {
@@ -75,9 +75,9 @@ export default {
             showSearch: false,
             search: '',
             archived: false,
-            schedules: [],
+            collections: [],
             loading: {
-                schedules: true
+                collections: true
             }
         }
     },
@@ -113,22 +113,22 @@ export default {
     methods: {
         refresh: function() {
             this.page = 0;
-            this.getSchedules();
+            this.getCollections();
         },
         external: function(url) {
             if (!url) return;
             window.open(url, "_blank")
         },
-        getSchedules: async function() {
-            this.loading.schedules = true;
+        getCollections: async function() {
+            this.loading.collections = true;
 
             try {
-                const url = new URL('/api/schedule', window.api);
+                const url = new URL('/api/collection', window.api);
                 url.searchParams.append('filter', this.search);
-                const schedules = await window.std(url);
+                const collections = await window.std(url);
 
-                this.schedules = schedules.schedules;
-                this.loading.schedules = false;
+                this.collections = collections.collections;
+                this.loading.collections = false;
             } catch (err) {
                 this.$emit('err', err);
             }

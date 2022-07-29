@@ -29,6 +29,31 @@
         "query": false,
         "res": true
     },
+    "GET /collection": {
+        "body": false,
+        "query": true,
+        "res": true
+    },
+    "GET /collection/:collection": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
+    "POST /collection": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "PATCH /collection/:collection": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "DELETE /collection/:collection": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
     "GET /login": {
         "body": false,
         "query": false,
@@ -81,31 +106,6 @@
     },
     "POST /obtain": {
         "body": true,
-        "query": false,
-        "res": true
-    },
-    "GET /schedule": {
-        "body": false,
-        "query": true,
-        "res": true
-    },
-    "GET /schedule/:schedule": {
-        "body": false,
-        "query": false,
-        "res": true
-    },
-    "POST /schedule": {
-        "body": true,
-        "query": false,
-        "res": true
-    },
-    "PATCH /schedule/:schedule": {
-        "body": true,
-        "query": false,
-        "res": true
-    },
-    "DELETE /schedule/:schedule": {
-        "body": false,
         "query": false,
         "res": true
     },

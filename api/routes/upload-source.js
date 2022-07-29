@@ -171,6 +171,10 @@ export default async function router(schema, config) {
             const source = await UploadSource.from(config.pool, req.params.source);
             source.permission(req.auth);
 
+            await sm.deleteSecret({
+                SecretId: `${config.StackName}-source-${source.id}`
+            }).promise();
+
             await source.delete(config.pool);
 
             return res.json({

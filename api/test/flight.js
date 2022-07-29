@@ -216,7 +216,6 @@ export default class Flight {
 
             Object.assign(this.config, custom);
 
-            console.error(this.config);
             this.srv = await api(this.config);
 
             t.end();

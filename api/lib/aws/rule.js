@@ -45,7 +45,6 @@ export default class EventRule {
             const res = await eb.describeRule({
                 Name: `${this.stack}-schedule-${schedule.id}`,
             }).promise();
-            console.error(res);
 
             return res;
         } catch (err) {
@@ -77,7 +76,9 @@ export default class EventRule {
                 Ids: ['default']
             }).promise();
         } catch (err) {
-            throw new Err(500, new Error(err), 'Failed to remove targets from rule');
+            if (!err.message.match(/does not exist/)) {
+                throw new Err(500, new Error(err), 'Failed to remove targets from rule');
+            }
         }
 
         try {

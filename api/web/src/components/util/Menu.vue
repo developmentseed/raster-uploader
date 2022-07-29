@@ -20,7 +20,7 @@ export default {
         return {
             items: {
                 Uploads: '/',
-                Schedules: '/schedule',
+                Collections: '/collection',
                 BaseMaps: '/basemap',
                 Sources: '/source'
 

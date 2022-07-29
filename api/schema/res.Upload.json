@@ -13,7 +13,7 @@
         "archived",
         "starred",
         "config",
-        "schedule_id"
+        "collection_id"
     ],
     "additionalProperties": false,
     "properties": {
@@ -54,7 +54,7 @@
         "config": {
             "type": "object"
         },
-        "schedule_id": {
+        "collection_id": {
             "type": ["null", "integer"]
         }
     }

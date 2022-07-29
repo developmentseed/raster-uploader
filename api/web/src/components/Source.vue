@@ -8,7 +8,7 @@
                 <span v-else>New</span>
             </h2>
 
-            <button @click='$router.go(-1)' class='btn fr round btn--stroke color-gray color-black-on-hover'>
+            <button v-if='!modal' @click='$router.go(-1)' class='btn fr round btn--stroke color-gray color-black-on-hover'>
                 <svg class='icon'><use href='#icon-close'/></svg>
             </button>
 
@@ -122,6 +122,12 @@ import Loading from './util/Loading.vue';
 
 export default {
     name: 'UploadSource',
+    props: {
+        modal: {
+            type: Boolean,
+            default: false
+        }
+    },
     mounted: function() {
         if (this.$route.params.sourceid) {
             this.getSource();
@@ -165,8 +171,13 @@ export default {
                 await window.std(window.api + `/api/source/${this.$route.params.sourceid}`, {
                     method: 'DELETE'
                 });
-                this.$emit('refresh');
-                this.$router.go(-1);
+
+                if (!this.modal) {
+                    this.$emit('refresh');
+                    this.$router.go(-1);
+                } else {
+                    this.$emit('close');
+                }
             } catch (err) {
                 this.$emit('err', err);
             }
@@ -205,8 +216,12 @@ export default {
                     body: body
                 });
 
-                this.$emit('refresh');
-                this.$router.go(-1);
+                if (!this.modal) {
+                    this.$emit('refresh');
+                    this.$router.go(-1);
+                } else {
+                    this.$emit('close');
+                }
             } catch (err) {
                 this.$emit('err', err);
             }

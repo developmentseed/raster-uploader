@@ -7,7 +7,7 @@
         "updated",
         "name",
         "cron",
-        "paused"
+        "source_id"
     ],
     "additionalProperties": false,
     "properties": {
@@ -31,6 +31,9 @@
         },
         "paused": {
             "type": "boolean"
+        },
+        "source_id": {
+            "type": "integer"
         }
     }
 }
