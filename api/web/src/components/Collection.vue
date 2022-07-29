@@ -72,6 +72,8 @@
                     </template>
                     <template v-else>
                         <Selection
+                            :create='true'
+                            @create='modal.source=true'
                             :selections='sources.upload_sources'
                             @selection='collection.source_id = $event'
                         />

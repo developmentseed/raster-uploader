@@ -2,6 +2,10 @@
 <div class='col col--12 grid my12'>
     <div class='col col--12'>
         <span v-text='"Select from the following:"'/>
+
+        <button @click='$emit("create")' class='btn round btn--stroke btn--s mb3 color-gray color-green-on-hover fr'>
+            <svg class='icon'><use href='#icon-plus'/></svg>
+        </button>
     </div>
     <div class='col col--12 grid border border--gray-light round'>
         <div
@@ -24,7 +28,8 @@
 export default {
     name: 'Selection',
     props: {
-        selections: Array
+        selections: Array,
+        create: Boolean
     },
     watch: {
         'selection.id': function() {
