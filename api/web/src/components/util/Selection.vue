@@ -27,13 +27,15 @@ export default {
         selections: Array
     },
     watch: {
-        selection: function() {
+        'selection.id': function() {
             this.$emit("selection", this.selection.id)
         }
     },
     data: function() {
         return {
-            selection: {}
+            selection: {
+                id: null
+            }
         };
     }
 }

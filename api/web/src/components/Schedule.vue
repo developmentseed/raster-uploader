@@ -66,6 +66,7 @@
                 <template v-else>
                     <Selection
                         :selections='sources.upload_sources'
+                        @selection='schedule.source_id = $event'
                     />
                 </template>
 
@@ -149,6 +150,7 @@ export default {
             schedule: {
                 name: '',
                 cron: '1 12 ? * MON-FRI *',
+                source_id: null,
                 paused: false
             }
         };
@@ -211,14 +213,20 @@ export default {
         postSchedule: async function() {
             this.loading.schedule = true;
 
+            const body = {
+                name: this.schedule.name,
+                cron: this.schedule.cron,
+                paused: this.schedule.paused
+            };
+
+            if (!this.$route.params.scheduleid) {
+                body.source_id = this.schedule.source_id;
+            }
+
             try {
                 this.schedule = await window.std(window.api + `/api/schedule${this.$route.params.scheduleid ? '/' + this.$route.params.scheduleid : ''}`, {
                     method: this.$route.params.scheduleid ? 'PATCH' : 'POST',
-                    body: {
-                        name: this.schedule.name,
-                        cron: this.schedule.cron,
-                        paused: this.schedule.paused
-                    }
+                    body
                 });
 
                 if (!this.$route.params.scheduleid) {
