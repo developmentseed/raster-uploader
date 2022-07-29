@@ -98,8 +98,8 @@
         </template>
     </div>
 
-    <Modal v-if='modal.source'>
-
+    <Modal v-if='modal.source' @close='modal.source = false'>
+        <UploadSource @err='emit("err", $event)' :close='false'/>
     </Modal>
 </div>
 </template>
@@ -111,6 +111,7 @@ import InputError from './util/InputError.vue';
 import Selection from './util/Selection.vue';
 import None from './util/None.vue';
 import Modal from './util/Modal.vue';
+import UploadSource from './Source.vue';
 import cron from 'cronstrue';
 
 export default {
@@ -232,6 +233,7 @@ export default {
     },
     components: {
         None,
+        UploadSource,
         Modal,
         Loading,
         UploadItem,

@@ -8,7 +8,7 @@
                 <span v-else>New</span>
             </h2>
 
-            <button @click='$router.go(-1)' class='btn fr round btn--stroke color-gray color-black-on-hover'>
+            <button v-if='close' @click='$router.go(-1)' class='btn fr round btn--stroke color-gray color-black-on-hover'>
                 <svg class='icon'><use href='#icon-close'/></svg>
             </button>
 
@@ -122,6 +122,12 @@ import Loading from './util/Loading.vue';
 
 export default {
     name: 'UploadSource',
+    props: {
+        close: {
+            type: Boolean,
+            default: true
+        }
+    },
     mounted: function() {
         if (this.$route.params.sourceid) {
             this.getSource();

@@ -6,7 +6,9 @@
                     <svg class='icon link color-darken50'><use xlink:href='#icon-close'></use></svg>
                 </button>
 
-                <slot></slot>
+                <div class='col col--12 grid px12 py12'>
+                    <slot></slot>
+                </div>
             </div>
         </div>
     </div>
