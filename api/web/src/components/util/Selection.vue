@@ -4,9 +4,14 @@
         <span v-text='"Select from the following:"'/>
     </div>
     <div class='col col--12 grid border border--gray-light round'>
-        <div @click='$emit("selection", sel.id)' :key='sel.id' v-for='sel in selections' class='col col--12'>
+        <div
+            @click='selection = sel'
+            :key='sel.id'
+            v-for='sel in selections'
+            class='col col--12 cursor-pointer bg-darken10-on-hover'
+        >
             <div class='w-full py6 px6' :class='{
-                "bg-gray-light": selection === sel.name
+                "bg-gray-light": selection.id === sel.id
             }'>
                 <span class='txt-h4 round' v-text='sel.name'/>
             </div>
@@ -20,6 +25,16 @@ export default {
     name: 'Selection',
     props: {
         selections: Array
+    },
+    watch: {
+        selection: function() {
+            this.$emit("selection", this.selection.id)
+        }
+    },
+    data: function() {
+        return {
+            selection: {}
+        };
     }
 }
 </script>
