@@ -140,7 +140,7 @@ test('POST: api/upload', async (t) => {
             uploaded: true,
             archived: false,
             starred: false,
-            schedule_id: null,
+            collection_id: null,
             config: { cog: { overview: null, blocksize: 512, compression: 'deflate' } }
         });
     } catch (err) {
@@ -176,7 +176,7 @@ test('GET: api/upload', async (t) => {
                 obtain: false,
                 uploaded: true,
                 starred: false,
-                schedule_id: null
+                collection_id: null
             }]
         });
     } catch (err) {
