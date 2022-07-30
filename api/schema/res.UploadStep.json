@@ -13,7 +13,7 @@
     "additionalProperties": false,
     "properties": {
         "id": {
-            "type": "integer"
+            "$ref": "./util/id.json"
         },
         "upload_id": {
             "type": "integer"

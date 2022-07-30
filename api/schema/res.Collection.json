@@ -7,15 +7,16 @@
         "updated",
         "name",
         "cron",
+        "glob",
         "source_id"
     ],
     "additionalProperties": false,
     "properties": {
         "id": {
-            "type": "integer"
+            "$ref": "./util/id.json"
         },
         "uid": {
-            "type": "integer"
+            "$ref": "./util/uid.json"
         },
         "created": {
             "$ref": "./util/created.json"
@@ -31,6 +32,9 @@
         },
         "paused": {
             "type": "boolean"
+        },
+        "glob": {
+            "type": "string"
         },
         "source_id": {
             "type": "integer"

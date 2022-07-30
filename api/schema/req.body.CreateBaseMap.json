@@ -6,9 +6,6 @@
     ],
     "additionalProperties": false,
     "properties": {
-        "uid": {
-            "type": "integer"
-        },
         "name": {
             "type": "string"
         },

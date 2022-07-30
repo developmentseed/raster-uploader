@@ -9,8 +9,7 @@
     "additionalProperties": false,
     "properties": {
         "id": {
-            "type": "integer",
-            "description": "Token ID"
+            "$ref": "./util/id.json"
         },
         "name": {
             "type": "string",

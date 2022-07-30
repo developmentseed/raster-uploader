@@ -4,12 +4,17 @@
     "required": [
         "name",
         "cron",
+        "glob",
         "paused",
         "source_id"
     ],
     "properties": {
         "name": {
             "type": "string"
+        },
+        "glob": {
+            "type": "string",
+            "default": ""
         },
         "cron": {
             "type": "string"

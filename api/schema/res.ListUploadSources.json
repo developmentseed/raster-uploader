@@ -26,7 +26,10 @@
                 "additionalProperties": false,
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "$ref": "./util/id.json"
+                    },
+                    "uid": {
+                        "$ref": "./util/uid.json"
                     },
                     "type": {
                         "type": "string",
@@ -34,9 +37,6 @@
                             "http",
                             "s3"
                         ]   
-                    },
-                    "uid": {
-                        "type": "integer"
                     },
                     "created": {
                         "$ref": "./util/created.json"
