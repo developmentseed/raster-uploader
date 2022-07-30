@@ -33,6 +33,19 @@
 
                         <InputError v-if='errors.url' desc='Invalid URL'/>
                     </div>
+
+                    <div class='col col--12 py6'>
+                        <label>Source Glob</label>
+
+                        <div class='fr'>
+                            <label class='switch-container'>
+                                <input v-model='hasGlob' type='checkbox' />
+                                <div class='switch'></div>
+                            </label>
+                        </div>
+
+                        <input :disabled='!hasGlob' v-model='source.glob' class='input' placeholder='Source Glob'/>
+                    </div>
                 </div>
                 <template v-if='!showsecrets && $route.params.sourceid'>
                     <div class='border border--gray-light round col col--12 px12 py12 grid clearfix'>
@@ -128,9 +141,10 @@ export default {
             default: false
         }
     },
-    mounted: function() {
+    mounted: async function() {
         if (this.$route.params.sourceid) {
-            this.getSource();
+            await this.getSource();
+            if (this.source.glob !== null) this.hasGlob = true;
         }
     },
     data: function() {
@@ -138,6 +152,7 @@ export default {
             errors: {
                 url: false,
             },
+            hasGlob: false,
             loading: false,
             showsecrets: false,
             secrets: {
@@ -151,7 +166,8 @@ export default {
             source: {
                 type: 'http',
                 name: '',
-                url: ''
+                url: '',
+                glob: ''
             }
         };
     },
@@ -195,6 +211,7 @@ export default {
                 name: this.source.name,
                 type: this.source.type,
                 url: this.source.url,
+                glob: this.hasGlob ? this.source.glob : null
             }
 
             if (this.source.type === 'http') {

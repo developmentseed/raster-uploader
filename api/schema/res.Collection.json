@@ -7,7 +7,6 @@
         "updated",
         "name",
         "cron",
-        "glob",
         "source_id"
     ],
     "additionalProperties": false,
@@ -32,9 +31,6 @@
         },
         "paused": {
             "type": "boolean"
-        },
-        "glob": {
-            "type": "string"
         },
         "source_id": {
             "type": "integer"

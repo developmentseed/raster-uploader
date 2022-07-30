@@ -5,9 +5,6 @@
         "name": {
             "type": "string"
         },
-        "glob": {
-            "type": "string"
-        },
         "cron": {
             "type": "string"
         },
