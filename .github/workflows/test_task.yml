@@ -25,12 +25,10 @@ jobs:
               with:
                   ref: ${{ github.event.pull_request.head.sha }}
 
-            - name: Install
+            - name: Install & Test
               run: |
                 cd tasks/${{matrix.task}}
                 python3 -m venv venv
                 source venv/bin/activate
                 pip install -r requirements.txt
-
-            - name: Test
-              run: python -m unittest test/*.py
+                python -m unittest test/*.py
