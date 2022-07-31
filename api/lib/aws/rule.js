@@ -66,7 +66,7 @@ export default class EventRule {
                 State: 'ENABLED'
             }).promise();
         } catch (err) {
-            throw new Err(500, new Error(err), 'Failed to disable rule');
+            throw new Err(500, new Error(err), 'Failed to update rule');
         }
     }
 

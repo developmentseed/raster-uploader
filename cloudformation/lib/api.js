@@ -115,6 +115,7 @@ const stack = {
         RuleRole: {
             Type: 'AWS::IAM::Role',
             Properties: {
+                RoleName: cf.join([cf.stackName, '-event-rules-role']),
                 AssumeRolePolicyDocument: {
                     Version: '2012-10-17',
                     Statement: [{
