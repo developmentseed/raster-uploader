@@ -21,7 +21,7 @@ export default class Config {
                 const name = `${this.StackName}-queue`;
                 this.sqs[sqs] = {
                     url: await SQS.getQueueURL(name),
-                    arn: `arn:aws:sqs:${process.env.AWS_DEFAULT_REGION}:${this.account}:name`
+                    arn: `arn:aws:sqs:${process.env.AWS_DEFAULT_REGION}:${this.account}:${sqs}`
                 };
             } catch (err) {
                 console.error(err);
