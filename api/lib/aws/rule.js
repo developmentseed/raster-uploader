@@ -5,9 +5,10 @@ import { Err } from '@openaddresses/batch-schema';
  * @class
  */
 export default class EventRule {
-    constructor(stack, sqs) {
+    constructor(stack, sqs, role) {
         this.stack = stack;
         this.sqs = sqs;
+        this.role = role;
     }
 
     async create(schedule) {
@@ -18,6 +19,7 @@ export default class EventRule {
                 Name: `${this.stack}-schedule-${schedule.id}`,
                 Description: `${this.stack} Schedule: ${schedule.id}`,
                 ScheduleExpression: `cron(${schedule.cron})`,
+                RoleArn: this.role,
                 State: schedule.paused ? 'DISABLED' : 'ENABLED'
             }).promise();
 
@@ -60,6 +62,7 @@ export default class EventRule {
                 Name: `${this.stack}-schedule-${schedule.id}`,
                 Description: `${this.stack} Schedule: ${schedule.id}`,
                 ScheduleExpression: `cron(${schedule.cron})`,
+                RoleArn: this.role,
                 State: 'ENABLED'
             }).promise();
         } catch (err) {

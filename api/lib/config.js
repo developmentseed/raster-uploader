@@ -18,10 +18,12 @@ export default class Config {
 
         for (const sqs of ['queue', 'transform-queue', 'obtain-queue']) {
             try {
-                const name = `${this.StackName}-queue`;
+                const name = `${this.StackName}-${sqs}`;
+
+                this.sqs_role = `arn:aws:iam:${process.env.AWS_DEFAULT_REGION}:${this.account}:role/${process.env.StackName}-event-rules`
                 this.sqs[sqs] = {
                     url: await SQS.getQueueURL(name),
-                    arn: `arn:aws:sqs:${process.env.AWS_DEFAULT_REGION}:${this.account}:${sqs}`
+                    arn: `arn:aws:sqs:${process.env.AWS_DEFAULT_REGION}:${this.account}:${name}`
                 };
             } catch (err) {
                 console.error(err);

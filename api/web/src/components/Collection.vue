@@ -186,6 +186,7 @@ export default {
             }
         },
         getSource: async function(source_id) {
+            if (!source_id) return;
             try {
                 this.source = await window.std(`/api/source/${source_id}`);
             } catch (err) {

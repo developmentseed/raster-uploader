@@ -112,6 +112,23 @@ const stack = {
                 ClusterName: cf.join('-', [cf.stackName, 'cluster'])
             }
         },
+        RuleRole: {
+            Type: 'AWS::IAM::Role',
+            Properties: {
+                Policies: [{
+                    PolicyName: cf.join([cf.stackName, '-event-rules']),
+                    PolicyDocument: {
+                        Statement: [{
+                            Effect: 'Allow',
+                            Action: [
+                                'sqs:SendMessage'
+                            ],
+                            Resource: [cf.getAtt('KMS', 'Arn')]
+                        }]
+                    }
+                }]
+            }
+        },
         TaskRole: {
             Type: 'AWS::IAM::Role',
             Properties: {
