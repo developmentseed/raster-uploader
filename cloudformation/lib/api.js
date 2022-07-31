@@ -42,8 +42,8 @@ const stack = {
 
         },
         ELBSecurityGroup: {
-            'Type' : 'AWS::EC2::SecurityGroup',
-            'Properties' : {
+            Type : 'AWS::EC2::SecurityGroup',
+            Properties : {
                 GroupDescription: cf.join('-', [cf.stackName, 'elb-sg']),
                 SecurityGroupIngress: [{
                     CidrIp: '0.0.0.0/0',
@@ -115,6 +115,16 @@ const stack = {
         RuleRole: {
             Type: 'AWS::IAM::Role',
             Properties: {
+                AssumeRolePolicyDocument: {
+                    Version: '2012-10-17',
+                    Statement: [{
+                        Effect: 'Allow',
+                        Principal: {
+                            Service: 'events.amazonaws.com'
+                        },
+                        Action: 'sts:AssumeRole'
+                    }]
+                },
                 Policies: [{
                     PolicyName: cf.join([cf.stackName, '-event-rules']),
                     PolicyDocument: {
@@ -232,39 +242,39 @@ const stack = {
             }
         },
         ExecRole: {
-            'Type': 'AWS::IAM::Role',
-            'Properties': {
-                'AssumeRolePolicyDocument': {
-                    'Version': '2012-10-17',
-                    'Statement': [{
+            Type: 'AWS::IAM::Role',
+            Properties: {
+                AssumeRolePolicyDocument: {
+                    Version: '2012-10-17',
+                    Statement: [{
                         Effect: 'Allow',
                         Principal: {
                             Service: 'ecs-tasks.amazonaws.com'
                         },
-                        'Action': 'sts:AssumeRole'
+                        Action: 'sts:AssumeRole'
                     }]
                 },
                 Policies: [{
                     PolicyName: cf.join([cf.stackName, '-api-logging']),
                     PolicyDocument: {
-                        'Statement': [{
-                            'Effect': 'Allow',
-                            'Action': [
+                        Statement: [{
+                            Effect: 'Allow',
+                            Action: [
                                 'logs:CreateLogGroup',
                                 'logs:CreateLogStream',
                                 'logs:PutLogEvents',
                                 'logs:DescribeLogStreams'
                             ],
-                            'Resource': ['arn:aws:logs:*:*:*']
+                            Resource: ['arn:aws:logs:*:*:*']
                         }]
                     }
                 }],
-                'ManagedPolicyArns': [
+                ManagedPolicyArns: [
                     'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy',
                     'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role',
                     'arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly'
                 ],
-                'Path': '/service-role/'
+                Path: '/service-role/'
             }
         },
         TaskDefinition: {
@@ -350,8 +360,8 @@ const stack = {
             }
         },
         ServiceSecurityGroup: {
-            'Type' : 'AWS::EC2::SecurityGroup',
-            'Properties' : {
+            Type: 'AWS::EC2::SecurityGroup',
+            Properties: {
                 GroupDescription: cf.join('-', [cf.stackName, 'ec2-sg']),
                 VpcId: cf.ref('VPC'),
                 SecurityGroupIngress: [{
