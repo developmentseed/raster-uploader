@@ -77,12 +77,10 @@ def single(event, file, handler, collection=None):
     ru_s3 = boto3.client("s3")
 
     if collection is not None:
-        res = requests.post(
+        res = requests.put(
             f"{os.environ.get('API')}/api/upload",
             headers={"Authorization": f'bearer {event.get("token")}'},
             json={
-                "name": file,
-                "uploaded": True,
                 "collection_id": collection
             },
         )

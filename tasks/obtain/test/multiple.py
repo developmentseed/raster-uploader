@@ -24,7 +24,7 @@ def mocked_patch_requests(*args, **kwargs):
         "id": 1
     }, 200)
 
-def mocked_post_requests(*args, **kwargs):
+def mocked_put_requests(*args, **kwargs):
     return MockResponse({
         "id": 1
     }, 200)
@@ -33,8 +33,8 @@ class TestSingle(unittest.TestCase):
 
     @mock_s3
     @mock.patch('requests.patch', side_effect=mocked_patch_requests)
-    @mock.patch('requests.post', side_effect=mocked_post_requests)
-    def test_single(self, mock_patch, mock_post):
+    @mock.patch('requests.put', side_effect=mocked_put_requests)
+    def test_single(self, mock_patch, mock_put):
         os.environ["AWS_ACCESS_KEY_ID"] = '123'
         os.environ["AWS_SECRET_ACCESS_KEY"] = '123'
 
@@ -67,7 +67,7 @@ class TestSingle(unittest.TestCase):
         }, None)
 
         self.assertEqual(len(mock_patch.call_args_list), 2)
-        self.assertEqual(len(mock_post.call_args_list), 2)
+        self.assertEqual(len(mock_put.call_args_list), 2)
 
 if __name__ == '__main__':
     unittest.main()
