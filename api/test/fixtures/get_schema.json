@@ -219,6 +219,11 @@
         "query": false,
         "res": true
     },
+    "PUT /upload": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
     "POST /upload": {
         "body": false,
         "query": false,

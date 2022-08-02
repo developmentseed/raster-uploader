@@ -31,7 +31,8 @@
         "additionalProperties": false,
         "properties": {
             "id": {
-                "type": "integer"
+                "type": "integer",
+                "description": "Unique ID"
             },
             "username": {
                 "type": "string"

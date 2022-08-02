@@ -82,14 +82,14 @@ export default async function router(schema, config) {
      * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
      */
     await schema.put('/upload', {
-        res: 'res.Upload.json'
-        body: 'req.body.CreateUpload.json',
+        res: 'res.Upload.json',
+        body: 'req.body.CreateUpload.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
 
             const upload = await Upload.generate(config.pool, {
-                uid: req.auth.id
+                uid: req.auth.id,
                 ...req.body
             });
 

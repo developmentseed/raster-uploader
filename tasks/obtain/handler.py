@@ -69,9 +69,6 @@ def handler(event, context):
         raise e
 
 
-
-
-
 def single(event, file, handler, collection=None):
     print(f"Processing: {file}")
     ru_s3 = boto3.client("s3")
