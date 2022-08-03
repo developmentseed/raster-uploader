@@ -5,7 +5,9 @@ import jwt
 import json
 import boto3
 import requests
-import datetime
+from datetime import datetime
+from datetime import timezone
+from datetime import timedelta
 from urllib.parse import urlparse
 from io import BytesIO, SEEK_SET, SEEK_END
 from lib.step import step, error
@@ -18,22 +20,25 @@ def handler(event, context):
         print(f'Event: Collection ID: {collection}')
 
         token = jwt.encode({
-            "exp": datetime.now(tz=timezone.utc) + datetime.timedelta(seconds=30),
+            "exp": datetime.now(tz=timezone.utc) + timedelta(seconds=30),
             "type": "machine"
         }, os.environ['SigningSecret'], algorithm="HS256")
 
-        collection = requests.get(
+        res = requests.post(
             f"{os.environ.get('API')}/api/machine",
-            headers={"Authorization": f'bearer {token}'}.
+            headers={"Authorization": f'bearer {token}'},
             json={
-                collection = collection
+                'collection': collection
             }
         )
 
+        res.raise_for_status()
+        res = res.json()
+
         event = {
-            "token": "HOW DO I GET THIS",
+            "token": res['token'],
             "config": {
-                "collection": collection["id"]
+                "collection": collection
             }
         }
 
@@ -49,6 +54,25 @@ def handler(event, context):
             f"{os.environ.get('API')}/api/source/{collection['source_id']}",
             headers={"Authorization": f'bearer {event.get("token")}'}
         )
+
+        source.raise_for_status()
+        source = source.json()
+
+        event["config"]["url"] = source["url"]
+        event["config"]["type"] = source["type"]
+        event["config"]["glob"] = source["glob"]
+
+    if event['config'].get('collection') is not None:
+        res = requests.put(
+            f"{os.environ.get('API')}/api/upload",
+            headers={"Authorization": f'bearer {event.get("token")}'},
+            json={ "collection_id": collection },
+        )
+
+        res.raise_for_status()
+        event['config']['upload'] = res.json()["id"]
+
+        print(f"Created Upload: {event['config']['upload']} (Collection: {event['config']['collection']})")
 
     try:
         if event["config"].get("type") == "s3":
@@ -116,21 +140,7 @@ def single(event, file, handler, collection=None):
     print(f"Processing: {file}")
     ru_s3 = boto3.client("s3")
 
-    if collection is not None:
-        res = requests.put(
-            f"{os.environ.get('API')}/api/upload",
-            headers={"Authorization": f'bearer {event.get("token")}'},
-            json={
-                "collection_id": collection
-            },
-        )
-
-        res.raise_for_status()
-        upload = res.json()["id"]
-
-        print(f"Created Upload: {upload} (Collection: {collection})")
-    else:
-        upload = event["config"].get("upload")
+    upload = event["config"].get("upload")
 
     ru_s3.put_object(
         Bucket=os.environ["BUCKET"],
