@@ -18,7 +18,7 @@ def mocked_put_requests(*args, **kwargs):
         "id": 1
     }, 200)
 
-class TestSingle(unittest.TestCase):
+class TestMultiple(unittest.TestCase):
 
     @mock_s3
     @mock.patch('requests.patch', side_effect=mocked_patch_requests)

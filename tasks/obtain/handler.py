@@ -1,3 +1,4 @@
+import re
 import io
 import os
 import json
@@ -9,6 +10,30 @@ from lib.step import step, error
 
 def handler(event, context):
     event = json.loads(event["Records"][0]["body"])
+
+    if event.get('source') == 'aws.events':
+        collection = int(re.sub('^.*schedule-', '', event['resources'][0]))
+        print(f'Event: Collection ID: {collection}')
+
+        collection = requests.get(
+            f"{os.environ.get('API')}/api/collection/{collection}",
+            headers={"Authorization": f'bearer {event.get("token")}'}
+        )
+
+        collection.raise_for_status()
+        collection = collection.json()
+
+        source = requests.get(
+            f"{os.environ.get('API')}/api/source/{collection['source_id']}",
+            headers={"Authorization": f'bearer {event.get("token")}'}
+        )
+
+        event = {
+            "token": "HOW DO I GET THIS",
+            "config": {
+                "collection": collection["id"]
+            }
+        }
 
     try:
         if event["config"].get("type") == "s3":
