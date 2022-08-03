@@ -67,6 +67,8 @@ def handler(event, context):
             exit()
 
     except Exception as e: # TODO Post Error Step
+        print(event)
+
         error(event, e)
 
 
