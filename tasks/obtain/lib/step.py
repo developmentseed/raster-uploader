@@ -1,6 +1,24 @@
 import os
+import sys
 import json
 import requests
+import traceback
+
+def error(event, err):
+    print("ERROR", err)
+    traceback.print_exc(file=sys.stdout)
+
+    return step(
+        {
+            "upload": event["config"]["upload"],
+            "type": "error",
+            "parent": event.get("parent"),
+            "config": event.get("config", {}),
+            "step": {"message": str(err), "closed": True},
+        },
+        event["token"],
+    )
+
 
 
 def step(step, token):
@@ -22,6 +40,5 @@ def step(step, token):
 
         return step_res.json()
     except Exception as e:
-        print(step_res.json())
         print(e)
         return e

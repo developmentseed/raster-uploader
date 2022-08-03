@@ -3,26 +3,9 @@ import os
 import json
 import boto3
 import requests
-import traceback
 from urllib.parse import urlparse
 from io import BytesIO, SEEK_SET, SEEK_END
-from lib.step import step
-
-def error(event, err):
-    print("ERROR", err)
-    traceback.print_exc(file=sys.stdout)
-
-    return step(
-        {
-            "upload": event["config"]["upload"],
-            "type": "error",
-            "parent": event["parent"],
-            "config": event["config"],
-            "step": {"message": err, "closed": True},
-        },
-        event["token"],
-    )
-
+from lib.step import step, error
 
 def handler(event, context):
     event = json.loads(event["Records"][0]["body"])
@@ -84,8 +67,7 @@ def handler(event, context):
             exit()
 
     except Exception as e: # TODO Post Error Step
-        print(e)
-        error(event, err)
+        error(event, e)
 
 
 def single(event, file, handler, collection=None):

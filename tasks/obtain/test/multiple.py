@@ -6,18 +6,7 @@ import unittest
 from unittest import mock
 from moto import mock_s3
 from handler import handler
-
-class MockResponse:
-    def __init__(self, json_data, status_code):
-        self.json_data = json_data
-        self.status_code = status_code
-
-    def json(self):
-        return self.json_data
-
-    def raise_for_status(self):
-        return True
-
+from test.request import MockResponse
 
 def mocked_patch_requests(*args, **kwargs):
     return MockResponse({
