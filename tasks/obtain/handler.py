@@ -62,6 +62,12 @@ def handler(event, context):
         event["config"]["type"] = source["type"]
         event["config"]["glob"] = source["glob"]
 
+        client = boto3.client('secretsmanager')
+        secrets = client.get_secret_value(SecretId=f'{os.environ["StackName"]}-source-{source["id"]}')
+        secrets = json.loads(secrets['SecretString'])
+
+        event["config"].update(secrets)
+
     if event['config'].get('collection') is not None:
         res = requests.put(
             f"{os.environ.get('API')}/api/upload",
