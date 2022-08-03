@@ -5,7 +5,7 @@ import Auth from '../lib/auth.js';
 import Rule from '../lib/aws/rule.js';
 
 export default async function router(schema, config) {
-    const rule = new Rule(config.StackName, config.sqs, config.sqs_role);
+    const rule = new Rule(config.StackName, config.sqs);
 
     /**
      * @api {get} /api/collection List Collections
