@@ -112,34 +112,6 @@ const stack = {
                 ClusterName: cf.join('-', [cf.stackName, 'cluster'])
             }
         },
-        RuleRole: {
-            Type: 'AWS::IAM::Role',
-            Properties: {
-                RoleName: cf.join([cf.stackName, '-event-rules-role']),
-                AssumeRolePolicyDocument: {
-                    Version: '2012-10-17',
-                    Statement: [{
-                        Effect: 'Allow',
-                        Principal: {
-                            Service: 'events.amazonaws.com'
-                        },
-                        Action: 'sts:AssumeRole'
-                    }]
-                },
-                Policies: [{
-                    PolicyName: cf.join([cf.stackName, '-event-rules']),
-                    PolicyDocument: {
-                        Statement: [{
-                            Effect: 'Allow',
-                            Action: [
-                                'sqs:SendMessage'
-                            ],
-                            Resource: [cf.getAtt('KMS', 'Arn')]
-                        }]
-                    }
-                }]
-            }
-        },
         TaskRole: {
             Type: 'AWS::IAM::Role',
             Properties: {
@@ -221,15 +193,6 @@ const stack = {
                                 cf.getAtt('DeadQueue', 'Arn'),
                                 cf.getAtt('ObtainQueue', 'Arn'),
                                 cf.getAtt('TransformQueue', 'Arn')
-                            ]
-                        },{
-                            Effect: 'Allow', // Attach IAM Role to Event Rule
-                            Action: [
-                                'iam:GetRole',
-                                'iam:PassRole'
-                            ],
-                            Resource: [
-                                cf.join(['arn:aws:iam:', '::', cf.accountId, ':role/', cf.stackName, '-*' ])
                             ]
                         },{
                             Effect: 'Allow', // Create events for scheduled uploads
