@@ -1,9 +1,11 @@
 import re
 import io
 import os
+import jwt
 import json
 import boto3
 import requests
+import datetime
 from urllib.parse import urlparse
 from io import BytesIO, SEEK_SET, SEEK_END
 from lib.step import step, error
@@ -12,8 +14,21 @@ def handler(event, context):
     event = json.loads(event["Records"][0]["body"])
 
     if event.get('source') == 'aws.events':
+
         collection = int(re.sub('^.*schedule-', '', event['resources'][0]))
         print(f'Event: Collection ID: {collection}')
+
+        token = jwt.encode({
+            "exp": datetime.now(tz=timezone.utc) + datetime.timedelta(seconds=30),
+            "type": "machine"
+        }, os.environ['SigningSecret'], algorithm="HS256")
+
+        event = {
+            "token": "HOW DO I GET THIS",
+            "config": {
+                "collection": collection["id"]
+            }
+        }
 
         collection = requests.get(
             f"{os.environ.get('API')}/api/collection/{collection}",
@@ -27,13 +42,6 @@ def handler(event, context):
             f"{os.environ.get('API')}/api/source/{collection['source_id']}",
             headers={"Authorization": f'bearer {event.get("token")}'}
         )
-
-        event = {
-            "token": "HOW DO I GET THIS",
-            "config": {
-                "collection": collection["id"]
-            }
-        }
 
     try:
         if event["config"].get("type") == "s3":

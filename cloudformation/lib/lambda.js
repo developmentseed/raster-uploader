@@ -91,6 +91,7 @@ for (const task of fs.readdirSync(path.resolve(__dirname, '../../tasks'))) {
             Timeout: 900,
             Environment: {
                 Variables: {
+                    SigningSecret: cf.ref('SigningSecret'),
                     StackName: cf.stackName,
                     BUCKET: cf.ref('Bucket'),
                     API: cf.join(['http://', cf.getAtt('ELB', 'DNSName')])
