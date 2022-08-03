@@ -79,6 +79,11 @@
         "query": false,
         "res": true
     },
+    "POST /machine": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
     "GET /map": {
         "body": false,
         "query": false,

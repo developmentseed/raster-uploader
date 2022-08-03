@@ -14,7 +14,6 @@ def handler(event, context):
     event = json.loads(event["Records"][0]["body"])
 
     if event.get('source') == 'aws.events':
-
         collection = int(re.sub('^.*schedule-', '', event['resources'][0]))
         print(f'Event: Collection ID: {collection}')
 
@@ -22,6 +21,14 @@ def handler(event, context):
             "exp": datetime.now(tz=timezone.utc) + datetime.timedelta(seconds=30),
             "type": "machine"
         }, os.environ['SigningSecret'], algorithm="HS256")
+
+        collection = requests.get(
+            f"{os.environ.get('API')}/api/machine",
+            headers={"Authorization": f'bearer {token}'}.
+            json={
+                collection = collection
+            }
+        )
 
         event = {
             "token": "HOW DO I GET THIS",

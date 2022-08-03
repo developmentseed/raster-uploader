@@ -1,0 +1,13 @@
+{
+    "type": "object",
+    "required": [
+        "token"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "token": {
+            "type": "string",
+            "description": "An access token to use in subsequent requests that is tightly scoped to the desired task"
+        }
+    }
+}
