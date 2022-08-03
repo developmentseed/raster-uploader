@@ -3,8 +3,26 @@ import os
 import json
 import boto3
 import requests
+import traceback
 from urllib.parse import urlparse
 from io import BytesIO, SEEK_SET, SEEK_END
+from lib.step import step
+
+def error(event, err):
+    print("ERROR", err)
+    traceback.print_exc(file=sys.stdout)
+
+    return step(
+        {
+            "upload": event["config"]["upload"],
+            "type": "error",
+            "parent": event["parent"],
+            "config": event["config"],
+            "step": {"message": err, "closed": True},
+        },
+        event["token"],
+    )
+
 
 def handler(event, context):
     event = json.loads(event["Records"][0]["body"])
@@ -34,7 +52,7 @@ def handler(event, context):
                         raise e
 
             if event["config"].get("collection") is None and recursive:
-                raise Exception("Cannot perform a recursive search on a single upload - use a collection")
+                return error(event, Exception("Cannot perform a recursive search on a single upload - use a collection"))
 
             if not recursive:
                 s3res = s3_client.get_object(Bucket=o.netloc, Key=o.path.lstrip("/"))
@@ -66,7 +84,8 @@ def handler(event, context):
             exit()
 
     except Exception as e: # TODO Post Error Step
-        raise e
+        print(e)
+        error(event, err)
 
 
 def single(event, file, handler, collection=None):

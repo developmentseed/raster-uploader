@@ -55,6 +55,7 @@ class TestSingle(unittest.TestCase):
         res = handler({
             "Records": [{
                 "body": json.dumps({
+                    "token": "123",
                     "config": {
                         "type": "s3",
                         "collection": 1,
