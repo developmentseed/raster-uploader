@@ -20,7 +20,7 @@ export default class Config {
             try {
                 const name = `${this.StackName}-${sqs}`;
 
-                this.sqs_role = `arn:aws:iam:${process.env.AWS_DEFAULT_REGION}:${this.account}:role/${process.env.StackName}-event-rules-role`;
+                this.sqs_role = `arn:aws:iam::${this.account}:role/${process.env.StackName}-event-rules-role`;
                 this.sqs[sqs] = {
                     url: await SQS.getQueueURL(name),
                     arn: `arn:aws:sqs:${process.env.AWS_DEFAULT_REGION}:${this.account}:${name}`

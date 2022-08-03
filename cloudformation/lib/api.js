@@ -223,6 +223,15 @@ const stack = {
                                 cf.getAtt('TransformQueue', 'Arn')
                             ]
                         },{
+                            Effect: 'Allow', // Attach IAM Role to Event Rule
+                            Action: [
+                                'iam:GetRole',
+                                'iam:PassRole'
+                            ],
+                            Resource: [
+                                cf.join(['arn:aws:iam:', '::', cf.accountId, ':role/', cf.stackName, '-*' ])
+                            ]
+                        },{
                             Effect: 'Allow', // Create events for scheduled uploads
                             Action: [
                                 'events:PutRule',
