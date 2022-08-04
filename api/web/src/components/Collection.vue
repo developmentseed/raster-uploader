@@ -190,7 +190,7 @@ export default {
         postTrigger: async function() {
             try {
                 this.loading.trigger = true;
-                 await window.std(`/api/collection/${this.$route.params.collectionid}`, {
+                 await window.std(`/api/collection/${this.$route.params.collectionid}/trigger`, {
                     method: 'POST'
                 });
             } catch (err) {
