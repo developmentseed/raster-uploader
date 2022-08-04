@@ -15,19 +15,23 @@ export default class Config {
             console.error(err);
         }
 
-
         for (const sqs of ['queue', 'transform-queue', 'obtain-queue']) {
             try {
                 const name = `${this.StackName}-${sqs}`;
 
+                const url = await SQS.getQueueURL(name);
+
                 this.sqs[sqs] = {
-                    url: await SQS.getQueueURL(name),
+                    url: url.QueueUrl,
                     arn: `arn:aws:sqs:${process.env.AWS_DEFAULT_REGION}:${this.account}:${name}`
                 };
+
             } catch (err) {
                 console.error(err);
             }
         }
+
+        console.error('SQS', this.sqs);
     }
 
     static env(args = {}) {
