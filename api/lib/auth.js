@@ -21,6 +21,18 @@ export default class Auth {
             throw new Err(403, null, 'Account Disabled - Please Contact Us');
         }
 
+        if (req.auth.access === 'machine') {
+            throw new Err(403, null, 'Machine token has restricted access');
+        }
+
+        return true;
+    }
+
+    static async is_machine(req) {
+        if (!req.auth || !req.auth.access || req.auth.access !== 'machine') {
+            throw new Err(403, null, 'Machine token required');
+        }
+
         return true;
     }
 

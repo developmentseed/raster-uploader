@@ -44,6 +44,16 @@ const stack = {
                         },{
                             Effect: 'Allow',
                             Action: [
+                                'secretsmanager:Describe*',
+                                'secretsmanager:Get*',
+                                'secretsmanager:List*'
+                            ],
+                            Resource: [
+                                cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '-*' ])
+                            ]
+                        },{
+                            Effect: 'Allow',
+                            Action: [
                                 'lambda:GetFunction',
                                 'lambda:invokeFunction',
                                 'logs:CreateLogGroup',
@@ -91,9 +101,10 @@ for (const task of fs.readdirSync(path.resolve(__dirname, '../../tasks'))) {
             Timeout: 900,
             Environment: {
                 Variables: {
+                    SigningSecret: cf.ref('SigningSecret'),
                     StackName: cf.stackName,
                     BUCKET: cf.ref('Bucket'),
-                    API: cf.join(['http://', cf.getAtt('ELB', 'DNSName')])
+                    API: cf.join(['https://', cf.ref('FrontEndDomain')])
                 }
             }
         }

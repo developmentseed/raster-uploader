@@ -22,7 +22,7 @@
                 "additionalProperties": false,
                 "properties": {
                     "id": {
-                        "type": "integer"
+                        "$ref": "./util/id.json"
                     },
                     "created": {
                         "$ref": "./util/created.json"

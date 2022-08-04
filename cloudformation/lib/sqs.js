@@ -52,6 +52,24 @@ const stack = {
                 }
             }
         },
+        ObtainQueuePolicy: {
+            Type: "AWS::SQS::QueuePolicy",
+            Properties: {
+                PolicyDocument: {
+                    Statement: [{
+                        Effect: 'Allow',
+                        Principal: {
+                            Service: 'events.amazonaws.com'
+                        },
+                        Action: ['sqs:SendMessage'],
+                        Resource: [cf.getAtt('ObtainQueue', 'Arn')]
+                    }]
+                },
+                Queues: [
+                    cf.ref('ObtainQueue')
+                ]
+            }
+        },
         ObtainLambdaSource: {
             Type: 'AWS::Lambda::EventSourceMapping',
             DependsOn: ['LambdaFunctionIdentify'],

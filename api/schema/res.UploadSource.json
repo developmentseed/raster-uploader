@@ -7,15 +7,16 @@
         "created",
         "updated",
         "name",
+        "glob",
         "url"
     ],
     "additionalProperties": false,
     "properties": {
         "id": {
-            "type": "integer"
+            "$ref": "./util/id.json"
         },
         "uid": {
-            "type": "integer"
+            "$ref": "./util/uid.json"
         },
         "type": {
             "type": "string",
@@ -35,6 +36,9 @@
         },
         "url": {
             "type": "string"
+        },
+        "glob": {
+            "type": ["string", "null"]
         },
         "secrets": {
             "type": "object"

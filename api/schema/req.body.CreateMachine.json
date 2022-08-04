@@ -1,0 +1,12 @@
+{
+    "type": "object",
+    "required": [
+        "collection"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "collection": {
+            "type": "number"
+        }
+    }
+}

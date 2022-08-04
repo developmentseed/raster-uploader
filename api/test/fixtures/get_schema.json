@@ -34,6 +34,11 @@
         "query": true,
         "res": true
     },
+    "POST /collection/:collection/trigger": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
     "GET /collection/:collection": {
         "body": false,
         "query": false,
@@ -75,6 +80,11 @@
         "res": true
     },
     "POST /login/reset": {
+        "body": true,
+        "query": false,
+        "res": true
+    },
+    "POST /machine": {
         "body": true,
         "query": false,
         "res": true
@@ -216,6 +226,11 @@
     },
     "GET /upload/:upload": {
         "body": false,
+        "query": false,
+        "res": true
+    },
+    "PUT /upload": {
+        "body": true,
         "query": false,
         "res": true
     },

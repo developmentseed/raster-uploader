@@ -24,8 +24,7 @@
                 "additionalProperties": false,
                 "properties": {
                     "id": {
-                        "type": "integer",
-                        "description": "Unique ID of User"
+                        "$ref": "./util/uid.json"
                     },
                     "username": {
                         "type": "string",

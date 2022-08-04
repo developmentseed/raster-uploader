@@ -135,8 +135,14 @@ export default async function server(config) {
             } else {
                 try {
                     const decoded = jwt.verify(authorization[1], config.SigningSecret);
-                    req.auth = await User.from(config.pool, decoded.u);
-                    req.auth.type = 'session';
+                    if (decoded.type === 'machine') {
+                        req.auth = {
+                            access: 'machine'
+                        };
+                    } else {
+                        req.auth = await User.from(config.pool, decoded.u);
+                        req.auth.type = 'session';
+                    }
                 } catch (err) {
                     return Err.respond(new Err(401, err, 'Invalid Token'), res);
                 }

@@ -68,6 +68,38 @@ export default async function router(schema, config) {
     });
 
     /**
+     * @api {put} /api/upload JSON Upload
+     * @apiVersion 1.0.0
+     * @apiName JSONUpload
+     * @apiGroup Upload
+     * @apiPermission user
+     *
+     * @apiDescription
+     *     Create a new upload but don't populate it with an actual file
+     *     Generally this will only be called internally via the obtain task
+     *
+     * @apiSchema (Body) {jsonschema=../schema/req.body.CreateUpload.json} apiParam
+     * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
+     */
+    await schema.put('/upload', {
+        body: 'req.body.CreateUpload.json',
+        res: 'res.Upload.json'
+    }, async (req, res) => {
+        try {
+            await Auth.is_auth(req);
+
+            const upload = await Upload.generate(config.pool, {
+                uid: req.auth.id,
+                ...req.body
+            });
+
+            return res.json(upload.serialize());
+        } catch (err) {
+            return Err.respond(err, res);
+        }
+    });
+
+    /**
      * @api {post} /api/upload Create Upload
      * @apiVersion 1.0.0
      * @apiName CreateUpload

@@ -18,10 +18,10 @@
     "additionalProperties": false,
     "properties": {
         "id": {
-            "type": "integer"
+            "$ref": "./util/id.json"
         },
         "uid": {
-            "type": "integer"
+            "$ref": "./util/uid.json"
         },
         "created": {
             "$ref": "./util/created.json"

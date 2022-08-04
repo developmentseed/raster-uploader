@@ -8,7 +8,7 @@
     "additionalProperties": false,
     "properties": {
         "uid": {
-            "type": "integer"
+            "$ref": "./util/uid.json"
         },
         "expires": {
             "type": "string"

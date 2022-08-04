@@ -18,7 +18,7 @@ export default class SQS {
             QueueName: name
         }).promise()
 
-        return res.QueueURL;
+        return res;
     }
 
     async send(upload, config, uid, parent = null) {

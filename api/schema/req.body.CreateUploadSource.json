@@ -4,7 +4,8 @@
         "name",
         "url",
         "secrets",
-        "type"
+        "type",
+        "glob"
     ],
     "additionalProperties": false,
     "properties": {
@@ -13,6 +14,10 @@
         },
         "url": {
             "type": "string"
+        },
+        "glob": {
+            "type": ["string", "null"],
+            "default": ""
         },
         "secrets": {
             "type": "object"

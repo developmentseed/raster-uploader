@@ -36,7 +36,9 @@ export default async function router(schema, config) {
             });
 
             req.body.obtain.upload = upload.id;
-            await sqs.obtain(req.body.obtain, req.auth.id);
+            await sqs.obtain({
+                ...req.body.obtain
+            }, req.auth.id);
 
             return res.json(upload.serialize());
         } catch (err) {

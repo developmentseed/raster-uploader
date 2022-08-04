@@ -1,11 +1,11 @@
 import { Err } from '@openaddresses/batch-schema';
 import UploadSource from '../lib/types/upload-source.js';
 import Auth from '../lib/auth.js';
-import AWS from 'aws-sdk';
-
-const sm = new AWS.SecretsManager({ region: process.env.AWS_DEFAULT_REGION });
+import Secret from '../lib/aws/secret.js';
 
 export default async function router(schema, config) {
+    const secret = new Secret(config.StackName);
+
     /**
      * @api {get} /api/source List Sources
      * @apiVersion 1.0.0
@@ -91,11 +91,7 @@ export default async function router(schema, config) {
             req.body.uid = req.auth.id;
             const source = await UploadSource.generate(config.pool, req.body);
 
-            await sm.createSecret({
-                Name: `${config.StackName}-source-${source.id}`,
-                Description: `${config.StackName} Source: ${source.id}`,
-                SecretString: JSON.stringify(secrets)
-            }).promise();
+            await secret.create(source, secrets);
 
             return res.json(source.serialize());
         } catch (err) {
@@ -134,12 +130,7 @@ export default async function router(schema, config) {
 
             await source.commit(config.pool, null, req.body);
 
-            if (secrets) {
-                await sm.putSecretValue({
-                    SecretId: `${config.StackName}-source-${source.id}`,
-                    SecretString: JSON.stringify(secrets)
-                }).promise();
-            }
+            if (secrets) await secret.update(source, secrets);
 
             return res.json(source.serialize());
         } catch (err) {
@@ -171,10 +162,7 @@ export default async function router(schema, config) {
             const source = await UploadSource.from(config.pool, req.params.source);
             source.permission(req.auth);
 
-            await sm.deleteSecret({
-                SecretId: `${config.StackName}-source-${source.id}`
-            }).promise();
-
+            await secret.delete(source);
             await source.delete(config.pool);
 
             return res.json({

@@ -91,10 +91,20 @@
             </div>
 
             <template v-if='$route.params.collectionid'>
-                <h2 class='mb3'>Uploads</h2>
+                <div class='col col--12 clearfix'>
+                    <h2 class='mb3 fl'>Uploads</h2>
+
+                    <button @click='postTrigger' class='fr btn round btn--stroke color-gray color-green-on-hover'>
+                        <svg class='icon'><use href='#icon-plus'/></svg>
+                    </button>
+                </div>
+
                 <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
                     <template v-if='loading.uploads'>
                         <Loading desc='Loading Uploads'/>
+                    </template>
+                    <template v-if='loading.trigger'>
+                        <Loading desc='Triggering Collection Run'/>
                     </template>
                     <template v-else-if='uploads.total === 0'>
                         <None name='Uploads'/>
@@ -145,7 +155,8 @@ export default {
             loading: {
                 collection: false,
                 uploads: true,
-                sources: true
+                sources: true,
+                trigger: false
             },
             human: '',
             errors: {
@@ -176,6 +187,17 @@ export default {
         }
     },
     methods: {
+        postTrigger: async function() {
+            try {
+                this.loading.trigger = true;
+                 await window.std(`/api/collection/${this.$route.params.collectionid}/trigger`, {
+                    method: 'POST'
+                });
+            } catch (err) {
+                this.$emit('err', err);
+            }
+            this.loading.trigger = false;
+        },
         setHuman: function() {
             try {
                 this.errors.cron = false;
@@ -186,6 +208,7 @@ export default {
             }
         },
         getSource: async function(source_id) {
+            if (!source_id) return;
             try {
                 this.source = await window.std(`/api/source/${source_id}`);
             } catch (err) {

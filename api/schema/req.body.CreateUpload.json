@@ -1,0 +1,18 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "size": {
+            "type": ["null", "integer"]
+        },
+        "name": {
+            "type": "string"
+        },
+        "obtain": {
+            "type": "boolean"
+        },
+        "collection_id": {
+            "type": ["null", "integer"]
+        }
+    }
+}
