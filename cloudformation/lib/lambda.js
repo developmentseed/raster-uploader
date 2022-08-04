@@ -94,7 +94,7 @@ for (const task of fs.readdirSync(path.resolve(__dirname, '../../tasks'))) {
                     SigningSecret: cf.ref('SigningSecret'),
                     StackName: cf.stackName,
                     BUCKET: cf.ref('Bucket'),
-                    API: cf.join(['http://', cf.getAtt('ELB', 'DNSName')])
+                    API: cf.join(['https://', cf.ref('FrontEndDomain')])
                 }
             }
         }

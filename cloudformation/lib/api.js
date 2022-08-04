@@ -345,12 +345,6 @@ const stack = {
                 }]
             }
         }
-    },
-    Outputs: {
-        ELB: {
-            Description: 'Raster Uploader API URL',
-            Value: cf.join(['http://', cf.getAtt('ELB', 'DNSName')])
-        }
     }
 };
 
