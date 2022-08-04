@@ -61,7 +61,7 @@ def handler(event, context):
         event["config"]["type"] = source["type"]
         event["config"]["glob"] = source["glob"]
 
-        client = boto3.client('secretsmanager')
+        client = boto3.client('secretsmanager', region_name=os.environ.get("AWS_DEFAULT_REGION", "us-east-1"))
         secrets = client.get_secret_value(SecretId=f'{os.environ["StackName"]}-source-{source["id"]}')
         secrets = json.loads(secrets['SecretString'])
 
@@ -75,6 +75,7 @@ def handler(event, context):
                 "s3",
                 aws_access_key_id=event["config"].get("aws_access_key_id"),
                 aws_secret_access_key=event["config"].get("aws_secret_access_key"),
+                region_name=os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
             )
 
             key_path = o.path.lstrip("/")
@@ -131,7 +132,7 @@ def handler(event, context):
 
 def single(event, file, handler, collection=None):
     print(f"Processing: {file}")
-    ru_s3 = boto3.client("s3")
+    ru_s3 = boto3.client("s3", region_name=os.environ.get("AWS_DEFAULT_REGION", "us-east-1"))
 
     if event['config'].get('collection') is not None:
         res = requests.put(
