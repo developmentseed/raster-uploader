@@ -1,5 +1,3 @@
-import re
-import io
 import os
 import jwt
 import json
@@ -73,7 +71,8 @@ def handler(event, context):
             f"{os.environ.get('API')}/api/upload",
             headers={"Authorization": f'bearer {event.get("token")}'},
             json={
-                "collection_id": event['config']['collection']
+                "collection_id": event['config']['collection'],
+                "obtain": True
             },
         )
 

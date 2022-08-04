@@ -34,6 +34,11 @@
         "query": true,
         "res": true
     },
+    "POST /collection/:collection/trigger": {
+        "body": false,
+        "query": false,
+        "res": true
+    },
     "GET /collection/:collection": {
         "body": false,
         "query": false,

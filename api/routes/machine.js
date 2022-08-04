@@ -1,7 +1,6 @@
 import { Err } from '@openaddresses/batch-schema';
 import Collection from '../lib/types/collection.js';
 import Auth from '../lib/auth.js';
-import Rule from '../lib/aws/rule.js';
 import jwt from 'jsonwebtoken';
 
 export default async function router(schema, config) {
