@@ -3,9 +3,11 @@ import Collection from '../lib/types/collection.js';
 import UploadSource from '../lib/types/upload-source.js';
 import Auth from '../lib/auth.js';
 import Rule from '../lib/aws/rule.js';
+import SQS from '../lib/aws/sqs.js';
 
 export default async function router(schema, config) {
     const rule = new Rule(config.StackName, config.sqs);
+    const sqs = new SQS(config.SigningSecret, config.sqs);
 
     /**
      * @api {get} /api/collection List Collections
@@ -31,6 +33,32 @@ export default async function router(schema, config) {
             const list = await Collection.list(config.pool, req.query);
 
             res.json(list);
+        } catch (err) {
+            return Err.respond(err, res);
+        }
+    });
+
+    /**
+     * @api {post} /api/collection/:collection/trigger Trigger Collection
+     * @apiVersion 1.0.0
+     * @apiName TriggerCollection
+     * @apiGroup Collection
+     * @apiPermission user
+     *
+     * @apiDescription
+     *     Manually trigger a collection outside of set Cron rules
+     *
+     * @apiSchema {jsonschema=../schema/res.Collection.json} apiSuccess
+     */
+    await schema.post('/collection', {
+        res: 'res.Collection.json'
+    }, async (req, res) => {
+        try {
+            await Auth.is_auth(req);
+
+            const collection = await Collection.generate(config.pool, req.body);
+
+            return res.json(collection.serialize());
         } catch (err) {
             return Err.respond(err, res);
         }
