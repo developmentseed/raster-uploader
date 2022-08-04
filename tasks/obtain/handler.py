@@ -72,7 +72,9 @@ def handler(event, context):
         res = requests.put(
             f"{os.environ.get('API')}/api/upload",
             headers={"Authorization": f'bearer {event.get("token")}'},
-            json={ "collection_id": collection },
+            json={
+                "collection_id": event['config']['collection']
+            },
         )
 
         res.raise_for_status()
