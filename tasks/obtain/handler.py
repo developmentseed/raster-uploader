@@ -1,4 +1,5 @@
 import os
+import re
 import jwt
 import json
 import boto3
@@ -66,21 +67,6 @@ def handler(event, context):
 
         event["config"].update(secrets)
 
-    if event['config'].get('collection') is not None:
-        res = requests.put(
-            f"{os.environ.get('API')}/api/upload",
-            headers={"Authorization": f'bearer {event.get("token")}'},
-            json={
-                "collection_id": event['config']['collection'],
-                "obtain": True
-            },
-        )
-
-        res.raise_for_status()
-        event['config']['upload'] = res.json()["id"]
-
-        print(f"Created Upload: {event['config']['upload']} (Collection: {event['config']['collection']})")
-
     try:
         if event["config"].get("type") == "s3":
             o = urlparse(event["config"].get("url"), allow_fragments=False)
@@ -111,7 +97,7 @@ def handler(event, context):
             if not recursive:
                 s3res = s3_client.get_object(Bucket=o.netloc, Key=o.path.lstrip("/"))
 
-                handler = io.BytesIO(s3res["Body"].read())
+                handler = BytesIO(s3res["Body"].read())
                 file = os.path.basename(urlparse(event["config"].get("url")).path)
                 single(event, file, handler)
             else:
@@ -121,7 +107,7 @@ def handler(event, context):
                 for key in s3list['Contents']:
                     s3res = s3_client.get_object(Bucket=o.netloc, Key=key["Key"])
 
-                    handler = io.BytesIO(s3res["Body"].read())
+                    handler = BytesIO(s3res["Body"].read())
                     file = os.path.basename(urlparse(key["Key"]).path)
                     single(event, file, handler, collection=event["config"]["collection"])
 
@@ -147,7 +133,22 @@ def single(event, file, handler, collection=None):
     print(f"Processing: {file}")
     ru_s3 = boto3.client("s3")
 
-    upload = event["config"].get("upload")
+    if event['config'].get('collection') is not None:
+        res = requests.put(
+            f"{os.environ.get('API')}/api/upload",
+            headers={"Authorization": f'bearer {event.get("token")}'},
+            json={
+                "collection_id": event['config']['collection'],
+                "obtain": True
+            },
+        )
+
+        res.raise_for_status()
+        upload = res.json()["id"]
+
+        print(f"Created Upload: {upload} (Collection: {event['config']['collection']})")
+    else:
+        upload = event["config"]["upload"]
 
     ru_s3.put_object(
         Bucket=os.environ["BUCKET"],
