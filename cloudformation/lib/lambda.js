@@ -44,6 +44,16 @@ const stack = {
                         },{
                             Effect: 'Allow',
                             Action: [
+                                'secretsmanager:Describe*',
+                                'secretsmanager:Get*',
+                                'secretsmanager:List*'
+                            ],
+                            Resource: [
+                                cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '-*' ])
+                            ]
+                        },{
+                            Effect: 'Allow',
+                            Action: [
                                 'lambda:GetFunction',
                                 'lambda:invokeFunction',
                                 'logs:CreateLogGroup',
