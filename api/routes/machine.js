@@ -30,7 +30,7 @@ export default async function router(schema, config) {
 
             const token = jwt.sign({
                 u: collection.uid
-            }, this.secret, {
+            }, config.SigningSecret, {
                 expiresIn: '15m'
             });
 
