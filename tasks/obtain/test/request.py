@@ -7,7 +7,7 @@ class MockResponse:
         return self.json_data
 
     def iter_content(self, bts):
-        return iter(b'')
+        return iter(b"")
 
     def raise_for_status(self):
         return True
