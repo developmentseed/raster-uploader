@@ -130,7 +130,7 @@ def handler(event, context):
                     if event["config"].get("glob") is not None:
                         glob_re = re.compile(glob_to_re(event["config"]["glob"]))
 
-                        if glob_re.match(o.path.lstrip("/")) is not None:
+                        if glob_re.match(key["Key"]) is not None:
                             handler = BytesIO(s3res["Body"].read())
                             file = os.path.basename(urlparse(key["Key"]).path)
                             single(

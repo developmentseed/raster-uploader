@@ -91,6 +91,9 @@ class TestEvent(unittest.TestCase):
         )
 
         self.assertEqual(len(mock_patch.call_args_list), 1)
+        self.assertEqual(len(mock_post.call_args_list), 2)
+        self.assertEqual(len(mock_get.call_args_list), 1)
+        self.assertEqual(len(mock_put.call_args_list), 1)
 
 
 if __name__ == "__main__":
