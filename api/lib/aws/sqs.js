@@ -26,7 +26,7 @@ export default class SQS {
             const token = jwt.sign({
                 u: uid
             }, this.secret, {
-                expiresIn: '15m'
+                expiresIn: '1h'
             });
 
             const sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION });
@@ -49,7 +49,7 @@ export default class SQS {
             const token = jwt.sign({
                 u: uid
             }, this.secret, {
-                expiresIn: '15m'
+                expiresIn: '1h'
             });
 
             if (!config.transform) config.transform = [];
@@ -74,7 +74,7 @@ export default class SQS {
             const token = jwt.sign({
                 u: uid
             }, this.secret, {
-                expiresIn: '15m'
+                expiresIn: '1h'
             });
 
             const sqs = new AWS.SQS({ region: process.env.AWS_DEFAULT_REGION });
