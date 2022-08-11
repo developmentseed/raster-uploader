@@ -144,7 +144,7 @@ export default async function server(config) {
                         req.auth.type = 'session';
                     }
                 } catch (err) {
-                    console.error(err)
+                    console.error(err);
                     return Err.respond(new Err(401, err, 'Invalid Token'), res);
                 }
             }
@@ -159,7 +159,7 @@ export default async function server(config) {
                     req.token.type = 'token';
                 }
             } catch (err) {
-                console.error(err)
+                console.error(err);
                 return Err.respond(new Err(401, err, 'Invalid Token'), res);
             }
         } else {
