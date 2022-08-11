@@ -132,6 +132,8 @@ export default {
     mounted: async function() {
         await this.getUpload();
         if (this.upload.uploaded) await this.getUploadSteps();
+        
+        this.calcPoll();
     },
     unmounted: async function() {
         if (this.polling.steps) clearInterval(this.polling.steps);
@@ -144,20 +146,23 @@ export default {
         linear: {
             deep: true,
             handler: function() {
-                const poll = this.linear.length ? this.linear[this.linear.length - 1].closed : false;
-
-                if (poll && !this.polling.steps) {
-                    this.polling.steps = setInterval(() => {
-                        this.getUploadSteps(false);
-                    }, 5000);
-                } else if (!poll && this.polling.steps) {
-                    clearInterval(this.polling.steps);
-                    this.polling.steps = false;
-                }
+                this.calcPoll();
             }
         }
     },
     methods: {
+        calcPoll: function() {
+            const poll = this.linear.length ? this.linear[this.linear.length - 1].closed : true;
+
+            if (poll && !this.polling.steps) {
+                this.polling.steps = setInterval(() => {
+                    this.getUploadSteps(false);
+                }, 5000);
+            } else if (!poll && this.polling.steps) {
+                clearInterval(this.polling.steps);
+                this.polling.steps = false;
+            }
+        },
         postStep: async function(step) {
             try {
                 await window.std(`/api/upload/${this.$route.params.uploadid}/step`, {

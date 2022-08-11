@@ -4,8 +4,26 @@
 
 ## Installation
 
+### API
+
 ```sh
+cd api/
+
 npm install
+
+echo "CREATE DATABASE uploader" | psql -U postgres
+
+npx knex migrate:latest
+```
+
+### UI
+
+```sh
+cd api/web
+
+npm install
+
+yarn dev
 ```
 
 ## Deployment

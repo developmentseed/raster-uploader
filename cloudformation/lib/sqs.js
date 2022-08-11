@@ -72,7 +72,7 @@ const stack = {
         },
         ObtainLambdaSource: {
             Type: 'AWS::Lambda::EventSourceMapping',
-            DependsOn: ['LambdaFunctionIdentify'],
+            DependsOn: ['LambdaFunctionObtain'],
             Properties: {
                 Enabled: 'True',
                 EventSourceArn:  cf.getAtt('ObtainQueue', 'Arn'),
