@@ -9,55 +9,37 @@ import App from './App.vue'
 import std from './std.js';
 std();
 
-import Home from './components/Home.vue';
-import Login from './components/Login.vue';
-import Lost from './components/Lost.vue';
-import Forgot from './components/Forgot.vue';
-import Verify from './components/Verify.vue';
-import Register from './components/Register.vue';
-import Reset from './components/Reset.vue';
-import Profile from './components/Profile.vue';
-import Admin from './components/Admin.vue';
-import Upload from './components/Upload.vue';
-import Uploaded from './components/Uploaded.vue';
-import BaseMaps from './components/BaseMaps.vue';
-import BaseMap from './components/BaseMap.vue';
-import Sources from './components/Sources.vue';
-import Source from './components/Source.vue';
-import Collections from './components/Collections.vue';
-import Collection from './components/Collection.vue';
-
 const router = new VueRouter.createRouter({
     history: VueRouter.createWebHistory(),
     routes: [
-        { path: '/', name: 'home', component: Home },
+        { path: '/', name: 'home', component: () => import('./components/Home.vue') },
 
-        { path: '/login', name: 'login', component: Login },
-        { path: '/login/forgot', name: 'forgot', component: Forgot },
-        { path: '/login/verify', name: 'verify', component: Verify },
-        { path: '/login/reset', name: 'reset', component: Reset },
-        { path: '/login/register', name: 'register', component: Register },
+        { path: '/login', name: 'login', component: () => import('./components/Login.vue') },
+        { path: '/login/forgot', name: 'forgot', component: () => import('./components/Forgot.vue') },
+        { path: '/login/verify', name: 'verify', component: () => import('./components/Verify.vue') },
+        { path: '/login/reset', name: 'reset', component: () => import('./components/Reset.vue') },
+        { path: '/login/register', name: 'register', component: () => import('./components/Register.vue') },
 
-        { path: '/upload', name: 'newupload', component: Upload },
-        { path: '/upload/:uploadid', name: 'upload', component: Uploaded },
+        { path: '/upload', name: 'newupload', component: () => import('./components/Upload.vue') },
+        { path: '/upload/:uploadid', name: 'upload', component: () => import('./components/Uploaded.vue') },
 
-        { path: '/basemap', name: 'basemaps', component: BaseMaps },
-        { path: '/basemap/new', name: 'newbasemap', component: BaseMap },
-        { path: '/basemap/:basemapid', name: 'basemap', component: BaseMap },
+        { path: '/basemap', name: 'basemaps', component: () => import('./components/BaseMaps.vue') },
+        { path: '/basemap/new', name: 'newbasemap', component: () => import('./components/BaseMap.vue') },
+        { path: '/basemap/:basemapid', name: 'basemap', component: () => import('./components/BaseMap.vue') },
 
-        { path: '/source', name: 'sources', component: Sources },
-        { path: '/source/new', name: 'newsource', component: Source },
-        { path: '/source/:sourceid', name: 'source', component: Source },
+        { path: '/source', name: 'sources', component: () => import('./components/Sources.vue') },
+        { path: '/source/new', name: 'newsource', component: () => import('./components/Source.vue') },
+        { path: '/source/:sourceid', name: 'source', component: () => import('./components/Source.vue') },
 
-        { path: '/collection', name: 'collections', component: Collections },
-        { path: '/collection/new', name: 'newcollection', component: Collection },
-        { path: '/collection/:collectionid', name: 'collection', component: Collection },
+        { path: '/collection', name: 'collections', component: () => import('./components/Collections.vue') },
+        { path: '/collection/new', name: 'newcollection', component: () => import('./components/Collection.vue') },
+        { path: '/collection/:collectionid', name: 'collection', component: () => import('./components/Collection.vue') },
 
-        { path: '/profile', name: 'profile', component: Profile },
+        { path: '/profile', name: 'profile', component: () => import('./components/Profile.vue') },
 
-        { path: '/admin', name: 'admin', component: Admin },
+        { path: '/admin', name: 'admin', component: () => import('./components/Admin.vue') },
 
-        { path: '/.*', name: 'lost', component: Lost }
+        { path: '/.*', name: 'lost', component: () => import('./components/Lost.vue') }
     ]
 });
 
