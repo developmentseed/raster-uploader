@@ -112,7 +112,7 @@ export default async function router(schema, config) {
             const token = await UserToken.from(config.pool, req.params.token_id);
             if (token.uid !== req.auth.id) throw new Err(401, null, 'Cannot delete a token you did not create');
 
-            await token.delete(config.pool);
+            await token.delete();
 
             return res.json({
                 status: 200,

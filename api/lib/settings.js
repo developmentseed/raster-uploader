@@ -50,7 +50,7 @@ export default class Settings {
             if (!valid) throw new Err(400, null, 'Setting does not conform to schema');
         }
 
-        return meta.patch(patch);
+        return true;
     }
 
     static async from(pool, key) {

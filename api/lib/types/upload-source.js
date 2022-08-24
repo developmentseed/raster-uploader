@@ -1,4 +1,3 @@
-import fs from 'fs';
 import Generic from '@openaddresses/batch-generic';
 import { Err } from '@openaddresses/batch-schema';
 import { sql } from 'slonik';
@@ -8,8 +7,6 @@ import { sql } from 'slonik';
  */
 export default class UploadSource extends Generic {
     static _table = 'upload_sources';
-    static _patch = JSON.parse(fs.readFileSync(new URL('../../schema/req.body.PatchUploadSource.json', import.meta.url)));
-    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.UploadSource.json', import.meta.url)));
 
     /**
      * List & Filter sources

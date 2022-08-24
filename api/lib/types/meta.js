@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { Err } from '@openaddresses/batch-schema';
 import Generic from '@openaddresses/batch-generic';
 import { sql } from 'slonik';
@@ -8,8 +7,6 @@ import { sql } from 'slonik';
  */
 export default class Meta extends Generic {
     static _table = 'meta';
-    static _patch = JSON.parse(fs.readFileSync(new URL('../../schema/req.body.PatchMeta.json', import.meta.url)));
-    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.Meta.json', import.meta.url)));
 
     /**
      * List & Filter Meta

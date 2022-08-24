@@ -77,7 +77,7 @@ export default async function router(schema, config) {
             if (!(meta instanceof Meta)) throw new Err(400, null, 'Meta not found');
 
             Settings.patch(meta, req.body);
-            await meta.commit(config.pool);
+            await meta.commit(req.body);
 
             res.json(meta.serialize());
         } catch (err) {
@@ -107,7 +107,7 @@ export default async function router(schema, config) {
             await Auth.is_admin(req);
 
             const meta = await Meta.from(config.pool, req.params.key);
-            await meta.delete(config.pool);
+            await meta.delete();
 
             res.json({
                 status: 200,

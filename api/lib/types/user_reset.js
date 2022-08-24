@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { Err } from '@openaddresses/batch-schema';
 import crypto from 'crypto';
 import { promisify } from 'util';
@@ -12,8 +11,6 @@ const randomBytes = promisify(crypto.randomBytes);
  */
 export default class UserReset extends Generic {
     static _table = 'users_reset';
-    static _patch = null;
-    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.UserReset.json', import.meta.url)));
 
     /**
      * Return a UserReset object given a token

@@ -128,7 +128,7 @@ export default async function router(schema, config) {
             const secrets = req.body.secrets;
             delete req.body.secrets;
 
-            await source.commit(config.pool, null, req.body);
+            await source.commit(req.body);
 
             if (secrets) await secret.update(source, secrets);
 
@@ -163,7 +163,7 @@ export default async function router(schema, config) {
             source.permission(req.auth);
 
             await secret.delete(source);
-            await source.delete(config.pool);
+            await source.delete();
 
             return res.json({
                 status: 200,

@@ -179,7 +179,7 @@ export default async function router(schema, config) {
 
             const paused = req.body.paused;
             delete req.body.paused;
-            await collection.commit(config.pool, null, req.body);
+            await collection.commit(req.body);
 
             await rule.update(collection);
 
@@ -220,7 +220,7 @@ export default async function router(schema, config) {
 
             await rule.delete(collection);
 
-            await collection.delete(config.pool);
+            await collection.delete();
 
             return res.json({
                 status: 200,

@@ -147,7 +147,7 @@ export default async function router(schema, config) {
 
             if (req.body.step) req.body.step = Object.assign(step.step, req.body.step);
 
-            await step.commit(config.pool, null, req.body);
+            await step.commit(req.body);
 
             if (req.body.closed === true) {
                 await sqs.send(req.params.upload, step.compile(), req.auth.id, step.id);
@@ -189,7 +189,7 @@ export default async function router(schema, config) {
             const step = await UploadStep.from(config.pool, req.params.step);
             step.permission(upload);
 
-            await step.delete(config.pool);
+            await step.delete();
 
             return res.json({
                 status: 200,
