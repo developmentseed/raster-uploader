@@ -21,7 +21,7 @@ export default class Login {
         await UserReset.delete_all(pool, reset.uid);
 
         const user = await User.from(pool, reset.uid);
-        await user.commit(pool, {
+        await user.commit({
             validated: true
         });
     }
@@ -34,7 +34,7 @@ export default class Login {
         await UserReset.delete_all(pool, reset.uid);
 
         const user = await User.from(pool, reset.uid);
-        await user.set_password(pool, body.password);
+        await user.set_password(body.password);
     }
 
     /**

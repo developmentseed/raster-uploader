@@ -2,6 +2,7 @@ import { Err } from '@openaddresses/batch-schema';
 import Auth from '../lib/auth.js';
 import Meta from '../lib/types/meta.js';
 import Settings from '../lib/settings.js';
+import { sql } from 'slonik';
 
 export default async function router(schema, config) {
 
@@ -77,7 +78,10 @@ export default async function router(schema, config) {
             if (!(meta instanceof Meta)) throw new Err(400, null, 'Meta not found');
 
             Settings.patch(meta, req.body);
-            await meta.commit(req.body);
+            await meta.commit({
+                updated: sql`NOW()`,
+                ...req.body
+            });
 
             res.json(meta.serialize());
         } catch (err) {
