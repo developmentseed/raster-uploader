@@ -231,7 +231,7 @@ export default class Flight {
      */
     user(test, username, admin = false) {
         test.test(`Create Token: ${username}`, async (t) => {
-            const res = await fetch(new URL('/api/user', this.base), {
+            const new_user_res = await fetch(new URL('/api/user', this.base), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -243,7 +243,7 @@ export default class Flight {
                 })
             });
 
-            const new_user = new FlightResponse(res, await res.json());
+            const new_user = new FlightResponse(new_user_res, await new_user_res.json());
 
             if (new_user.status !== 200) throw new Error(JSON.stringify(new_user.body));
 
@@ -257,7 +257,7 @@ export default class Flight {
                 `);
             }
 
-            const new_login = await fetch(new URL('/api/login', this.base), {
+            const new_login_res = await fetch(new URL('/api/login', this.base), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -268,7 +268,10 @@ export default class Flight {
                 })
             });
 
-            this.token[username] = (await new_login.json()).token;
+            const new_login = new FlightResponse(new_login_res, await new_login_res.json());
+            if (new_login.status !== 200) throw new Error(JSON.stringify(new_login.body));
+
+            this.token[username] = (new_login.body).token;
             t.end();
         });
     }

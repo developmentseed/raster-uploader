@@ -117,7 +117,7 @@ export default async function router(schema, config) {
             const basemap = await BaseMap.from(config.pool, req.params.basemap);
             basemap.permission(req.auth);
 
-            await basemap.commit(config.pool, null, req.body);
+            await basemap.commit(req.body);
 
             return res.json(basemap.serialize());
         } catch (err) {
@@ -149,7 +149,7 @@ export default async function router(schema, config) {
             const basemap = await BaseMap.from(config.pool, req.params.basemap);
             basemap.permission(req.auth);
 
-            await basemap.delete(config.pool);
+            await basemap.delete();
 
             return res.json({
                 status: 200,

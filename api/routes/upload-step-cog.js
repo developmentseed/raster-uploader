@@ -49,8 +49,9 @@ export default async function router(schema, config) {
 
             await sqs.transform(step.config, req.body, req.auth.id, step.id);
 
-            step.closed = true;
-            await step.commit(config.pool);
+            await step.commit({
+                closed: true
+            });
 
             return res.json(step.serialize());
         } catch (err) {

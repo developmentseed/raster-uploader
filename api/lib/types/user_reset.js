@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { Err } from '@openaddresses/batch-schema';
 import crypto from 'crypto';
 import { promisify } from 'util';
@@ -12,8 +11,6 @@ const randomBytes = promisify(crypto.randomBytes);
  */
 export default class UserReset extends Generic {
     static _table = 'users_reset';
-    static _patch = null;
-    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.UserReset.json', import.meta.url)));
 
     /**
      * Return a UserReset object given a token
@@ -45,7 +42,7 @@ export default class UserReset extends Generic {
             throw new Err(401, null, 'Invalid or Expired Reset Token');
         }
 
-        return this.deserialize(pgres);
+        return this.deserialize(pool, pgres);
     }
 
     static async delete_all(pool, uid) {
@@ -75,7 +72,7 @@ export default class UserReset extends Generic {
                 RETURNING *
             `);
 
-            return this.deserialize(pgres);
+            return this.deserialize(pool, pgres);
         } catch (err) {
             throw new Err(500, err, 'Internal User Error');
         }

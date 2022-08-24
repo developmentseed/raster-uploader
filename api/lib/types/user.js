@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { Err } from '@openaddresses/batch-schema';
 import bcrypt from 'bcrypt';
 import { sql } from 'slonik';
@@ -9,8 +8,6 @@ import Generic from '@openaddresses/batch-generic';
  */
 export default class User extends Generic {
     static _table = 'users';
-    static _patch = JSON.parse(fs.readFileSync(new URL('../../schema/req.body.PatchUser.json', import.meta.url)));
-    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.User.json', import.meta.url)));
 
     /**
      * Return a list of users
@@ -90,33 +87,15 @@ export default class User extends Generic {
             throw new Err(403, null, 'Invalid Username or Pass');
         }
 
-        return this.deserialize(pgres);
+        return this.deserialize(pool, pgres);
     }
 
 
-    async commit(pool) {
-        try {
-            await pool.query(sql`
-                UPDATE users
-                    SET
-                        access = ${this.access},
-                        validated = ${this.validated}
-                    WHERE
-                        id = ${this.id}
-                    RETURNING *
-            `);
-        } catch (err) {
-            throw new Err(500, err, 'Internal User Error');
-        }
-
-        return this;
-    }
-
-    async set_password(pool, password) {
+    async set_password(password) {
         const userhash = await bcrypt.hash(password, 10);
 
         try {
-            await pool.query(sql`
+            await this._pool.query(sql`
                 UPDATE users
                     SET
                         password = ${userhash},
@@ -152,7 +131,7 @@ export default class User extends Generic {
                 ) RETURNING *
             `);
 
-            return this.deserialize(pgres);
+            return this.deserialize(pool, pgres);
         } catch (err) {
             if (err.originalError && err.originalError.code && err.originalError.code === '23505') {
                 throw new Err(400, err, 'User already exists');

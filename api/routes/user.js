@@ -88,11 +88,18 @@ export default async function router(schema, config) {
             }
 
             if (!config.validate) {
-                usr.validated = true;
-                await usr.commit(config.pool);
+                await usr.commit({
+                    validated: true
+                });
             }
 
-            return res.json(usr.serialize());
+            return res.json({
+                id: usr.id,
+                username: usr.username,
+                email: usr.email,
+                access: usr.access,
+                validated: usr.validated
+            });
         } catch (err) {
             return Err.respond(err, res);
         }
@@ -131,11 +138,16 @@ export default async function router(schema, config) {
                 delete req.body.validated;
             }
 
-            const user = await User.from(config.pool, req.params.uid);
-            user.patch(req.body);
-            await user.commit(config.pool);
+            const usr = await User.from(config.pool, req.params.uid);
+            await usr.commit(req.body);
 
-            res.json(user.serialize());
+            return res.json({
+                id: usr.id,
+                username: usr.username,
+                email: usr.email,
+                access: usr.access,
+                validated: usr.validated
+            });
         } catch (err) {
             return Err.respond(err, res);
         }

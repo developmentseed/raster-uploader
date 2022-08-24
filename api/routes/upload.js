@@ -161,7 +161,7 @@ export default async function router(schema, config) {
                     const head = await S3.head(meta.path);
                     meta.size = head.ContentLength;
 
-                    await upload.commit(config.pool, {}, {
+                    await upload.commit({
                         name: meta.name,
                         size: meta.size,
                         uploaded: true,
@@ -217,7 +217,7 @@ export default async function router(schema, config) {
             const upload = await Upload.from(config.pool, req.params.upload);
             upload.permission(req.auth);
 
-            await upload.commit(config.pool, null, req.body);
+            await upload.commit(req.body);
 
             if (upload.obtain && req.body.uploaded) {
                 await sqs.send(upload.id, {
@@ -256,7 +256,7 @@ export default async function router(schema, config) {
             const upload = await Upload.from(config.pool, req.params.upload);
             upload.permission(req.auth);
 
-            await upload.delete(config.pool);
+            await upload.delete();
 
             await S3.del(`uploads/${upload.id}/`, {
                 recurse: true

@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { Err } from '@openaddresses/batch-schema';
 import Generic from '@openaddresses/batch-generic';
 import { sql } from 'slonik';
@@ -8,8 +7,6 @@ import { sql } from 'slonik';
  */
 export default class Meta extends Generic {
     static _table = 'meta';
-    static _patch = JSON.parse(fs.readFileSync(new URL('../../schema/req.body.PatchMeta.json', import.meta.url)));
-    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.Meta.json', import.meta.url)));
 
     /**
      * List & Filter Meta
@@ -53,26 +50,6 @@ export default class Meta extends Generic {
     }
 
     /**
-     * Commit a meta to the database
-     *
-     * @param {Pool} pool - Postgres Pool instance
-     */
-    async commit(pool) {
-        try {
-            await pool.query(sql`
-                UPDATE meta
-                    SET
-                        value = ${JSON.stringify(this.value)},
-                        updated = NOW()
-                    WHERE
-                        key = ${this.key}
-            `);
-        } catch (err) {
-            throw new Err(500, err, 'failed to save meta');
-        }
-    }
-
-    /**
      * Create a new Meta
      *
      * @param {Pool} pool - Postgres Pool instance
@@ -94,7 +71,7 @@ export default class Meta extends Generic {
                 ) RETURNING *
             `);
 
-            return this.deserialize(pgres);
+            return this.deserialize(pool, pgres);
         } catch (err) {
             throw new Err(500, err, 'Failed to generate meta');
         }
@@ -103,13 +80,11 @@ export default class Meta extends Generic {
     /**
      * Delete a meta
      *
-     * @param {Pool} pool - Postgres Pool instance
-     *
      * @returns {meta}
      */
-    async delete(pool) {
+    async delete() {
         try {
-            await pool.query(sql`
+            await this._pool.query(sql`
                 DELETE FROM meta
                     WHERE key = ${this.key}
             `);

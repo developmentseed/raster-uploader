@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { Err } from '@openaddresses/batch-schema';
 import Generic from '@openaddresses/batch-generic';
 import crypto from 'crypto';
@@ -12,8 +11,6 @@ const randomBytes = promisify(crypto.randomBytes);
  */
 export default class Token extends Generic {
     static _table = 'users_tokens';
-    static _patch = JSON.parse(fs.readFileSync(new URL('../../schema/req.body.PatchToken.json', import.meta.url)));
-    static _res = JSON.parse(fs.readFileSync(new URL('../../schema/res.Token.json', import.meta.url)));
 
     /**
      * List & Filter Tokens
@@ -54,25 +51,6 @@ export default class Token extends Generic {
             return this.deserialize_list(pgres, 'tokens');
         } catch (err) {
             throw new Err(500, err, 'Failed to list tokens');
-        }
-    }
-
-    /**
-     * Commit a token to the database
-     *
-     * @param {Pool} pool - Postgres Pool instance
-     */
-    async commit(pool) {
-        try {
-            await pool.query(sql`
-                UPDATE users_tokens
-                    SET
-                        name = ${this.name}
-                    WHERE
-                        id = ${this.id}
-            `);
-        } catch (err) {
-            throw new Err(500, err, 'failed to save token');
         }
     }
 
@@ -145,7 +123,7 @@ export default class Token extends Generic {
                 ) RETURNING *
             `);
 
-            return this.deserialize(pgres);
+            return this.deserialize(pool, pgres);
         } catch (err) {
             throw new Err(500, err, 'Failed to generate token');
         }
