@@ -1,0 +1,60 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "$ref": "./uploads/id.json"
+        },
+        "uid": {
+            "$ref": "./uploads/uid.json"
+        },
+        "created": {
+            "$ref": "./uploads/created.json"
+        },
+        "updated": {
+            "$ref": "./uploads/updated.json"
+        },
+        "size": {
+            "$ref": "./uploads/size.json"
+        },
+        "status": {
+            "$ref": "./uploads/status.json"
+        },
+        "name": {
+            "$ref": "./uploads/name.json"
+        },
+        "config": {
+            "$ref": "./uploads/config.json"
+        },
+        "archived": {
+            "$ref": "./uploads/archived.json"
+        },
+        "obtain": {
+            "$ref": "./uploads/obtain.json"
+        },
+        "uploaded": {
+            "$ref": "./uploads/uploaded.json"
+        },
+        "starred": {
+            "$ref": "./uploads/starred.json"
+        },
+        "collection_id": {
+            "$ref": "./uploads/collection_id.json"
+        }
+    },
+    "required": [
+        "id",
+        "uid",
+        "created",
+        "updated",
+        "size",
+        "status",
+        "name",
+        "config",
+        "archived",
+        "obtain",
+        "uploaded",
+        "starred",
+        "collection_id"
+    ]
+}

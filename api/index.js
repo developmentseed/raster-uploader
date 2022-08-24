@@ -2,11 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
-import morgan from 'morgan';
 import express from 'express';
 import minify from 'express-minify';
 import history from 'connect-history-api-fallback';
-import bodyparser from 'body-parser';
 import { Schema, Err } from '@openaddresses/batch-schema';
 import { Pool } from '@openaddresses/batch-generic';
 import minimist from 'minimist';
@@ -53,7 +51,7 @@ export default async function server(config) {
     const app = express();
 
     const schema = new Schema(express.Router(), {
-        schemas: String(new URL('./schema', import.meta.url)).replace('file://', '')
+        schemas: new URL('./schema', import.meta.url)
     });
 
     app.disable('x-powered-by');
@@ -103,12 +101,6 @@ export default async function server(config) {
 
     app.use('/api', schema.router);
     app.use('/docs', express.static('./doc'));
-
-    schema.router.use(bodyparser.urlencoded({ extended: true }));
-    schema.router.use(morgan('combined'));
-    schema.router.use(bodyparser.json({
-        limit: '50mb'
-    }));
 
     schema.router.use(async (req, res, next) => {
         if (req.header('authorization')) {

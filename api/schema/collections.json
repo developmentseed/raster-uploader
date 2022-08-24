@@ -1,0 +1,36 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "$ref": "./collections/id.json"
+        },
+        "cron": {
+            "$ref": "./collections/cron.json"
+        },
+        "uid": {
+            "$ref": "./collections/uid.json"
+        },
+        "name": {
+            "$ref": "./collections/name.json"
+        },
+        "created": {
+            "$ref": "./collections/created.json"
+        },
+        "updated": {
+            "$ref": "./collections/updated.json"
+        },
+        "source_id": {
+            "$ref": "./collections/source_id.json"
+        }
+    },
+    "required": [
+        "id",
+        "cron",
+        "uid",
+        "name",
+        "created",
+        "updated",
+        "source_id"
+    ]
+}

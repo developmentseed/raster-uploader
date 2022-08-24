@@ -1,0 +1,40 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "$ref": "./upload_steps/id.json"
+        },
+        "upload_id": {
+            "$ref": "./upload_steps/upload_id.json"
+        },
+        "parent": {
+            "$ref": "./upload_steps/parent.json"
+        },
+        "created": {
+            "$ref": "./upload_steps/created.json"
+        },
+        "step": {
+            "$ref": "./upload_steps/step.json"
+        },
+        "type": {
+            "$ref": "./upload_steps/type.json"
+        },
+        "closed": {
+            "$ref": "./upload_steps/closed.json"
+        },
+        "config": {
+            "$ref": "./upload_steps/config.json"
+        }
+    },
+    "required": [
+        "id",
+        "upload_id",
+        "parent",
+        "created",
+        "step",
+        "type",
+        "closed",
+        "config"
+    ]
+}
