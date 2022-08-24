@@ -1,0 +1,40 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "$ref": "./upload_sources/id.json"
+        },
+        "name": {
+            "$ref": "./upload_sources/name.json"
+        },
+        "url": {
+            "$ref": "./upload_sources/url.json"
+        },
+        "uid": {
+            "$ref": "./upload_sources/uid.json"
+        },
+        "created": {
+            "$ref": "./upload_sources/created.json"
+        },
+        "updated": {
+            "$ref": "./upload_sources/updated.json"
+        },
+        "type": {
+            "$ref": "./upload_sources/type.json"
+        },
+        "glob": {
+            "$ref": "./upload_sources/glob.json"
+        }
+    },
+    "required": [
+        "id",
+        "name",
+        "url",
+        "uid",
+        "created",
+        "updated",
+        "type",
+        "glob"
+    ]
+}

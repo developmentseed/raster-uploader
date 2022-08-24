@@ -6,6 +6,8 @@ import SQS from './aws/sqs.js';
  */
 export default class Config {
     async load() {
+        if (this.StackName === 'test') return;
+
         const STS = new AWS.STS();
 
         try {
@@ -30,8 +32,6 @@ export default class Config {
                 console.error(err);
             }
         }
-
-        console.error('SQS', this.sqs);
     }
 
     static env(args = {}) {
