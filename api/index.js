@@ -44,6 +44,9 @@ export default async function server(config) {
     config.pool = await Pool.connect(process.env.POSTGRES || args.postgres || 'postgres://postgres@localhost:5432/uploader', {
         parsing: {
             geometry: true
+        },
+        schemas: {
+            dir: new URL('./schema', import.meta.url)
         }
     });
 
