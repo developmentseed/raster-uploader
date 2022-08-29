@@ -41,7 +41,7 @@ export default async function router(schema, config) {
      */
     await schema.post('/meta', {
         body: 'req.body.CreateMeta.json',
-        res: 'res.Meta.json'
+        res: 'meta.json'
     }, async (req, res) => {
         try {
             await Auth.is_admin(req);
@@ -69,7 +69,7 @@ export default async function router(schema, config) {
     await schema.patch('/meta/:key', {
         ':key': 'string',
         body: 'req.body.PatchMeta.json',
-        res: 'res.Meta.json'
+        res: 'meta.json'
     }, async (req, res) => {
         try {
             await Auth.is_admin(req);

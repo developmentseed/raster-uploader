@@ -17,11 +17,11 @@ export default async function router(schema, config) {
      *     Create a new obtain
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.CreateObtain.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/uploads.json} apiSuccess
      */
     await schema.post('/obtain', {
         body: 'req.body.CreateObtain.json',
-        res: 'res.Upload.json'
+        res: 'uploads.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);

@@ -66,14 +66,14 @@ export default async function server(config) {
     /**
      * @api {get} /api Get Metadata
      * @apiVersion 1.0.0
-     * @apiName Meta
+     * @apiName Server
      * @apiGroup Server
      * @apiPermission public
      *
      * @apiDescription
      *     Return basic metadata about server configuration
      *
-     * @apiSchema {jsonschema=./schema/res.Meta.json} apiSuccess
+     * @apiSchema {jsonschema=./schema/res.Server.json} apiSuccess
      */
     app.get('/api', (req, res) => {
         return res.json({
