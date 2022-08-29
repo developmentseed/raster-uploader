@@ -146,6 +146,10 @@ if __name__ == "__main__":
 
     upload["config"]["upload"] = upload["id"]
 
+    # TODO Temporary
+    upload['config']["parent"] = 99
+    upload['config']["group"] = "/Grid/precipitationCal"
+
     handler(
         {
             "Records": [

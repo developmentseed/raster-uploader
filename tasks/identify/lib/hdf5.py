@@ -23,32 +23,35 @@ def hdf5(pth, event):
             selections = []
             for var in src.subdatasets:
                 var = re.sub('HDF5:.*?:/?', '', var)
-
-                print(var)
                 selections.append({"name": var})
 
-        step(
-            {
-                "upload": event["config"]["upload"],
-                "parent": event.get("parent"),
-                "type": "selection",
-                "config": event["config"],
-                "step": {
-                    "title": "Select a HDF5 Group",
-                    "selections": selections,
-                    "variable": "group",
+            step(
+                {
+                    "upload": event["config"]["upload"],
+                    "parent": event.get("parent"),
+                    "type": "selection",
+                    "config": event["config"],
+                    "step": {
+                        "title": "Select a HDF5 Group",
+                        "selections": selections,
+                        "variable": "group",
+                    },
                 },
-            },
-            event["token"],
-        )
-        return None
+                event["token"],
+            )
+            return None
 
-    if event["config"].get("group"):
-        data =  src.subdatasets[event["config"]["group"]]
-    else:
-        data = src
+        data = None
+        if event["config"].get("group"):
+            for sub in src.subdatasets:
+                if sub in event["config"]["group"]:
+                    data = sub
 
-    exit();
+            if data is None:
+                raise Exception("Could not find dataset with that group ID")
+
+        else:
+            data = src
 
     if event["config"].get("variable") is None:
         selections = []

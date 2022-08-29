@@ -13,7 +13,7 @@ def error(event, err):
         {
             "upload": event["config"]["upload"],
             "type": "error",
-            "parent": event["parent"],
+            "parent": event.get("parent"),
             "config": event["config"],
             "step": {"message": err, "closed": True},
         },
