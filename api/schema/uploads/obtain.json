@@ -1,3 +1,5 @@
 {
-    "type": "boolean"
+    "type": "boolean",
+    "description": "",
+    "$comment": "bool"
 }

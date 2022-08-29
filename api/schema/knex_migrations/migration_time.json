@@ -3,5 +3,7 @@
         "string",
         "null"
     ],
-    "format": "date-time"
+    "format": "date-time",
+    "description": "",
+    "$comment": "timestamptz"
 }

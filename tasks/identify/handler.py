@@ -15,6 +15,7 @@ from rio_cogeo.cogeo import cog_translate
 from lib.step import step
 from lib.nc import nc
 from lib.tiff import tiff
+from lib.hdf5 import hdf5
 from lib.compression import decompress
 
 s3 = boto3.client("s3")
@@ -111,12 +112,15 @@ def handler(event, context):
         )
 
     try:
-        if os.path.splitext(filtered[0])[1] == ".nc":
+        if os.path.splitext(filtered[0])[1] in [".nc"]:
             print("NetCDF Conversion")
             pth = nc(filtered[0], event)
-        elif os.path.splitext(filtered[0])[1] == ".tif":
+        elif os.path.splitext(filtered[0])[1] in [".tif"]:
             print("Tiff Conversion")
             pth = tiff(filtered[0], event)
+        elif os.path.splitext(filtered[0])[1] in [".hdf", ".h5", ".hdf5", ".he5"]:
+            print("HDF5 Conversion")
+            pth = hdf5(filtered[0], event)
         else:
             return error(event, "No processing pipeline")
     except Exception as e:

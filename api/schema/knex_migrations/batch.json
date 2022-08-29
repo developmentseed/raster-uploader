@@ -2,5 +2,7 @@
     "type": [
         "number",
         "null"
-    ]
+    ],
+    "description": "",
+    "$comment": "int4"
 }
