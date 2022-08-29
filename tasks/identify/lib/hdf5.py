@@ -44,14 +44,17 @@ def hdf5(pth, event):
         data = None
         if event["config"].get("group"):
             for sub in src.subdatasets:
-                if sub in event["config"]["group"]:
-                    data = sub
+                if event["config"]["group"] in sub:
+                    data = rasterio.open(sub)
 
             if data is None:
                 raise Exception("Could not find dataset with that group ID")
 
         else:
             data = src
+
+    if data.crs is None:
+        raise Exception("Dataset does not contain CRS data")
 
     if event["config"].get("variable") is None:
         selections = []
