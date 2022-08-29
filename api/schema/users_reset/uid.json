@@ -2,5 +2,7 @@
     "type": [
         "number",
         "null"
-    ]
+    ],
+    "description": "User ID that the reset belongs to",
+    "$comment": "int8"
 }

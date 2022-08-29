@@ -1,3 +1,5 @@
 {
-    "type": "object"
+    "type": "object",
+    "description": "Initial Upload Config",
+    "$comment": "jsonb"
 }

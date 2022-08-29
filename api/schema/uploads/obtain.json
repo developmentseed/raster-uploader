@@ -1,3 +1,5 @@
 {
-    "type": "boolean"
+    "type": "boolean",
+    "description": "Is the Upload currently being obtained before being processed (ie: not a manual upload via the UI)",
+    "$comment": "bool"
 }

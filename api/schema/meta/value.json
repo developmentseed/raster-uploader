@@ -1,3 +1,5 @@
 {
-    "type": "object"
+    "type": "object",
+    "description": "Meta Value",
+    "$comment": "jsonb"
 }

@@ -2,5 +2,7 @@
     "type": [
         "string",
         "null"
-    ]
+    ],
+    "description": "Human Readable Name",
+    "$comment": "text"
 }

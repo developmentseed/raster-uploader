@@ -1,3 +1,5 @@
 {
-    "type": "string"
+    "type": "string",
+    "description": "AWS Cron schedule for running the collection",
+    "$comment": "text"
 }

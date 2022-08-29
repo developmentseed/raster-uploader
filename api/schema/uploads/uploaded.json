@@ -1,3 +1,5 @@
 {
-    "type": "boolean"
+    "type": "boolean",
+    "description": "Has the file been uploaded to the datastore",
+    "$comment": "bool"
 }
