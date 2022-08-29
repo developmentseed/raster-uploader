@@ -1,5 +1,5 @@
 <template>
-    <div class='z2 fixed top right bottom left scroll-auto bg-darken50'>
+    <div class='z2 fixed top right bottom left scroll-auto bg-darken50 shadow-darken25'>
         <div class='flex flex--center-main pt36'>
             <div class='flex-child bg-white round relative w600'>
                 <button @click='$emit("close")' class='absolute top right px12 py12'>
@@ -16,6 +16,6 @@
 
 <script>
 export default {
-    name: 'Modal'
+    name: 'Modal',
 }
 </script>
