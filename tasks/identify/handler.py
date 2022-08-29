@@ -4,37 +4,19 @@ import boto3
 import time
 import requests
 import numpy as np
-import sys
-import traceback
 from netCDF4 import Dataset
 from rasterio.crs import CRS
 from rasterio.warp import calculate_default_transform
 from rasterio.io import MemoryFile
 from rio_cogeo.cogeo import cog_translate
 
-from lib.step import step
+from lib.step import step, error
 from lib.nc import nc
 from lib.tiff import tiff
 from lib.hdf5 import hdf5
 from lib.compression import decompress
 
 s3 = boto3.client("s3")
-
-
-def error(event, err):
-    print("ERROR", err)
-    traceback.print_exc(file=sys.stdout)
-
-    return step(
-        {
-            "upload": event["config"]["upload"],
-            "type": "error",
-            "parent": event["parent"],
-            "config": event["config"],
-            "step": {"message": err, "closed": True},
-        },
-        event["token"],
-    )
 
 
 def handler(event, context):
@@ -152,7 +134,7 @@ if __name__ == "__main__":
     os.environ["API"] = "http://localhost:4999"
     # os.environ['API'] = 'http://raster-uploader-prod-1759918000.us-east-1.elb.amazonaws.com'
 
-    upload = 61
+    upload = 148
     token = "uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925"
 
     upload = requests.get(

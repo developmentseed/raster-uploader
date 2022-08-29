@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import boto3
 import time
@@ -6,33 +7,34 @@ import requests
 import numpy as np
 
 from lib.step import step
-from netCDF4 import Dataset
+
+import rasterio
 from rasterio.crs import CRS
 from rasterio.warp import calculate_default_transform
 from rasterio.io import MemoryFile
 from rio_cogeo.cogeo import cog_translate
 
 
-def nc(pth, event):
-    # variable_name = event["config"]['variable_name']
-    # x_variable, y_variable = event["config"].get('x_variable'), event["config"].get('y_variable')
-    src = Dataset(pth, "r")
+def hdf5(pth, event):
+    with rasterio.open(pth) as src:
+        if event["config"].get("group") is None and len(src.subdatasets) == 1:
+            event["config"]["group"] = list(src.groups.keys())[0]
+        elif event["config"].get("group") is None and len(src.subdatasets) > 1:
+            selections = []
+            for var in src.subdatasets:
+                var = re.sub('HDF5:.*?:/?', '', var)
 
-    if event["config"].get("group") is None and len(src.groups) == 1:
-        event["config"]["group"] = list(src.groups.keys())[0]
-    elif event["config"].get("group") is None and len(src.groups) > 1:
-        selections = []
-        for var in data.groups:
-            selections.append({"name": var})
+                print(var)
+                selections.append({"name": var})
 
         step(
             {
                 "upload": event["config"]["upload"],
-                "parent": event["parent"],
+                "parent": event.get("parent"),
                 "type": "selection",
                 "config": event["config"],
                 "step": {
-                    "title": "Select a NetCDF Group",
+                    "title": "Select a HDF5 Group",
                     "selections": selections,
                     "variable": "group",
                 },
@@ -42,9 +44,11 @@ def nc(pth, event):
         return None
 
     if event["config"].get("group"):
-        data = src.groups[event["config"].get("group")]
+        data =  src.subdatasets[event["config"]["group"]]
     else:
         data = src
+
+    exit();
 
     if event["config"].get("variable") is None:
         selections = []
@@ -54,7 +58,7 @@ def nc(pth, event):
         step(
             {
                 "upload": event["config"]["upload"],
-                "parent": event["parent"],
+                "parent": event.get("parent"),
                 "type": "selection",
                 "config": event["config"],
                 "step": {
