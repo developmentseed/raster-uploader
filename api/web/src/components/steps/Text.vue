@@ -1,7 +1,7 @@
 <template>
 <div class='col col--12 grid my12'>
     <div class='col col--12'>
-        <svg class='icon fl mx12 mt3'><use xlink:href='#icon-cursor'/></svg>
+        <svg class='icon fl mx12 mt3'><use xlink:href='#icon-pencil'/></svg>
         Text Input
 
         <template v-if='step.closed'>
