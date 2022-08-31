@@ -13,7 +13,7 @@
         "collections": {
             "type": "array",
             "items": {
-                "$ref": "./res.Collection.json"
+                "$ref": "./collections.json"
             }
         }
     }

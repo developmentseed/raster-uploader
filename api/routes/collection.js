@@ -50,11 +50,11 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Manually trigger a collection outside of set Cron rules
      *
-     * @apiSchema {jsonschema=../schema/res.Collection.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/collections.json} apiSuccess
      */
     await schema.post('/collection/:collection/trigger', {
         ':collection': 'integer',
-        res: 'res.Collection.json'
+        res: 'collections.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
@@ -91,11 +91,11 @@ export default async function router(schema, config) {
      *
      * @apiParam {Number} collection The ID of the collection
      *
-     * @apiSchema {jsonschema=../schema/res.Collection.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/collections.json} apiSuccess
      */
     await schema.get('/collection/:collection', {
         ':collection': 'integer',
-        res: 'res.Collection.json'
+        res: 'collections.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
@@ -122,11 +122,11 @@ export default async function router(schema, config) {
      *     Create a new collection
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.CreateCollection.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.Collection.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/collections.json} apiSuccess
      */
     await schema.post('/collection', {
         body: 'req.body.CreateCollection.json',
-        res: 'res.Collection.json'
+        res: 'collections.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
@@ -164,12 +164,12 @@ export default async function router(schema, config) {
      * @apiParam {Number} collection The ID of the collection
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.PatchCollection.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.Collection.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/collections.json} apiSuccess
      */
     await schema.patch('/collection/:collection', {
         ':collection': 'integer',
         body: 'req.body.PatchCollection.json',
-        res: 'res.Collection.json'
+        res: 'collections.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);

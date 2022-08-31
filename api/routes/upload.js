@@ -49,11 +49,11 @@ export default async function router(schema, config) {
      *
      * @apiParam {Number} upload The ID of the upload
      *
-     * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/uploads.json} apiSuccess
      */
     await schema.get('/upload/:upload', {
         ':upload': 'integer',
-        res: 'res.Upload.json'
+        res: 'uploads.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
@@ -79,11 +79,11 @@ export default async function router(schema, config) {
      *     Generally this will only be called internally via the obtain task
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.CreateUpload.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/uploads.json} apiSuccess
      */
     await schema.put('/upload', {
         body: 'req.body.CreateUpload.json',
-        res: 'res.Upload.json'
+        res: 'uploads.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
@@ -109,10 +109,10 @@ export default async function router(schema, config) {
      * @apiDescription
      *     Create a new upload
      *
-     * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/uploads.json} apiSuccess
      */
     await schema.post('/upload', {
-        res: 'res.Upload.json'
+        res: 'uploads.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
@@ -204,12 +204,12 @@ export default async function router(schema, config) {
      * @apiParam {Number} upload The ID of the upload
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.PatchUpload.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.Upload.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/uploads.json} apiSuccess
      */
     await schema.patch('/upload/:upload', {
         ':upload': 'integer',
         body: 'req.body.PatchUpload.json',
-        res: 'res.Upload.json'
+        res: 'uploads.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
