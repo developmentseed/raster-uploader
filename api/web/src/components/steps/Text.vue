@@ -1,7 +1,7 @@
 <template>
 <div class='col col--12 grid my12'>
     <div class='col col--12'>
-        <svg class='icon fl mx12 mt3'><use xlink:href='#icon-cursor'/></svg>
+        <svg class='icon fl mx12 mt3'><use xlink:href='#icon-pencil'/></svg>
         Text Input
 
         <template v-if='step.closed'>
@@ -42,7 +42,7 @@
                 <div class='col col--12'>
                     <span class='ml12' v-text='step.step.title || "Select from the following:"'/>
                 </div>
-                <div class='col col--12 grid border border--gray-light round mx12'>
+                <div class='col col--12 mx12'>
                     <input v-model='selection' class='input'/>
                 </div>
             </template>
@@ -55,7 +55,7 @@
 import Loading from '../util/Loading.vue';
 
 export default {
-    name: 'StepStrInput',
+    name: 'StepText',
     props: {
         step: Object,
         open: Boolean

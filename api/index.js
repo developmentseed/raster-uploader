@@ -166,7 +166,7 @@ export default async function server(config) {
 
     await schema.api();
     await schema.load(
-        String(new URL('./routes/', import.meta.url)).replace('file://', ''),
+        new URL('./routes/', import.meta.url),
         config,
         {
             silent: !!config.silent

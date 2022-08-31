@@ -3,37 +3,21 @@ import json
 import boto3
 import time
 import requests
+import argparse
 import numpy as np
-import sys
-import traceback
 from netCDF4 import Dataset
 from rasterio.crs import CRS
 from rasterio.warp import calculate_default_transform
 from rasterio.io import MemoryFile
 from rio_cogeo.cogeo import cog_translate
 
-from lib.step import step
+from lib.step import step, error
 from lib.nc import nc
 from lib.tiff import tiff
+from lib.hdf5 import hdf5
 from lib.compression import decompress
 
 s3 = boto3.client("s3")
-
-
-def error(event, err):
-    print("ERROR", err)
-    traceback.print_exc(file=sys.stdout)
-
-    return step(
-        {
-            "upload": event["config"]["upload"],
-            "type": "error",
-            "parent": event["parent"],
-            "config": event["config"],
-            "step": {"message": err, "closed": True},
-        },
-        event["token"],
-    )
 
 
 def handler(event, context):
@@ -111,12 +95,15 @@ def handler(event, context):
         )
 
     try:
-        if os.path.splitext(filtered[0])[1] == ".nc":
+        if os.path.splitext(filtered[0])[1] in [".nc"]:
             print("NetCDF Conversion")
             pth = nc(filtered[0], event)
-        elif os.path.splitext(filtered[0])[1] == ".tif":
+        elif os.path.splitext(filtered[0])[1] in [".tif"]:
             print("Tiff Conversion")
             pth = tiff(filtered[0], event)
+        elif os.path.splitext(filtered[0])[1] in [".hdf", ".h5", ".hdf5", ".he5"]:
+            print("HDF5 Conversion")
+            pth = hdf5(filtered[0], event)
         else:
             return error(event, "No processing pipeline")
     except Exception as e:
@@ -145,25 +132,55 @@ def handler(event, context):
 
 
 if __name__ == "__main__":
-    os.environ["API"] = "http://localhost:4999"
-    # os.environ['API'] = 'http://raster-uploader-prod-1759918000.us-east-1.elb.amazonaws.com'
+    parser = argparse.ArgumentParser(description="Process a Raster-Uploader Upload")
+    parser.add_argument("upload", type=int, help="Upload ID to process")
+    parser.add_argument("--step", type=int, help="Start processing from a given step")
+    parser.add_argument(
+        "--api", type=str, help="API URL", default="http://localhost:4999"
+    )
+    parser.add_argument(
+        "--token",
+        type=str,
+        help="API Token",
+        default="uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925",
+    )
+    args = parser.parse_args()
 
-    upload = 61
-    token = "uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925"
+    os.environ["API"] = args.api
 
     upload = requests.get(
-        f"{os.environ.get('API')}/api/upload/{upload}",
-        headers={"Authorization": f"bearer {token}"},
+        f"{args.api}/api/upload/{args.upload}",
+        headers={"Authorization": f"bearer {args.token}"},
     )
     upload.raise_for_status()
     upload = upload.json()
 
-    upload["config"]["upload"] = upload["id"]
+    if args.step:
+        upload_step = requests.get(
+            f"{args.api}/api/upload/{args.upload}/step/{args.step}",
+            headers={"Authorization": f"bearer {args.token}"},
+        )
+        upload_step.raise_for_status()
+        upload_step = upload_step.json()
+
+
+        config = upload_step["config"]
+        parent = upload_step["id"]
+    else:
+        config = upload["config"]
+
+    # TODO Temporary
+    config["group"] = "/Grid/precipitationCal"
+    config["src_crs"] = "EPSG:4326"
 
     handler(
         {
             "Records": [
-                {"body": json.dumps({"token": token, "config": upload["config"]})}
+                {
+                    "body": json.dumps(
+                        {"token": args.token, "parent": parent, "config": config}
+                    )
+                }
             ]
         },
         None,
