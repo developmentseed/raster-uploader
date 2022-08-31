@@ -1,3 +1,5 @@
 {
-    "type": "boolean"
+    "type": "boolean",
+    "description": "Has the user validated their email",
+    "$comment": "bool"
 }

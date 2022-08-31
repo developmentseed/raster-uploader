@@ -44,11 +44,11 @@ export default async function router(schema, config) {
      *
      * @apiParam {Number} basemap The ID of the basemap
      *
-     * @apiSchema {jsonschema=../schema/res.BaseMap.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/basemap.json} apiSuccess
      */
     await schema.get('/basemap/:basemap', {
         ':basemap': 'integer',
-        res: 'res.BaseMap.json'
+        res: 'basemap.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
@@ -73,11 +73,11 @@ export default async function router(schema, config) {
      *     Create a new basemap
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.CreateBaseMap.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.BaseMap.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/basemap.json} apiSuccess
      */
     await schema.post('/basemap', {
         body: 'req.body.CreateBaseMap.json',
-        res: 'res.BaseMap.json'
+        res: 'basemap.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);
@@ -104,12 +104,12 @@ export default async function router(schema, config) {
      * @apiParam {Number} basemap The ID of the basemap
      *
      * @apiSchema (Body) {jsonschema=../schema/req.body.PatchBaseMap.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.BaseMap.json} apiSuccess
+     * @apiSchema {jsonschema=../schema/basemap.json} apiSuccess
      */
     await schema.patch('/basemap/:basemap', {
         ':basemap': 'integer',
         body: 'req.body.PatchBaseMap.json',
-        res: 'res.BaseMap.json'
+        res: 'basemap.json'
     }, async (req, res) => {
         try {
             await Auth.is_auth(req);

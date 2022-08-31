@@ -3,5 +3,7 @@
         "string",
         "null"
     ],
-    "maxLength": 255
+    "maxLength": 255,
+    "description": "",
+    "$comment": "varchar"
 }

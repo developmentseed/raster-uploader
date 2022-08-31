@@ -20,7 +20,7 @@ export default async function router(schema, config) {
      */
     await schema.post('/machine', {
         body: 'req.body.CreateMachine.json',
-        res: 'res.Collection.json'
+        res: 'res.Machine.json'
     }, async (req, res) => {
         try {
             await Auth.is_machine(req);

@@ -1,3 +1,5 @@
 {
-    "type": "boolean"
+    "type": "boolean",
+    "description": "Has the upload been starred as a favourite",
+    "$comment": "bool"
 }

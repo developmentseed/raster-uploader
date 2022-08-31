@@ -1,4 +1,6 @@
 {
     "type": "string",
-    "format": "date-time"
+    "format": "date-time",
+    "description": "Timestamp at which collection was created",
+    "$comment": "timestamp"
 }

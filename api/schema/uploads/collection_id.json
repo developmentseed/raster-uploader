@@ -2,5 +2,7 @@
     "type": [
         "number",
         "null"
-    ]
+    ],
+    "description": "If the upload is part of a collection, the ID of the collection",
+    "$comment": "int8"
 }

@@ -1,3 +1,5 @@
 {
-    "type": "boolean"
+    "type": "boolean",
+    "description": "Has the Upload been archived",
+    "$comment": "bool"
 }

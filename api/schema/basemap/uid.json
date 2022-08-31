@@ -2,5 +2,7 @@
     "type": [
         "number",
         "null"
-    ]
+    ],
+    "description": "User ID that basemap belongs to",
+    "$comment": "int8"
 }

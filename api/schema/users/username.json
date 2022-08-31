@@ -1,3 +1,5 @@
 {
-    "type": "string"
+    "type": "string",
+    "description": "The unique username of the user",
+    "$comment": "text"
 }

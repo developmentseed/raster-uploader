@@ -1,3 +1,5 @@
 {
-    "type": "number"
+    "type": "number",
+    "description": "Unique ID",
+    "$comment": "int8"
 }

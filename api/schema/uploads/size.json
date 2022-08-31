@@ -2,5 +2,7 @@
     "type": [
         "number",
         "null"
-    ]
+    ],
+    "description": "Size of the Upload in bytes",
+    "$comment": "int8"
 }

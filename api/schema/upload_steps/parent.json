@@ -2,5 +2,7 @@
     "type": [
         "number",
         "null"
-    ]
+    ],
+    "description": "Parent Step used to pre-populate the current step",
+    "$comment": "int8"
 }

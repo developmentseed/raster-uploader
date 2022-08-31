@@ -1,3 +1,5 @@
 {
-    "type": "boolean"
+    "type": "boolean",
+    "description": "Has user input been obained to start the next step",
+    "$comment": "bool"
 }
