@@ -56,8 +56,8 @@ def hdf5(pth, event):
     if data.crs is None:
         src_crs = event["config"].get("src_crs")
 
-        if src_crs:
-            src_crs = CRS.from_proj4(src_crs)
+        if src_crs is not None:
+            src_crs = CRS.from_string(src_crs)
         else:
             step(
                 {
@@ -67,7 +67,7 @@ def hdf5(pth, event):
                     "config": event["config"],
                     "step": {
                         "title": "Select a CRS or EPSG Code",
-                        "variable": "srs_crs",
+                        "variable": "src_crs",
                     },
                 },
                 event["token"],
@@ -81,38 +81,36 @@ def hdf5(pth, event):
 
     dst_crs = CRS.from_epsg(4326)
 
-    # calculate destination transform
-    dst_transform, dst_width, dst_height = calculate_default_transform(
-        src_crs,
-        dst_crs,
-        src_width,
-        src_height,
-        left=xmin,
-        bottom=ymin,
-        right=xmax,
-        top=ymax,
-    )
-
-    # https://github.com/NASA-IMPACT/cloud-optimized-data-pipelines/blob/rwegener2-envi-to-cog/docker/omno2-to-cog/OMNO2d.003/handler.py
-    affine_transformation = event["config"].get("affine_transformation")
-    if affine_transformation:
-        xres = (xmax - xmin) / float(src_width)
-        yres = (ymax - ymin) / float(src_height)
-        geotransform = eval(affine_transformation)
+    if event["config"].get("affine_transformation") is not None:
+        geotransform = eval(event["config"].get("affine_transformation"))
         dst_transform = Affine.from_gdal(*geotransform)
+    else:
+        # calculate destination transform
+        dst_transform, dst_width, dst_height = calculate_default_transform(
+            src_crs,
+            dst_crs,
+            src_width,
+            src_height,
+            left=xmin,
+            bottom=ymin,
+            right=xmax,
+            top=ymax,
+        )
 
     cog = event["config"]["cog"]
+
+    print(data.meta)
 
     # Save output as COG
     output_profile = dict(
         driver="GTiff",
-        dtype=data.dtype,
+        dtype=data.meta["dtype"],
         count=1,
         crs=src_crs,
         transform=dst_transform,
         height=dst_height,
         width=dst_width,
-        nodata=nodata_value,
+        nodata=data.meta["nodata"],
         tiled=True,
         compress=cog["compression"],
         blockxsize=cog["blocksize"],
@@ -122,6 +120,12 @@ def hdf5(pth, event):
 
     print("profile h/w: ", output_profile["height"], output_profile["width"])
     outfilename = f"{os.path.splitext(pth)[0]}.tif"
+
+    variable = data.read()
+
+    # not perfect but something for now
+    if len(variable.shape) == 3 and variable.shape[0] == 1:
+        variable = np.transpose(variable[0])
 
     with MemoryFile() as memfile:
         with memfile.open(**output_profile) as mem:
