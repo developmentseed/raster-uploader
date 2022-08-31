@@ -3,6 +3,6 @@
         "number",
         "null"
     ],
-    "description": "",
+    "description": "User ID that basemap belongs to",
     "$comment": "int8"
 }

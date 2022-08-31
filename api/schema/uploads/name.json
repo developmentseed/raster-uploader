@@ -3,6 +3,6 @@
         "string",
         "null"
     ],
-    "description": "",
+    "description": "Human Readable Name",
     "$comment": "text"
 }

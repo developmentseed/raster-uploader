@@ -1,6 +1,6 @@
 {
     "type": "string",
     "format": "date-time",
-    "description": "",
+    "description": "Timestamp at which API Token was created",
     "$comment": "timestamp"
 }

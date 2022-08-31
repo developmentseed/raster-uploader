@@ -3,6 +3,6 @@
         "number",
         "null"
     ],
-    "description": "",
+    "description": "User ID that the API Token belongs to",
     "$comment": "int8"
 }

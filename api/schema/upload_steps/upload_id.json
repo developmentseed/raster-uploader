@@ -1,5 +1,5 @@
 {
     "type": "number",
-    "description": "",
+    "description": "Upload the step belongs to",
     "$comment": "int8"
 }

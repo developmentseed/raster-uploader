@@ -1,5 +1,5 @@
 {
     "type": "number",
-    "description": "",
+    "description": "Source from which the collection is pulling data",
     "$comment": "int8"
 }

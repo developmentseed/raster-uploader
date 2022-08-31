@@ -1,5 +1,5 @@
 {
     "type": "number",
-    "description": "",
+    "description": "User ID that the collection belongs to",
     "$comment": "int8"
 }

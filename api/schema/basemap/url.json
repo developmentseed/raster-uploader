@@ -1,5 +1,5 @@
 {
     "type": "string",
-    "description": "",
+    "description": "WMS URL of basemap",
     "$comment": "text"
 }

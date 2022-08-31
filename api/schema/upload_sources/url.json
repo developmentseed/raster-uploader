@@ -1,5 +1,5 @@
 {
     "type": "string",
-    "description": "",
+    "description": "URL to the source data",
     "$comment": "text"
 }

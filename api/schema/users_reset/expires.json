@@ -1,6 +1,6 @@
 {
     "type": "string",
     "format": "date-time",
-    "description": "",
+    "description": "Timestamp at which the reset expires",
     "$comment": "timestamp"
 }

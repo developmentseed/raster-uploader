@@ -3,6 +3,6 @@
         "string",
         "null"
     ],
-    "description": "",
+    "description": "Glob for filtering data to a subset of the data found in the upload source",
     "$comment": "text"
 }

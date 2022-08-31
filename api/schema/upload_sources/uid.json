@@ -3,6 +3,6 @@
         "number",
         "null"
     ],
-    "description": "",
+    "description": "User ID that the upload source belongs to",
     "$comment": "int8"
 }

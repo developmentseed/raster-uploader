@@ -1,5 +1,5 @@
 {
     "type": "string",
-    "description": "",
+    "description": "Status of the Upload",
     "$comment": "text"
 }

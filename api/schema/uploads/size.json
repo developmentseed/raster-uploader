@@ -3,6 +3,6 @@
         "number",
         "null"
     ],
-    "description": "",
+    "description": "Size of the Upload in bytes",
     "$comment": "int8"
 }
