@@ -58,6 +58,16 @@
                             @err='$emit("err", $event)'
                         />
                     </template>
+                    <template v-else-if='step.type === "text"'>
+                        <StepText
+                            :key='step.id'
+                            :step='step'
+                            :open='!polling.steps && step_it === linear.length-1'
+                            @step='getUploadSteps'
+                            @split='postStep($event)'
+                            @err='$emit("err", $event)'
+                        />
+                    </template>
                     <template v-else-if='step.type === "selection"'>
                         <StepSelection
                             :key='step.id'
@@ -99,6 +109,7 @@
 import Loading from './util/Loading.vue';
 import UploadedGraph from './uploaded/Graph.vue';
 import StepSelection from './steps/Selection.vue';
+import StepText from './steps/Text.vue';
 import StepLoading from './steps/Loading.vue';
 import StepCog from './steps/Cog.vue';
 import StepError from './steps/Error.vue';
@@ -132,7 +143,7 @@ export default {
     mounted: async function() {
         await this.getUpload();
         if (this.upload.uploaded) await this.getUploadSteps();
-        
+
         this.calcPoll();
     },
     unmounted: async function() {
@@ -243,6 +254,7 @@ export default {
         Loading,
         UploadedGraph,
         StepSelection,
+        StepText,
         StepLoading,
         StepInitial,
         StepError,

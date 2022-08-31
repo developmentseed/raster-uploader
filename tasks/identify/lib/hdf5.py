@@ -54,61 +54,34 @@ def hdf5(pth, event):
             data = src
 
     if data.crs is None:
-        raise Exception("Dataset does not contain CRS data")
+        src_crs = event["config"].get("src_crs")
 
-    if event["config"].get("variable") is None:
-        selections = []
-        for var in data.variables:
-            selections.append({"name": var})
-
-        step(
-            {
-                "upload": event["config"]["upload"],
-                "parent": event.get("parent"),
-                "type": "selection",
-                "config": event["config"],
-                "step": {
-                    "title": "Select a NetCDF Variable",
-                    "selections": selections,
-                    "variable": "variable",
+        if src_crs:
+            src_crs = CRS.from_proj4(src_crs)
+        else:
+            step(
+                {
+                    "upload": event["config"]["upload"],
+                    "parent": event.get("parent"),
+                    "type": "text",
+                    "config": event["config"],
+                    "step": {
+                        "title": "Select a CRS or EPSG Code",
+                        "variable": "srs_crs",
+                    },
                 },
-            },
-            event["token"],
-        )
+                event["token"],
+            )
+            return None
 
-        return None
-
-    variable = data[event["config"].get("variable")][:]
-    nodata_value = variable.fill_value
-
-    # not perfect but something for now
-    if len(variable.shape) == 3 and variable.shape[0] == 1:
-        variable = np.transpose(variable[0])
-
-    x_variable = None
-    y_variable = None
-    # ---
 
     # This implies a global spatial extent, which is not always the case
-    src_height, src_width = variable.shape[0], variable.shape[1]
-    if x_variable and y_variable:
-        xmin = src[x_variable][:].min()
-        xmax = src[x_variable][:].max()
-        ymin = src[y_variable][:].min()
-        ymax = src[y_variable][:].max()
-    else:
-        xmin, ymin, xmax, ymax = [-180, -90, 180, 90]
-
-    src_crs = event["config"].get("src_crs")
-
-    if src_crs:
-        src_crs = CRS.from_proj4(src_crs)
-    else:
-        src_crs = CRS.from_epsg(4326)
+    src_height, src_width = data.shape[0], data.shape[1]
+    xmin, ymin, xmax, ymax = [-180, -90, 180, 90]
 
     dst_crs = CRS.from_epsg(4326)
 
-    # calculate dst transform
+    # calculate destination transform
     dst_transform, dst_width, dst_height = calculate_default_transform(
         src_crs,
         dst_crs,
@@ -133,7 +106,7 @@ def hdf5(pth, event):
     # Save output as COG
     output_profile = dict(
         driver="GTiff",
-        dtype=variable.dtype,
+        dtype=data.dtype,
         count=1,
         crs=src_crs,
         transform=dst_transform,
@@ -155,7 +128,6 @@ def hdf5(pth, event):
             data = variable.astype(np.float32)
             mem.write(data, indexes=1)
 
-        print(outfilename)
         cog_translate(
             memfile,
             outfilename,

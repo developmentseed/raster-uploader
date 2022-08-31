@@ -105,6 +105,10 @@ export default {
                         'label': 'Selection',
                         'background-image': '/svgs/cursor.svg.png'
                     })
+                    .selector('[type = "text"]').css({
+                        'label': 'Text',
+                        'background-image': '/svgs/pencil.svg.png'
+                    })
                     .selector('[type = "cog"]').css({
                         'label': 'COG',
                         'background-image': '/svgs/picture.svg.png'
