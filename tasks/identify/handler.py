@@ -132,14 +132,21 @@ def handler(event, context):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Process a Raster-Uploader Upload')
-    parser.add_argument('upload', type=int, help='Upload ID to process')
-    parser.add_argument('--step', type=int, help='Start processing from a given step')
-    parser.add_argument('--api', type=str, help='API URL', default='http://localhost:4999')
-    parser.add_argument('--token', type=str, help='API Token', default='uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925')
+    parser = argparse.ArgumentParser(description="Process a Raster-Uploader Upload")
+    parser.add_argument("upload", type=int, help="Upload ID to process")
+    parser.add_argument("--step", type=int, help="Start processing from a given step")
+    parser.add_argument(
+        "--api", type=str, help="API URL", default="http://localhost:4999"
+    )
+    parser.add_argument(
+        "--token",
+        type=str,
+        help="API Token",
+        default="uploader.ae5c3b1bed4f09f7acdc23d6a8374d220f797bae5d4ce72763fbbcc675981925",
+    )
     args = parser.parse_args()
 
-    os.environ['API'] = args.api
+    os.environ["API"] = args.api
 
     upload = requests.get(
         f"{args.api}/api/upload/{args.upload}",
@@ -149,18 +156,18 @@ if __name__ == "__main__":
     upload = upload.json()
 
     if args.step:
-        step = requests.get(
+        upload_step = requests.get(
             f"{args.api}/api/upload/{args.upload}/step/{args.step}",
             headers={"Authorization": f"bearer {args.token}"},
         )
-        step.raise_for_status()
-        step = step.json()
+        upload_step.raise_for_status()
+        upload_step = upload_step.json()
 
-        config = step["config"]
-        parent = step["id"]
+
+        config = upload_step["config"]
+        parent = upload_step["id"]
     else:
         config = upload["config"]
-
 
     # TODO Temporary
     config["group"] = "/Grid/precipitationCal"
@@ -170,11 +177,9 @@ if __name__ == "__main__":
         {
             "Records": [
                 {
-                    "body": json.dumps({
-                        "token": args.token,
-                        "parent": parent,
-                        "config": config
-                    })
+                    "body": json.dumps(
+                        {"token": args.token, "parent": parent, "config": config}
+                    )
                 }
             ]
         },

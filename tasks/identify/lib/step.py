@@ -22,7 +22,7 @@ def error(event, err):
 
 
 def step(step, token):
-    print(step)
+    print('STEP', step)
 
     try:
         step_res = requests.post(
