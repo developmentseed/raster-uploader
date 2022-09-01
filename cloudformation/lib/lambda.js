@@ -1,15 +1,12 @@
-'use strict';
-
-const cf = require('@mapbox/cloudfriend');
-const fs = require('fs');
-const path = require('path');
+import cf from '@mapbox/cloudfriend';
+import fs from 'fs';
 
 const stack = {
     Resources: {
         LambdaFunctionRole: {
             Type: 'AWS::IAM::Role',
             Properties: {
-                RoleName: cf.join([ cf.stackName, '-queue-role' ]),
+                RoleName: cf.join([cf.stackName, '-queue-role']),
                 AssumeRolePolicyDocument: {
                     Version: '2012-10-17',
                     Statement: [{
@@ -22,7 +19,7 @@ const stack = {
                 },
                 Path: '/',
                 Policies: [{
-                    PolicyName: cf.join([ cf.stackName, '-queue-policy' ]),
+                    PolicyName: cf.join([cf.stackName, '-queue-policy']),
                     PolicyDocument: {
                         Version: '2012-10-17',
                         Statement: [{
@@ -38,7 +35,7 @@ const stack = {
                                 's3:*'
                             ],
                             Resource: [
-                                cf.join(['arn:aws:s3:::', cf.ref('Bucket') ]),
+                                cf.join(['arn:aws:s3:::', cf.ref('Bucket')]),
                                 cf.join(['arn:aws:s3:::', cf.ref('Bucket'), '/*'])
                             ]
                         },{
@@ -49,7 +46,7 @@ const stack = {
                                 'secretsmanager:List*'
                             ],
                             Resource: [
-                                cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '-*' ])
+                                cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '-*'])
                             ]
                         },{
                             Effect: 'Allow',
@@ -79,11 +76,11 @@ const stack = {
             }
         }
     }
-}
+};
 
 const exclude = ['titiler'];
 
-for (const task of fs.readdirSync(path.resolve(__dirname, '../../tasks'))) {
+for (const task of fs.readdirSync(new URL('../../tasks', import.meta.url))) {
     if (exclude.includes(task)) continue;
 
     stack.Resources[`LambdaFunction${task.charAt(0).toUpperCase() + task.slice(1)}`] = {
@@ -121,4 +118,4 @@ for (const task of fs.readdirSync(path.resolve(__dirname, '../../tasks'))) {
     };
 }
 
-module.exports = stack;
+export default stack;

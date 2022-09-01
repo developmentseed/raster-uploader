@@ -1,16 +1,12 @@
-'use strict';
+import cf from '@mapbox/cloudfriend';
 
-const cf = require('@mapbox/cloudfriend');
-
-const stack = {
+export default {
     Resources: {
         Bucket: {
             Type: 'AWS::S3::Bucket',
             Properties: {
                 BucketName: cf.join('-', [cf.stackName, cf.accountId, cf.region])
             }
-        },
+        }
     }
 };
-
-module.exports = stack;

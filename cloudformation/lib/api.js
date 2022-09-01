@@ -1,7 +1,6 @@
-'use strict';
-const cf = require('@mapbox/cloudfriend');
+import cf from '@mapbox/cloudfriend';
 
-const stack = {
+export default {
     Parameters: {
         SigningSecret: {
             Type: 'String',
@@ -141,7 +140,7 @@ const stack = {
                                 's3:*'
                             ],
                             Resource: [
-                                cf.join(['arn:aws:s3:::', cf.ref('Bucket') ]),
+                                cf.join(['arn:aws:s3:::', cf.ref('Bucket')]),
                                 cf.join(['arn:aws:s3:::', cf.ref('Bucket'), '/*'])
                             ]
                         },{
@@ -160,22 +159,22 @@ const stack = {
                                 'secretsmanager:List*'
                             ],
                             Resource: [
-                                cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '/*' ]),
+                                cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '/*'])
                             ]
                         },{
                             Effect: 'Allow', // Upload Source Secrets
                             Action: [
-                                "secretsmanager:Create*",
-                                "secretsmanager:Put*",
-                                "secretsmanager:Update*",
-                                "secretsmanager:Delete*",
-                                "secretsmanager:Restore*",
+                                'secretsmanager:Create*',
+                                'secretsmanager:Put*',
+                                'secretsmanager:Update*',
+                                'secretsmanager:Delete*',
+                                'secretsmanager:Restore*',
                                 'secretsmanager:Describe*',
                                 'secretsmanager:Get*',
                                 'secretsmanager:List*'
                             ],
                             Resource: [
-                                cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '-*' ])
+                                cf.join(['arn:aws:secretsmanager:', cf.region, ':', cf.accountId, ':secret:', cf.stackName, '-*'])
                             ]
                         },{
                             Effect: 'Allow', // Performing work on rasters
@@ -207,7 +206,7 @@ const stack = {
                                 'events:DeleteRule'
                             ],
                             Resource: [
-                                cf.join(['arn:aws:events:', cf.region, ':', cf.accountId, ':rule/', cf.stackName, '-*' ])
+                                cf.join(['arn:aws:events:', cf.region, ':', cf.accountId, ':rule/', cf.stackName, '-*'])
                             ]
                         }]
                     }
@@ -291,7 +290,7 @@ const stack = {
                         { Name: 'AWS_DEFAULT_REGION', Value: cf.region },
                         { Name: 'TiTiler', Value: cf.join(['https://', cf.ref('TiTilerAPI'), '.execute-api.', cf.region, '.', cf.ref('AWS::URLSuffix'), '/']) },
                         { Name: 'FROM_EMAIL_ADDRESS', Value: cf.ref('FromEmailAddress') },
-                        { Name: 'FRONTEND_DOMAIN', Value: cf.ref('FrontEndDomain') },
+                        { Name: 'FRONTEND_DOMAIN', Value: cf.ref('FrontEndDomain') }
                     ],
                     LogConfiguration: {
                         LogDriver: 'awslogs',
@@ -347,5 +346,3 @@ const stack = {
         }
     }
 };
-
-module.exports = stack;

@@ -1,12 +1,13 @@
 {
     "name": "@developmentseed/raster-uploader",
     "private": true,
+    "type": "module",
     "version": "1.0.0",
     "author": "ingalls <nick@ingalls.ca>",
     "description": "Imagery In, COGS out!",
     "scripts": {
         "test": "echo 'no tests'",
-        "lint": "eslint cloudformation/**.js"
+        "lint": "eslint cloudformation/**/*.js"
     },
     "repository": {
         "type": "git",
@@ -24,6 +25,6 @@
         "@mapbox/cloudfriend": "^5.1.1",
         "@mapbox/mock-aws-sdk-js": "^1.0.0",
         "@openaddresses/batch-alarms": "^2.1.3",
-        "@openaddresses/deploy": "^5.2.1"
+        "@openaddresses/deploy": "^6.1.1"
     }
 }
