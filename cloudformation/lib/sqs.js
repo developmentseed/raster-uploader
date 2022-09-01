@@ -1,13 +1,11 @@
-'use strict';
+import cf from '@mapbox/cloudfriend';
 
-const cf = require('@mapbox/cloudfriend');
-
-const stack = {
+export default {
     Resources: {
         Queue: {
             Type: 'AWS::SQS::Queue',
             Properties: {
-                QueueName: cf.join([cf.stackName, '-queue' ]),
+                QueueName: cf.join([cf.stackName, '-queue']),
                 VisibilityTimeout: 1200,
                 RedrivePolicy: {
                     deadLetterTargetArn: cf.getAtt('DeadQueue', 'Arn'),
@@ -24,7 +22,7 @@ const stack = {
         TransformQueue: {
             Type: 'AWS::SQS::Queue',
             Properties: {
-                QueueName: cf.join([cf.stackName, '-transform-queue' ]),
+                QueueName: cf.join([cf.stackName, '-transform-queue']),
                 VisibilityTimeout: 1200,
                 RedrivePolicy: {
                     deadLetterTargetArn: cf.getAtt('DeadQueue', 'Arn'),
@@ -44,7 +42,7 @@ const stack = {
         ObtainQueue: {
             Type: 'AWS::SQS::Queue',
             Properties: {
-                QueueName: cf.join([cf.stackName, '-obtain-queue' ]),
+                QueueName: cf.join([cf.stackName, '-obtain-queue']),
                 VisibilityTimeout: 1200,
                 RedrivePolicy: {
                     deadLetterTargetArn: cf.getAtt('DeadQueue', 'Arn'),
@@ -53,7 +51,7 @@ const stack = {
             }
         },
         ObtainQueuePolicy: {
-            Type: "AWS::SQS::QueuePolicy",
+            Type: 'AWS::SQS::QueuePolicy',
             Properties: {
                 PolicyDocument: {
                     Statement: [{
@@ -87,8 +85,6 @@ const stack = {
                 EventSourceArn:  cf.getAtt('Queue', 'Arn'),
                 FunctionName: cf.ref('LambdaFunctionIdentify')
             }
-        },
-    },
+        }
+    }
 };
-
-module.exports = stack;

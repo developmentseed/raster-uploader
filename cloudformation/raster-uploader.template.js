@@ -1,16 +1,16 @@
-const cf = require('@mapbox/cloudfriend');
-const alarms = require('@openaddresses/batch-alarms');
+import cf from '@mapbox/cloudfriend';
+import alarms from '@openaddresses/batch-alarms';
 
-const db = require('./lib/db.js');
-const s3 = require('./lib/s3.js');
-const api = require('./lib/api.js');
-const kms = require('./lib/kms.js');
-const vpc = require('./lib/vpc.js');
-const etl = require('./lib/etl.js');
-const sqs = require('./lib/sqs.js');
-const lambda = require('./lib/lambda.js');
-const titiler = require('./lib/titiler.js');
-const secret = require('./lib/secret.js');
+import db from './lib/db.js';
+import s3 from './lib/s3.js';
+import api from './lib/api.js';
+import kms from './lib/kms.js';
+import vpc from './lib/vpc.js';
+import etl from './lib/etl.js';
+import sqs from './lib/sqs.js';
+import lambda from './lib/lambda.js';
+import titiler from './lib/titiler.js';
+import secret from './lib/secret.js';
 
 const base = {
     Parameters: {
@@ -21,7 +21,7 @@ const base = {
     }
 };
 
-module.exports = cf.merge(
+export default cf.merge(
     base,
     s3,
     db,

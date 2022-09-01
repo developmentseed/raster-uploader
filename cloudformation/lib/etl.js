@@ -1,8 +1,6 @@
-'use strict';
+import cf from '@mapbox/cloudfriend';
 
-const cf = require('@mapbox/cloudfriend');
-
-const stack = {
+export default {
     Resources: {
         JobRole: {
             Type: 'AWS::IAM::Role',
@@ -29,7 +27,7 @@ const stack = {
                         },{
                             Effect: 'Allow',
                             Action: [
-                                's3:*',
+                                's3:*'
                             ],
                             Resource: [
                                 cf.getAtt('Bucket', 'Arn')
@@ -164,9 +162,7 @@ const stack = {
                 Priority: 1,
                 JobQueueName: cf.join([cf.stackName, '-queue'])
             }
-        },
+        }
 
-    },
+    }
 };
-
-module.exports = stack;

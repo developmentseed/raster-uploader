@@ -1,6 +1,6 @@
-const cf = require('@mapbox/cloudfriend');
+import cf from '@mapbox/cloudfriend';
 
-module.exports = {
+export default {
     Resources: {
         VPC: {
             Type: 'AWS::EC2::VPC',

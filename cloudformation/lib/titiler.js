@@ -1,15 +1,14 @@
-'use strict';
-const cf = require('@mapbox/cloudfriend');
+import cf from '@mapbox/cloudfriend';
 
-const stack = {
+export default {
     Resources: {
         TiTilerLambda: {
             Type: 'AWS::Lambda::Function',
-            DependsOn: [ 'TiTilerRole', 'TiTilerLogs' ],
+            DependsOn: ['TiTilerRole', 'TiTilerLogs'],
             Properties: {
                 FunctionName: cf.join([cf.stackName, '-titiler']),
                 Code: {
-                    ImageUri: cf.join([cf.accountId, '.dkr.ecr.', cf.region, `.amazonaws.com/raster-uploader:task-titiler-`, cf.ref('GitSha')])
+                    ImageUri: cf.join([cf.accountId, '.dkr.ecr.', cf.region, '.amazonaws.com/raster-uploader:task-titiler-', cf.ref('GitSha')])
                 },
                 PackageType: 'Image',
                 Role: cf.getAtt('TiTilerRole', 'Arn'),
@@ -29,7 +28,7 @@ const stack = {
                 },
                 MemorySize: 1536,
                 Timeout: 10
-            },
+            }
         },
         TiTilerLogs: {
             Type: 'AWS::Logs::LogGroup',
@@ -70,14 +69,14 @@ const stack = {
                         }]
                     }
                 }],
-                ManagedPolicyArns: [ cf.join(['arn:', cf.ref('AWS::Partition'), ':iam::aws:policy/service-role/AWSLambdaBasicExecutionRole']) ]
+                ManagedPolicyArns: [cf.join(['arn:', cf.ref('AWS::Partition'), ':iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'])]
             }
         },
         TiTilerAPI: {
             Type: 'AWS::ApiGatewayV2::Api',
             Properties: {
                 Name: cf.join([cf.stackName, '-titiler']),
-                ProtocolType: 'HTTP',
+                ProtocolType: 'HTTP'
             }
         },
         TiTilerPermission: {
@@ -87,7 +86,7 @@ const stack = {
                 FunctionName: cf.getAtt('TiTilerLambda', 'Arn'),
                 Principal: 'apigateway.amazonaws.com',
                 SourceArn: cf.join(['arn:', cf.ref('AWS::Partition'), ':execute-api:', cf.region, ':', cf.accountId, ':', cf.ref('TiTilerAPI'), '/*/*'])
-            },
+            }
         },
         TiTilerIntegration: {
             Type: 'AWS::ApiGatewayV2::Integration',
@@ -96,7 +95,7 @@ const stack = {
                 IntegrationType: 'AWS_PROXY',
                 IntegrationUri: cf.getAtt('TiTilerLambda', 'Arn'),
                 PayloadFormatVersion: '2.0'
-            },
+            }
         },
         TiTilerRoute: {
             Type: 'AWS::ApiGatewayV2::Route',
@@ -105,22 +104,21 @@ const stack = {
                 RouteKey: '$default',
                 AuthorizationType: 'NONE',
                 Target: cf.join(['integrations/', cf.ref('TiTilerIntegration')])
-            },
+            }
         },
         TiTilerStage: {
             Type: 'AWS::ApiGatewayV2::Stage',
             Properties: {
                 ApiId: cf.ref('TiTilerAPI'),
                 StageName: '$default',
-                AutoDeploy: true,
-            },
-        },
+                AutoDeploy: true
+            }
+        }
     },
     Outputs: {
         TiTilerEndpoint: {
             Value: cf.join(['https://', cf.ref('TiTilerAPI'), '.execute-api.', cf.region, '.', cf.ref('AWS::URLSuffix'), '/'])
         }
-    },
+    }
 };
 
-module.exports = stack;
