@@ -15,6 +15,21 @@
             </h2>
 
             <div class='fr'>
+                <button
+                    @click='mode = "processing"'
+                    class='btn round btn--s btn--pill btn--pill-hl btn--gray'
+                    :class='{ "btn--stroke": mode !== "processing" }'
+                >
+                    Processing
+                </button>
+                <button
+                    @click='mode = "metadata"'
+                    class='btn round btn--s btn--pill btn--pill-hr btn--gray'
+                    :class='{ "btn--stroke": mode !== "metadata" }'
+                >
+                    Metadata
+                </button>
+
                 <button @click='upload.starred = !upload.starred' class='mx6 btn btn--stroke round' :class='{
                     "color-blue": upload.starred,
                     "color-gray-light": !upload.starred,
@@ -120,6 +135,7 @@ export default {
     props: ['meta'],
     data: function() {
         return {
+            mode: 'processing',
             loading: {
                 upload: true,
                 delete: false,

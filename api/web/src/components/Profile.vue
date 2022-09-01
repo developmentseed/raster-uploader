@@ -1,11 +1,14 @@
 <template>
     <div class='col col--12 grid pt24'>
-        <div class='col col--12 grid border-b border--gray-light'>
-            <div class='col col--12'>
 
-                <h2 class='txt-h4 ml12 pb12 fl'>Profile:</h2>
+        <div class='col col--12'>
+            <div class='flex flex--center-main'>
+                <div style='width: 80px; height: 80px; border-radius: 50%;' class='bg-gray'>
+                </div>
             </div>
         </div>
+
+        <h2 class='txt-h4 ml12 pb12 w-full'>Profile:</h2>
 
         <div class='col col--12 grid grid--gut12'>
             <div class='col col--6 pt12'>
