@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { Err } from '@openaddresses/batch-schema';
+import Err from '@openaddresses/batch-error';
 
 /**
  * @class

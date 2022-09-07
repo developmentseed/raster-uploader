@@ -1,4 +1,4 @@
-import { Err } from '@openaddresses/batch-schema';
+import Err from '@openaddresses/batch-error';
 import Upload from '../lib/types/upload.js';
 import Auth from '../lib/auth.js';
 import S3 from '../lib/aws/s3.js';
