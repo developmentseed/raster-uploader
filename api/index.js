@@ -5,7 +5,8 @@ import jwt from 'jsonwebtoken';
 import express from 'express';
 import minify from 'express-minify';
 import history from 'connect-history-api-fallback';
-import { Schema, Err } from '@openaddresses/batch-schema';
+import Schema from '@openaddresses/batch-schema';
+import Err from '@openaddresses/batch-error';
 import { Pool } from '@openaddresses/batch-generic';
 import minimist from 'minimist';
 

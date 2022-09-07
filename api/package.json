@@ -24,8 +24,8 @@
     },
     "homepage": "https://github.com/developmentseed/raster-uploader#readme",
     "dependencies": {
-        "@openaddresses/batch-generic": "^9.0.0",
-        "@openaddresses/batch-schema": "^5.1.0",
+        "@openaddresses/batch-generic": "^11.1.0",
+        "@openaddresses/batch-schema": "^7.0.0",
         "@turf/bbox": "^6.5.0",
         "aws-sdk": "^2.1137.0",
         "bcrypt": "^5.0.1",
@@ -38,7 +38,7 @@
         "knex": "^2.0.0",
         "mailgen": "^2.0.25",
         "minimist": "^1.2.6",
-        "slonik": "^30.0.0",
+        "slonik": "^31.0.0",
         "tape": "^5.5.3",
         "wkx": "^0.5.0"
     },
