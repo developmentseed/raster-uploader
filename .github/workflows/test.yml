@@ -1,6 +1,9 @@
 name: Test
 
 on:
+    push:
+      branches:
+        - main
     pull_request:
         types:
             - opened
@@ -16,7 +19,7 @@ jobs:
         steps:
             - uses: actions/checkout@v2
               with:
-                  ref: ${{ github.event.pull_request.head.sha }}
+                  ref: ${{github.event.pull_request.head.sha || github.sha}}
 
             - name: Docker Pull
               run: docker-compose pull
