@@ -1,5 +1,5 @@
 {
-    "profile": "impact",
+    "profile": "CHANGE-ME",
     "artifacts": {
         "docker": [
             "raster-uploader:{{gitsha}}",

@@ -9,11 +9,17 @@
 ```sh
 cd api/
 
+nvm use 18 # (something greater than 12?)
 npm install
 
+# may need
+# echo "CREATE ROLE postgres WITH SUPERUSER, LOGIN" | psql postgres
+# if you don't have that role already
 echo "CREATE DATABASE uploader" | psql -U postgres
 
 npx knex migrate:latest
+
+yarn dev
 ```
 
 ### UI
@@ -24,6 +30,22 @@ cd api/web
 npm install
 
 yarn dev
+```
+
+App should be running locally at localhost:4999
+
+... However you will need some user in the database in order to use the app. One way to deal with this is to replicate the production database. You can do this by running the ./clone prod command.
+
+First you must:
+
+1. Install the [Deploy](https://github.com/openaddresses/deploy) utility.
+2. Update the profile in .deploy to match the AWS profile name you use locally that is associated with the AWS account of the production database (i.e. the profile name in ~/.aws/credentials).
+
+```bash
+# Not sure all these permissions are necessary
+echo "CREATE ROLE uploader WITH SUPERUSER LOGIN" | psql -U postgres
+echo "CREATE ROLE rdsadmin WITH SUPERUSER LOGIN" | psql -U postgres
+./clone prod
 ```
 
 ## Deployment
@@ -37,7 +59,7 @@ or via a generic Cloudformation JSON.
 The Cloudformation JSON can be generated via:
 
 ```sh
-npx depoy json
+npx deploy json
 ```
 and then deployed via the AWS CLI or AWS Console UI.
 
