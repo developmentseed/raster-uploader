@@ -7,22 +7,11 @@ import SQS from '../lib/aws/sqs.js';
 export default async function router(schema, config) {
     const sqs = new SQS(config.SigningSecret, config.sqs);
 
-    /**
-     * @api {get} /api/upload/:upload/step List Steps
-     * @apiVersion 1.0.0
-     * @apiName ListUploadSteps
-     * @apiGroup Steps
-     * @apiPermission user
-     *
-     * @apiParam {Number} upload The ID of the upload
-     *
-     * @apiDescription
-     *     Return a list of steps related to a given upload
-     *
-     * @apiSchema (Query) {jsonschema=../schema/req.query.ListUploadSteps.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.ListUploadSteps.json} apiSuccess
-     */
     await schema.get('/upload/:upload/step', {
+        name: 'List Steps',
+        group: 'Steps',
+        auth: 'user',
+        description: 'Return a list of steps related to a given upload',
         ':upload': 'integer',
         query: 'req.query.ListUploadSteps.json',
         res: 'res.ListUploadSteps.json'
@@ -42,22 +31,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {get} /api/upload/:upload/step/:step Get Step
-     * @apiVersion 1.0.0
-     * @apiName GetUploadStep
-     * @apiGroup Steps
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Get a single upload step
-     *
-     * @apiParam {Number} upload The ID of the upload
-     * @apiParam {Number} step The ID of the step
-     *
-     * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
-     */
     await schema.get('/upload/:upload/step/:step', {
+        name: 'Get Step',
+        group: 'Steps',
+        auth: 'user',
+        description: 'Get a single upload step',
         ':upload': 'integer',
         ':step': 'integer',
         res: 'res.UploadStep.json'
@@ -77,21 +55,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {post} /api/:upload/step Create Step
-     * @apiVersion 1.0.0
-     * @apiName CreateUploadStep
-     * @apiGroup Steps
-     * @apiPermission user
-     *
-     * @apiParam {Number} upload The ID of the upload
-     *
-     * @apiDescription
-     *     Create a new upload step
-     *
-     * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
-     */
     await schema.post('/upload/:upload/step', {
+        name: 'Create Step',
+        group: 'Steps',
+        auth: 'user',
+        description: 'Creata a new upload step',
         ':upload': 'integer',
         res: 'res.UploadStep.json'
     }, async (req, res) => {
@@ -110,23 +78,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {patch} /api/upload/:upload/step/:step Update Step
-     * @apiVersion 1.0.0
-     * @apiName PatchUploadStep
-     * @apiGroup Steps
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Update information about a given upload step
-     *
-     * @apiParam {Number} upload The ID of the upload
-     * @apiParam {Number} step The ID of the step
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.PatchUploadStep.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
-     */
     await schema.patch('/upload/:upload/step/:step', {
+        name: 'Update Step',
+        group: 'Steps',
+        auth: 'user',
+        description: 'Update information about a given upload',
         ':upload': 'integer',
         ':step': 'integer',
         body: 'req.body.PatchUploadStep.json',
@@ -159,22 +115,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {delete} /api/upload/:upload/step/:step Delete Step
-     * @apiVersion 1.0.0
-     * @apiName DeleteUploadStep
-     * @apiGroup Steps
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Delete a given upload step
-     *
-     * @apiParam {Number} upload The ID of the upload
-     * @apiParam {Number} step The ID of the upload
-     *
-     * @apiSchema {jsonschema=../schema/res.Standard.json} apiSuccess
-     */
     await schema.delete('/upload/:upload/step/:step', {
+        name: 'Delete Step',
+        group: 'Steps',
+        auth: 'user',
+        description: 'Delete a given upload step',
         ':upload': 'integer',
         ':step': 'integer',
         res: 'res.Standard.json'
@@ -200,22 +145,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {put} /api/upload/:upload/step/:step Resubmit Step
-     * @apiVersion 1.0.0
-     * @apiName PutUploadStep
-     * @apiGroup Steps
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Resubmit a step to an SQS Queue
-     *
-     * @apiParam {Number} upload The ID of the upload
-     * @apiParam {Number} step The ID of the step
-     *
-     * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
-     */
     await schema.put('/upload/:upload/step/:step', {
+        name: 'Resubmit Step',
+        group: 'Steps',
+        auth: 'user',
+        description: 'Resubmit a step to the SQS Queue',
         ':upload': 'integer',
         ':step': 'integer',
         res: 'res.UploadStep.json'

@@ -11,20 +11,11 @@ export default async function router(schema, config) {
     const sqs = new SQS(config.SigningSecret, config.sqs);
     const secret = new Secret(config.StackName);
 
-    /**
-     * @api {get} /api/collection List Collections
-     * @apiVersion 1.0.0
-     * @apiName ListCollections
-     * @apiGroup Collection
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Return a list of Collections
-     *
-     * @apiSchema (Query) {jsonschema=../schema/req.query.ListCollections.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.ListCollections.json} apiSuccess
-     */
     await schema.get('/collection', {
+        name: 'List Collections',
+        group: 'Collection',
+        auth: 'user',
+        description: 'Return a list of collections',
         query: 'req.query.ListCollections.json',
         res: 'res.ListCollections.json'
     }, async (req, res) => {
@@ -40,19 +31,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {post} /api/collection/:collection/trigger Trigger Collection
-     * @apiVersion 1.0.0
-     * @apiName TriggerCollection
-     * @apiGroup Collection
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Manually trigger a collection outside of set Cron rules
-     *
-     * @apiSchema {jsonschema=../schema/collections.json} apiSuccess
-     */
     await schema.post('/collection/:collection/trigger', {
+        name: 'Trigger Collection',
+        group: 'Collection',
+        auth: 'user',
+        description: 'Manually trigger a collection outside of set Cron rules',
         ':collection': 'integer',
         res: 'collections.json'
     }, async (req, res) => {
@@ -79,21 +62,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {get} /api/collection/:collection Get Collection
-     * @apiVersion 1.0.0
-     * @apiName GetCollection
-     * @apiGroup collection
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Get a single collection
-     *
-     * @apiParam {Number} collection The ID of the collection
-     *
-     * @apiSchema {jsonschema=../schema/collections.json} apiSuccess
-     */
     await schema.get('/collection/:collection', {
+        name: 'Get Collection',
+        group: 'Collection',
+        auth: 'user',
+        description: 'Get a single collection',
         ':collection': 'integer',
         res: 'collections.json'
     }, async (req, res) => {
@@ -111,20 +84,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {post} /api/collection Create Collection
-     * @apiVersion 1.0.0
-     * @apiName CreateCollection
-     * @apiGroup Collection
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Create a new collection
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.CreateCollection.json} apiParam
-     * @apiSchema {jsonschema=../schema/collections.json} apiSuccess
-     */
     await schema.post('/collection', {
+        name: 'Create Collection',
+        group: 'Collection',
+        auth: 'user',
+        description: 'Create a new collection',
         body: 'req.body.CreateCollection.json',
         res: 'collections.json'
     }, async (req, res) => {
@@ -151,22 +115,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {patch} /api/collection/:collection Update Collection
-     * @apiVersion 1.0.0
-     * @apiName PatchCollection
-     * @apiGroup Collection
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Update information about a given collection
-     *
-     * @apiParam {Number} collection The ID of the collection
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.PatchCollection.json} apiParam
-     * @apiSchema {jsonschema=../schema/collections.json} apiSuccess
-     */
     await schema.patch('/collection/:collection', {
+        name: 'Update Collection',
+        group: 'Collection',
+        auth: 'user',
+        description: 'Update information about a given collection',
         ':collection': 'integer',
         body: 'req.body.PatchCollection.json',
         res: 'collections.json'
@@ -194,21 +147,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {delete} /api/collection/:collection Delete Collection
-     * @apiVersion 1.0.0
-     * @apiName DeleteCollection
-     * @apiGroup Collection
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Delete a given Collection
-     *
-     * @apiParam {Number} collection The ID of the collection
-     *
-     * @apiSchema {jsonschema=../schema/res.Standard.json} apiSuccess
-     */
     await schema.delete('/collection/:collection', {
+        name: 'Delete Collection',
+        group: 'Collection',
+        auth: 'user',
+        description: 'Delete a given collection',
         ':collection': 'integer',
         res: 'res.Standard.json'
     }, async (req, res) => {

@@ -7,20 +7,11 @@ import Email from '../lib/email.js';
 export default async function router(schema, config) {
     const email = new Email(config);
 
-    /**
-     * @api {get} /api/user List Users
-     * @apiVersion 1.0.0
-     * @apiName ListUsers
-     * @apiGroup User
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Return a list of users that have registered with the service
-     *
-     * @apiSchema (Query) {jsonschema=../schema/req.query.ListUsers.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.ListUsers.json} apiSuccess
-     */
     await schema.get('/user', {
+        name: 'List Users',
+        group: 'User',
+        auth: 'user',
+        description: 'Return a list of users that have registered with the service',
         query: 'req.query.ListUsers.json',
         res: 'res.ListUsers.json'
     }, async (req, res) => {
@@ -35,20 +26,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {post} /api/user Create User
-     * @apiVersion 1.0.0
-     * @apiName CreateUser
-     * @apiGroup User
-     * @apiPermission public
-     *
-     * @apiDescription
-     *     Create a new user
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.CreateUser.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.User.json} apiSuccess
-     */
     await schema.post('/user', {
+        name: 'Create User',
+        group: 'User',
+        auth: 'public',
+        description: 'Create a new user',
         body: 'req.body.CreateUser.json',
         res: 'res.User.json'
     }, async (req, res) => {
@@ -105,22 +87,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {patch} /api/user/:uid Update User
-     * @apiVersion 1.0.0
-     * @apiName PatchUser
-     * @apiGroup User
-     * @apiPermission admin
-     *
-     * @apiDescription
-     *     Update information about a given user
-     *
-     * @apiParam {Number} uid The UID of the user to update
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.PatchUser.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.User.json} apiSuccess
-     */
     await schema.patch('/user/:uid', {
+        name: 'Update User',
+        group: 'User',
+        auth: 'admin',
+        description: 'Update information about a given user - or allow a user to update their own information',
         ':uid': 'integer',
         body: 'req.body.PatchUser.json',
         res: 'res.User.json'

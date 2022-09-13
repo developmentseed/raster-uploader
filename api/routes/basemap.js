@@ -3,20 +3,11 @@ import BaseMap from '../lib/types/basemap.js';
 import Auth from '../lib/auth.js';
 
 export default async function router(schema, config) {
-    /**
-     * @api {get} /api/basemap List BaseMap
-     * @apiVersion 1.0.0
-     * @apiName ListBaseMap
-     * @apiGroup BaseMap
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Return a list of basemaps
-     *
-     * @apiSchema (Query) {jsonschema=../schema/req.query.ListBaseMap.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.ListBaseMap.json} apiSuccess
-     */
     await schema.get('/basemap', {
+        name: 'List BaseMap',
+        group: 'BaseMap',
+        auth: 'user',
+        description: 'Return a list of basemaps',
         query: 'req.query.ListBaseMap.json',
         res: 'res.ListBaseMap.json'
     }, async (req, res) => {
@@ -32,21 +23,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {get} /api/basemap/:basemap Get BaseMap
-     * @apiVersion 1.0.0
-     * @apiName GetBaseMap
-     * @apiGroup BaseMap
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Get a single basemap
-     *
-     * @apiParam {Number} basemap The ID of the basemap
-     *
-     * @apiSchema {jsonschema=../schema/basemap.json} apiSuccess
-     */
     await schema.get('/basemap/:basemap', {
+        name: 'Get BaseMap',
+        group: 'BaseMap',
+        auth: 'user',
+        description: 'Get a single basemap',
         ':basemap': 'integer',
         res: 'basemap.json'
     }, async (req, res) => {
@@ -62,20 +43,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {post} /api/basemap Create BaseMap
-     * @apiVersion 1.0.0
-     * @apiName CreateBaseMap
-     * @apiGroup BaseMap
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Create a new basemap
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.CreateBaseMap.json} apiParam
-     * @apiSchema {jsonschema=../schema/basemap.json} apiSuccess
-     */
     await schema.post('/basemap', {
+        name: 'Create BaseMap',
+        group: 'BaseMap',
+        auth: 'user',
+        description: 'Create a new basemap',
         body: 'req.body.CreateBaseMap.json',
         res: 'basemap.json'
     }, async (req, res) => {
@@ -91,22 +63,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {patch} /api/basemap/:basemap Update BaseMap
-     * @apiVersion 1.0.0
-     * @apiName PatchBaseMap
-     * @apiGroup BaseMap
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Update information about a given basemap
-     *
-     * @apiParam {Number} basemap The ID of the basemap
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.PatchBaseMap.json} apiParam
-     * @apiSchema {jsonschema=../schema/basemap.json} apiSuccess
-     */
     await schema.patch('/basemap/:basemap', {
+        name: 'Update BaseMap',
+        group: 'BaseMap',
+        auth: 'user',
+        description: 'Update information about a given basemap',
         ':basemap': 'integer',
         body: 'req.body.PatchBaseMap.json',
         res: 'basemap.json'
@@ -125,21 +86,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {delete} /api/basemap/:basemap Delete BaseMap
-     * @apiVersion 1.0.0
-     * @apiName DeleteBaseMap
-     * @apiGroup BaseMap
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Delete a given basemap
-     *
-     * @apiParam {Number} basemap The ID of the basemap
-     *
-     * @apiSchema {jsonschema=../schema/res.Standard.json} apiSuccess
-     */
     await schema.delete('/basemap/:basemap', {
+        name: 'Delete BaseMap',
+        group: 'BaseMap',
+        auth: 'user',
+        description: 'Delete a given basemap',
         ':basemap': 'integer',
         res: 'res.Standard.json'
     }, async (req, res) => {

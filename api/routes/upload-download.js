@@ -4,21 +4,11 @@ import Auth from '../lib/auth.js';
 import S3 from '../lib/aws/s3.js';
 
 export default async function router(schema, config) {
-    /**
-     * @api {get} /api/upload/:upload/download Download Upload
-     * @apiVersion 1.0.0
-     * @apiName DownloadUpload
-     * @apiGroup Upload
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Download the initially uploaded file
-     *
-     * @apiParam {Number} :upload The ID of the upload
-     *
-     * @apiSchema (Query) {jsonschema=../schema/req.query.DownloadUpload.json} apiParam
-     */
     await schema.get('/upload/:upload/download', {
+        name: 'Download',
+        group: 'DownloadUpload',
+        auth: 'user',
+        description: 'Download the initially uploaded file',
         ':upload': 'integer',
         query: 'req.query.DownloadUpload.json'
     }, async (req, res) => {

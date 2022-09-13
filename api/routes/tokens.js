@@ -3,21 +3,11 @@ import UserToken from '../lib/types/token.js';
 import Auth from '../lib/auth.js';
 
 export default async function router(schema, config) {
-
-    /**
-     * @api {get} /api/token List Tokens
-     * @apiVersion 1.0.0
-     * @apiName ListTokens
-     * @apiGroup Token
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     List all tokens associated with the requester's account
-     *
-     * @apiSchema (Query) {jsonschema=../schema/req.query.ListTokens.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.ListTokens.json} apiSuccess
-     */
     await schema.get('/token', {
+        name: 'List Tokens',
+        group: 'Token',
+        auth: 'user',
+        description: 'List all tokens associated with the requesters account',
         query: 'req.query.ListTokens.json',
         res: 'res.ListTokens.json'
     }, async (req, res) => {
@@ -31,20 +21,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {post} /api/token Create Token
-     * @apiVersion 1.0.0
-     * @apiName CreateToken
-     * @apiGroup Token
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Create a new API token for programatic access
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.CreateToken.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.CreateToken.json} apiSuccess
-     */
     await schema.post('/token', {
+        name: 'Create Token',
+        group: 'Token',
+        auth: 'user',
+        description: 'Create a new API token for programmatic access',
         body: 'req.body.CreateToken.json',
         res: 'res.CreateToken.json'
     }, async (req, res) => {
@@ -60,19 +41,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {get} /api/token/:token_id Get Token
-     * @apiVersion 1.0.0
-     * @apiName GetToken
-     * @apiGroup Token
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Get information about a single token
-     *
-     * @apiSchema {jsonschema=../schema/res.Token.json} apiSuccess
-     */
     await schema.get('/token/:token_id', {
+        name: 'Get Token',
+        group: 'Token',
+        auth: 'user',
+        description: 'Get information about a single token',
         ':token_id': 'integer',
         res: 'res.Token.json'
     }, async (req, res) => {
@@ -90,19 +63,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {delete} /api/token/:token_id Delete Token
-     * @apiVersion 1.0.0
-     * @apiName DeleteToken
-     * @apiGroup Token
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Delete a user's API Token
-     *
-     * @apiSchema {jsonschema=../schema/res.Standard.json} apiSuccess
-     */
     await schema.delete('/token/:token_id', {
+        name: 'Delete Token',
+        group: 'Token',
+        auth: 'user',
+        description: 'Delete a user\'s API Token',
         ':token_id': 'integer',
         res: 'res.Standard.json'
     }, async (req, res) => {

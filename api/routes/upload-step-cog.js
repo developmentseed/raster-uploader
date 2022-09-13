@@ -10,22 +10,11 @@ export default async function router(schema, config) {
     const tile = new Tile(config.SigningSecret);
     const sqs = new SQS(config.SigningSecret);
 
-    /**
-     * @api {post} /api/upload/:upload/step/:step/cog/transform COG Transform
-     * @apiVersion 1.0.0
-     * @apiName COGTransform
-     * @apiGroup Cogs
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Perform a transform step on a COG
-     *
-     * @apiParam {Number} upload The ID of the upload
-     * @apiParam {Number} step The ID of the step
-     *
-     * @apiSchema {jsonschema=../schema/res.UploadStep.json} apiSuccess
-     */
     await schema.post('/upload/:upload/step/:step/cog/transform', {
+        name: 'COG Transform',
+        group: 'COGS',
+        auth: 'user',
+        description: 'Perform a transform step on a COG',
         ':upload': 'integer',
         ':step': 'integer',
         body: 'req.body.CreateTransform.json',
@@ -59,22 +48,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {get} /api/upload/:upload/step/:step/cog/download COG Download
-     * @apiVersion 1.0.0
-     * @apiName COGDownload
-     * @apiGroup Cogs
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Download a cog
-     *
-     * @apiParam {Number} upload The ID of the upload
-     * @apiParam {Number} step The ID of the step
-     *
-     * @apiSchema (Query) {jsonschema=../schema/req.query.COGDownload.json} apiParam
-     */
     await schema.get('/upload/:upload/step/:step/cog/download', {
+        name: 'COG Download',
+        group: 'COGS',
+        auth: 'user',
+        description: 'Download a COG',
         ':upload': 'integer',
         ':step': 'integer',
         query: 'req.query.COGDownload.json'
@@ -103,20 +81,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {get} /api/upload/:upload/step/:step/cog/info COG Info
-     * @apiVersion 1.0.0
-     * @apiName COGInfo
-     * @apiGroup Cogs
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Get information about a COG
-     *
-     * @apiParam {Number} upload The ID of the upload
-     * @apiParam {Number} step The ID of the step
-     */
     await schema.get('/upload/:upload/step/:step/cog/info', {
+        name: 'COG Info',
+        group: 'COGS',
+        auth: 'user',
+        description: 'Get information about a COG',
         ':upload': 'integer',
         ':step': 'integer'
     }, async (req, res) => {
@@ -152,26 +121,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {get} /api/cog/:z/:x/:y.png COG Tile
-     * @apiVersion 1.0.0
-     * @apiName COGTile
-     * @apiGroup Cogs
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Get a given tile from a cog
-     *
-     * @apiParam {Number} upload The ID of the upload
-     * @apiParam {Number} step The ID of the step
-     *
-     * @apiParam {Number} x WMS X Coordinate
-     * @apiParam {Number} y WMS Y Coordinate
-     * @apiParam {Number} z WMS Z Coordinate
-     *
-     * @apiSchema (Query) {jsonschema=../schema/req.query.COGTile.json} apiParam
-     */
     await schema.get('/cog/:z/:x/:y.png', {
+        name: 'COG Tile',
+        group: 'COGS',
+        auth: 'user',
+        description: 'Get a given tile from a COG',
         ':upload': 'integer',
         ':step': 'integer',
         ':z': 'integer',

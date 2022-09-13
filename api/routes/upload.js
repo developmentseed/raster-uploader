@@ -8,20 +8,11 @@ import SQS from '../lib/aws/sqs.js';
 export default async function router(schema, config) {
     const sqs = new SQS(config.SigningSecret, config.sqs);
 
-    /**
-     * @api {get} /api/upload List Uploads
-     * @apiVersion 1.0.0
-     * @apiName ListUploads
-     * @apiGroup Upload
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Return a list of uploads that have been attempted by a user
-     *
-     * @apiSchema (Query) {jsonschema=../schema/req.query.ListUploads.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.ListUploads.json} apiSuccess
-     */
     await schema.get('/upload', {
+        name: 'List Uploads',
+        group: 'Upload',
+        auth: 'user',
+        description: 'Return a list of uploads that have been attempted by a user',
         query: 'req.query.ListUploads.json',
         res: 'res.ListUploads.json'
     }, async (req, res) => {
@@ -37,21 +28,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {get} /api/upload/:upload Get Upload
-     * @apiVersion 1.0.0
-     * @apiName GetUpload
-     * @apiGroup Upload
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Get a single upload
-     *
-     * @apiParam {Number} upload The ID of the upload
-     *
-     * @apiSchema {jsonschema=../schema/uploads.json} apiSuccess
-     */
     await schema.get('/upload/:upload', {
+        name: 'Get Upload',
+        group: 'Upload',
+        auth: 'user',
+        description: 'Get a single upload',
         ':upload': 'integer',
         res: 'uploads.json'
     }, async (req, res) => {
@@ -67,21 +48,14 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {put} /api/upload JSON Upload
-     * @apiVersion 1.0.0
-     * @apiName JSONUpload
-     * @apiGroup Upload
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Create a new upload but don't populate it with an actual file
-     *     Generally this will only be called internally via the obtain task
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.CreateUpload.json} apiParam
-     * @apiSchema {jsonschema=../schema/uploads.json} apiSuccess
-     */
     await schema.put('/upload', {
+        name: 'JSON Upload',
+        group: 'Upload',
+        auth: 'user',
+        description: `
+            Create a new upload but don't populate it with an actual file
+            Generally this will only be called internally via the obtain task
+        `,
         body: 'req.body.CreateUpload.json',
         res: 'uploads.json'
     }, async (req, res) => {
@@ -99,19 +73,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {post} /api/upload Create Upload
-     * @apiVersion 1.0.0
-     * @apiName CreateUpload
-     * @apiGroup Upload
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Create a new upload
-     *
-     * @apiSchema {jsonschema=../schema/uploads.json} apiSuccess
-     */
     await schema.post('/upload', {
+        name: 'Create Upload',
+        group: 'Upload',
+        auth: 'user',
+        description: 'Create a new upload',
         res: 'uploads.json'
     }, async (req, res) => {
         try {
@@ -191,22 +157,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {patch} /api/upload/:upload Update Upload
-     * @apiVersion 1.0.0
-     * @apiName PatchUpload
-     * @apiGroup User
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Update information about a given upload
-     *
-     * @apiParam {Number} upload The ID of the upload
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.PatchUpload.json} apiParam
-     * @apiSchema {jsonschema=../schema/uploads.json} apiSuccess
-     */
     await schema.patch('/upload/:upload', {
+        name: 'Update Upload',
+        group: 'Upload',
+        auth: 'user',
+        description: 'Update information about a given upload',
         ':upload': 'integer',
         body: 'req.body.PatchUpload.json',
         res: 'uploads.json'
@@ -232,21 +187,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {delete} /api/upload/:upload Delete Upload
-     * @apiVersion 1.0.0
-     * @apiName DeleteUpload
-     * @apiGroup User
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Delete a given upload
-     *
-     * @apiParam {Number} upload The ID of the upload
-     *
-     * @apiSchema {jsonschema=../schema/res.Standard.json} apiSuccess
-     */
     await schema.delete('/upload/:upload', {
+        name: 'Delete Upload',
+        group: 'Upload',
+        auth: 'user',
+        description: 'Delete a given upload',
         ':upload': 'integer',
         res: 'res.Standard.json'
     }, async (req, res) => {

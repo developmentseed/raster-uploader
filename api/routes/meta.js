@@ -5,18 +5,11 @@ import Settings from '../lib/settings.js';
 import { sql } from 'slonik';
 
 export default async function router(schema, config) {
-
-    /**
-     * @api {get} /api/meta List Meta
-     * @apiVersion 1.0.0
-     * @apiName ListMeta
-     * @apiGroup Meta
-     * @apiPermission admin
-     *
-     * @apiDescription
-     *     Return a list of metadata objects
-     */
     await schema.get('/meta', {
+        name: 'List Meta',
+        group: 'Meta',
+        auth: 'admin',
+        description: 'Return a list of metadata objects',
         query: 'req.query.ListMeta.json',
         res: 'res.ListMeta.json'
     }, async (req, res) => {
@@ -29,17 +22,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {post} /api/meta Create Meta
-     * @apiVersion 1.0.0
-     * @apiName CreateMeta
-     * @apiGroup Meta
-     * @apiPermission meta
-     *
-     * @apiDescription
-     *     Create a new metadata object
-     */
     await schema.post('/meta', {
+        name: 'Create Meta',
+        group: 'Meta',
+        auth: 'Create a new metadata object',
+        description: '',
         body: 'req.body.CreateMeta.json',
         res: 'meta.json'
     }, async (req, res) => {
@@ -54,19 +41,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {patch} /api/meta/:key Update Meta
-     * @apiVersion 1.0.0
-     * @apiName PatchMeta
-     * @apiGroup Meta
-     * @apiPermission admin
-     *
-     * @apiDescription
-     *     Update a metadata object
-     *
-     * @apiParam {String} key Meta Key to update
-     */
     await schema.patch('/meta/:key', {
+        name: 'Update Meta',
+        group: 'Meta',
+        auth: 'admin',
+        description: 'Update a metadata object',
         ':key': 'string',
         body: 'req.body.PatchMeta.json',
         res: 'meta.json'
@@ -89,21 +68,11 @@ export default async function router(schema, config) {
         }
     });
 
-    /**
-     * @api {delete} /api/meta/:key Delete Meta
-     * @apiVersion 1.0.0
-     * @apiName PatchMeta
-     * @apiGroup Meta
-     * @apiPermission admin
-     *
-     * @apiDescription
-     *     Update a metadata object
-     *
-     * @apiParam {String} key Meta key to delete
-     *
-     * @apiSchema {jsonschema=../schema/res.Standard.json} apiSuccess
-     */
     await schema.delete('/meta/:key', {
+        name: 'Delete Meta',
+        group: 'Meta',
+        auth: 'admin',
+        description: 'Delete a metadata object',
         ':key': 'string',
         res: 'res.Standard.json'
     }, async (req, res) => {

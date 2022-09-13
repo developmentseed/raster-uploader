@@ -6,20 +6,11 @@ import SQS from '../lib/aws/sqs.js';
 export default async function router(schema, config) {
     const sqs = new SQS(config.SigningSecret);
 
-    /**
-     * @api {post} /api/obtain Create Obtain
-     * @apiVersion 1.0.0
-     * @apiName CreateObtain
-     * @apiGroup Obtain
-     * @apiPermission user
-     *
-     * @apiDescription
-     *     Create a new obtain
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.CreateObtain.json} apiParam
-     * @apiSchema {jsonschema=../schema/uploads.json} apiSuccess
-     */
     await schema.post('/obtain', {
+        name: 'Create Obtain',
+        group: 'Obtain',
+        auth: 'user',
+        description: 'Create a new obtain task',
         body: 'req.body.CreateObtain.json',
         res: 'uploads.json'
     }, async (req, res) => {
