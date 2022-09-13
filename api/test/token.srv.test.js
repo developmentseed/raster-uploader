@@ -46,7 +46,6 @@ test('POST: api/token', async (t) => {
 
         t.deepEquals(res.body, {
             id: 1,
-            uid: 1,
             name: 'Default Token'
         });
     } catch (err) {
@@ -69,7 +68,6 @@ test('GET: api/token/1', async (t) => {
 
         t.deepEquals(res.body, {
             id: 1,
-            uid: 1,
             name: 'Default Token'
         });
     } catch (err) {
@@ -139,7 +137,6 @@ test('POST: api/token', async (t) => {
 
         t.deepEquals(res.body, {
             id: 2,
-            uid: 2,
             name: 'Default Token'
         });
     } catch (err) {
