@@ -27,7 +27,7 @@ export default {
                 DBName: 'uploader',
                 DBInstanceIdentifier: cf.stackName,
                 KmsKeyId: cf.ref('KMS'),
-                EngineVersion: '14.2',
+                EngineVersion: '14.3',
                 MasterUsername: 'uploader',
                 MasterUserPassword: cf.ref('DatabasePassword'),
                 AllocatedStorage: 10,
