@@ -6,5 +6,12 @@
             "raster-uploader:task-identify-{{gitsha}}",
             "raster-uploader:task-titiler-{{gitsha}}"
         ]
-    }
+    },
+    "tags": [{
+        "Key": "Project",
+        "Value": "raster-uploader"
+    },{ 
+        "Key": "Client",
+        "Value": "nasa"
+    }] 
 }
