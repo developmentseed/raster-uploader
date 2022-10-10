@@ -4,21 +4,14 @@ import Auth from '../lib/auth.js';
 import jwt from 'jsonwebtoken';
 
 export default async function router(schema, config) {
-    /**
-     * @api {post} /api/machine
-     * @apiVersion 1.0.0
-     * @apiName PostMachine
-     * @apiGroup machine
-     * @apiPermission machine
-     *
-     * @apiDescription
-     *     Obtain tasks started as part of a collection via the EventBridge scheduling
-     *      rules must obtain data about the user/collection that initiated the task
-     *
-     * @apiSchema (Body) {jsonschema=../schema/req.body.CreateMachine.json} apiParam
-     * @apiSchema {jsonschema=../schema/res.Machine.json} apiSuccess
-     */
     await schema.post('/machine', {
+        name: 'Internal',
+        group: 'Machine',
+        auth: 'machine',
+        description: `
+            Obtain tasks started as part of a collection via the EventBridge scheduling
+            rules must obtain data about the user/collection that initiated the task
+        `,
         body: 'req.body.CreateMachine.json',
         res: 'res.Machine.json'
     }, async (req, res) => {

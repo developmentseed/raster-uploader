@@ -176,6 +176,8 @@ export default async function server(config) {
     schema.not_found();
     schema.error();
 
+    fs.writeFileSync(new URL('./doc/api.js', import.meta.url), schema.docs.join('\n'));
+
     app.use(history({
         rewrites: [{
             from: /.*\/js\/.*$/,
