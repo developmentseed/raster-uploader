@@ -24,6 +24,6 @@
     "dependencies": {
         "@mapbox/cloudfriend": "^5.1.1",
         "@openaddresses/batch-alarms": "^2.1.3",
-        "@openaddresses/deploy": "^6.1.1"
+        "@openaddresses/deploy": "^7.0.0"
     }
 }
