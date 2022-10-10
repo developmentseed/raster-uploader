@@ -10,7 +10,7 @@
             "type": "integer",
             "description": "Total number of uploads"
         },
-        "tokens": {
+        "uploads": {
             "type": "array",
             "items": {
                 "type": "object",
