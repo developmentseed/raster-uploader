@@ -1,7 +1,7 @@
 <template>
     <div class='col col--12'>
-        <div class='col col--12 clearfix py6'>
-            <RasterMenu item='Uploads'/>
+        <div class='col col--12 clearfix py6 relative'>
+            Uploads
 
             <div class='fr'>
                 <label class='switch-container px6'>
@@ -21,7 +21,9 @@
                 </button>
             </div>
         </div>
-        <div class='border border--gray-light round mb60'>
+        <div class='border border--gray-light round mb60 relative'>
+            <RasterMenu/>
+
             <template v-if='showSearch'>
                 <div class='col col--12 px24 py6'>
                     <div class='relative'>
@@ -55,10 +57,10 @@
 
 <script>
 import Pager from './util/Pager.vue';
-import RasterMenu from './util/Menu.vue';
 import UploadItem from './util/UploadItem.vue';
 import Loading from './util/Loading.vue';
 import None from './util/None.vue';
+import RasterMenu from './util/Menu.vue';
 
 export default {
     name: 'Home',

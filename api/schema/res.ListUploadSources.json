@@ -10,7 +10,7 @@
             "type": "integer",
             "description": "Total number of sources"
         },
-        "tokens": {
+        "upload_sources": {
             "type": "array",
             "items": {
                 "type": "object",

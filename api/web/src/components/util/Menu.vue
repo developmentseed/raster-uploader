@@ -1,21 +1,26 @@
 <template>
-<h2 @click='$router.push({ path: "/" })' class='dropdown fl cursor-default'>
-    <svg class='icon inline'><use href='#icon-chevron-down'/></svg>
+<div class='absolute top border border--gray-light round px6 py6' style='left: calc(-48px + -24px); width: 62px;'>
+    <button v-tooltip='"Uploads"' @click='$router.push("/")' class='btn round btn--stroke color-gray mb12'>
+        <svg class='icon'><use href='#icon-picture'/></svg>
+    </button>
 
-    <span v-text='item'/>
+    <button v-tooltip='"Collections"' @click='$router.push("/collection")' class='btn round btn--stroke color-gray mb12'>
+        <svg class='icon'><use href='#icon-folder'/></svg>
+    </button>
 
-    <div class='round dropdown-content color-black' style='top: 24px;'>
-        <div :key='i' v-for='i in Object.keys(items).filter((i) => { return i !== item; })' @click.stop='$router.push({ path: items[i] })' class='round bg-gray-light-on-hover cursor-pointer px12' v-text='i'></div>
-    </div>
-</h2>
+    <button v-tooltip='"Basemaps"' @click='$router.push("/basemap")' class='btn round btn--stroke color-gray mb12'>
+        <svg class='icon'><use href='#icon-map'/></svg>
+    </button>
+
+    <button v-tooltip='"Sources"' @click='$router.push("/source")' class='btn round btn--stroke color-gray'>
+        <svg class='icon'><use href='#icon-database'/></svg>
+    </button>
+</div>
 </template>
 
 <script>
 export default {
     name: 'RasterMenu',
-    props: {
-        item: String
-    },
     data: function() {
         return {
             items: {
