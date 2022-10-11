@@ -24,6 +24,7 @@
     },
     "homepage": "https://github.com/developmentseed/raster-uploader#readme",
     "dependencies": {
+        "@openaddresses/batch-error": "^1.1.0",
         "@openaddresses/batch-generic": "^11.3.0",
         "@openaddresses/batch-schema": "^7.2.0",
         "@turf/bbox": "^6.5.0",
@@ -39,12 +40,12 @@
         "mailgen": "^2.0.25",
         "minimist": "^1.2.6",
         "slonik": "^31.0.0",
-        "tape": "^5.5.3",
         "wkx": "^0.5.0"
     },
     "devDependencies": {
         "@mapbox/mock-aws-sdk-js": "^1.0.0",
         "apidoc": "^0.53.0",
+        "tape": "^5.5.3",
         "apidoc-plugin-schema2": "^0.1.8",
         "codecov": "^3.8.3",
         "eslint": "^8.15.0",
@@ -54,8 +55,8 @@
         "path-to-regexp": "^6.2.1"
     },
     "apidoc": {
-        "name": "Raster Upload API",
-        "title": "OpenAddresses API",
+        "name": "Raster Uploader API",
+        "title": "Raster Uploader API",
         "version": "1.0.0",
         "header": {
             "title": "Authentication",
