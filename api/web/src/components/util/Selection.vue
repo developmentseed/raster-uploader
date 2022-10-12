@@ -3,6 +3,10 @@
     <div class='col col--12'>
         <span>Select from the following:</span>
 
+        <button @click='getList' class='btn round btn--stroke btn--s mb3 color-gray color-green-on-hover fr mx3'>
+            <svg class='icon'><use href='#icon-refresh'/></svg>
+        </button>
+
         <button v-if='create' @click='$emit("create")' class='btn round btn--stroke btn--s mb3 color-gray color-green-on-hover fr mx3'>
             <svg class='icon'><use href='#icon-plus'/></svg>
         </button>
@@ -38,7 +42,7 @@
     <template v-else>
         <BasicSelection
             :selections='selections'
-            @selection='selection = $event'
+            @selection='$emit("selection", $event)'
         />
     </template>
 </div>
@@ -77,9 +81,6 @@ export default {
         'filter.shown': function() {
             if (!this.filter.show) this.filter.value = '';
         },
-        'selection.id': function() {
-            this.$emit("selection", this.selection.id)
-        }
     },
     data: function() {
         return {
@@ -88,14 +89,11 @@ export default {
                 shown: false,
                 value: ''
             },
-            selection: false,
             total: 0,
             selections: []
         };
     },
     mounted: function() {
-        this.selection = this.selections[0];
-
         this.getList();
     },
     methods: {
