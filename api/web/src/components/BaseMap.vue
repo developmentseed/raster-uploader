@@ -16,7 +16,9 @@
                 <svg class='icon'><use href='#icon-trash'/></svg>
             </button>
         </div>
-        <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
+        <div class='border border--gray-light round col col--12 px12 py12 clearfix relative'>
+            <RasterMenu/>
+
             <template v-if='loading'>
                 <Loading desc='Loading BaseMap'/>
             </template>
@@ -53,6 +55,7 @@
 <script>
 import InputError from './util/InputError.vue';
 import Loading from './util/Loading.vue';
+import RasterMenu from './util/Menu.vue';
 
 export default {
     name: 'BaseMap',
@@ -132,7 +135,8 @@ export default {
     },
     components: {
         Loading,
-        InputError
+        InputError,
+        RasterMenu
     }
 }
 </script>

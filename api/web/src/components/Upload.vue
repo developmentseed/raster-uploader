@@ -7,7 +7,9 @@
                 <span>New Upload</span>
             </h2>
         </div>
-        <div class='round mb60 col col--12 grid border border--gray-light py12 px12'>
+        <div class='round mb60 col col--12 grid border border--gray-light py12 px12 relative'>
+            <RasterMenu/>
+
             <UploadSettings
                 @settings='settings = $event'
             />
@@ -58,6 +60,7 @@
 </template>
 
 <script>
+import RasterMenu from './util/Menu.vue';
 import UploadS3 from './util/UploadS3.vue';
 import UploadHTTP from './util/UploadHTTP.vue';
 import UploadFile from './util/Upload.vue';
@@ -82,6 +85,7 @@ export default {
         }
     },
     components: {
+        RasterMenu,
         UploadSettings,
         UploadFile,
         UploadHTTP,

@@ -26,7 +26,9 @@
             </div>
         </div>
     </div>
-    <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
+    <div class='border border--gray-light round col col--12 px12 py12 clearfix relative'>
+        <RasterMenu/>
+
         <template v-if='loading.collection'>
             <Loading desc='Loading Collection'/>
         </template>
@@ -137,6 +139,7 @@
 
 <script>
 import Loading from './util/Loading.vue';
+import RasterMenu from './util/Menu.vue';
 import UploadItem from './util/UploadItem.vue';
 import InputError from './util/InputError.vue';
 import Selection from './util/Selection.vue';
@@ -295,7 +298,8 @@ export default {
         Loading,
         UploadItem,
         InputError,
-        Selection
+        Selection,
+        RasterMenu
     }
 }
 </script>
