@@ -74,6 +74,9 @@ export default {
         'filter.value': function() {
             this.getList();
         },
+        'filter.shown': function() {
+            if (!this.filter.show) this.filter.value = '';
+        },
         'selection.id': function() {
             this.$emit("selection", this.selection.id)
         }
