@@ -59,6 +59,7 @@
                     <Selection
                         key='upload_sources'
                         :create='true'
+                        filter_param='filter'
                         @create='modal.source=true'
                         :url='source_url'
                         @selection='collection.source_id = $event'
@@ -74,6 +75,7 @@
                     <Selection
                         key='uploads'
                         :create='false'
+                        filter_param='filter'
                         :url='upload_url'
                         @selection='upload_id = $event'
                     />

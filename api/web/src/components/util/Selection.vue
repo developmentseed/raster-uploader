@@ -1,9 +1,32 @@
 <template>
 <div class='col col--12 grid my12'>
+    <div class='col col--12'>
+        <span v-text='"select from the following:"'/>
+
+        <button v-if='create' @click='$emit("create")' class='btn round btn--stroke btn--s mb3 color-gray color-green-on-hover fr mx3'>
+            <svg class='icon'><use href='#icon-plus'/></svg>
+        </button>
+
+        <button v-if='filter_param' @click='filter.shown = !filter.shown' class='btn round btn--stroke btn--s mb3 color-gray color-green-on-hover fr mx3'>
+            <svg class='icon'><use href='#icon-search'/></svg>
+        </button>
+    </div>
+
+    <template v-if='filter.shown'>
+        <div class='col col--12 py6'>
+            <div class='relative'>
+                <div class='absolute flex flex--center-cross flex--center-main w36 h36'>
+                    <svg class='icon'><use xlink:href='#icon-search'></use></svg>
+                </div>
+                <input v-model='filter.value' class='input pl36' :placeholder='name'>
+            </div>
+        </div>
+    </template>
+
     <template v-if='loading'>
         <Loading desc='Loading Selections'/>
     </template>
-    <template v-if='total === 0'>
+    <template v-else-if='total === 0'>
         <div class='col col--12 ml12 mt12 border border--gray-light round'>
             <None
                 :name='name'
@@ -12,43 +35,22 @@
             />
         </div>
     </template>
-
     <template v-else>
-        <div class='col col--12'>
-            <span v-text='"select from the following:"'/>
-
-            <button v-if='create' @click='$emit("create")' class='btn round btn--stroke btn--s mb3 color-gray color-green-on-hover fr'>
-                <svg class='icon'><use href='#icon-plus'/></svg>
-            </button>
-
-            <button v-if='filter_param' @click='filter.shown = !filter.shown' class='btn round btn--stroke btn--s mb3 color-gray color-green-on-hover fr'>
-                <svg class='icon'><use href='#icon-search'/></svg>
-            </button>
-        </div>
-        <div class='col col--12 grid border border--gray-light round'>
-            <div
-                @click='selection = sel'
-                :key='sel.id'
-                v-for='sel in selections'
-                class='col col--12 cursor-pointer bg-darken10-on-hover'
-            >
-                <div class='w-full py6 px6' :class='{
-                    "bg-gray-light": selection.id === sel.id
-                }'>
-                    <span class='txt-h4 round' v-text='sel.name'/>
-                </div>
-            </div>
-        </div>
+        <BasicSelection
+            :selections='selections'
+            @selection='selection = $event'
+        />
     </template>
 </div>
 </template>
 
 <script>
+import BasicSelection from './BasicSelection.vue';
 import Loading from './Loading.vue';
 import None from './None.vue';
 
 export default {
-    name: 'selection',
+    name: 'Selection',
     props: {
         url: URL,
         name: {
@@ -57,7 +59,7 @@ export default {
         },
         limit: {
             type: Number,
-            default: 20
+            default: 10
         },
         filter_param: {
             type: String,
@@ -69,6 +71,9 @@ export default {
         }
     },
     watch: {
+        'filter.value': function() {
+            this.getList();
+        },
         'selection.id': function() {
             this.$emit("selection", this.selection.id)
         }
@@ -117,7 +122,8 @@ export default {
     },
     components: {
         None,
-        Loading
+        Loading,
+        BasicSelection
     }
 }
 </script>
