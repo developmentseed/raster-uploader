@@ -22,6 +22,9 @@
         },
         "source_id": {
             "$ref": "./collections/source_id.json"
+        },
+        "config": {
+            "$ref": "./collections/config.json"
         }
     },
     "required": [
@@ -31,6 +34,7 @@
         "name",
         "created",
         "updated",
-        "source_id"
+        "source_id",
+        "config"
     ]
 }

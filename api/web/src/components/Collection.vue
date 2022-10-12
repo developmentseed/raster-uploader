@@ -71,7 +71,7 @@
                 <template v-if='$route.params.collectionid'>
                     <label class='ml12'>Upload Config:</label>
 
-                    <div class='pre col col--12'>TODO</div>
+                    <div class='pre col col--12' v-text='collection.config'></div>
                 </template>
                 <template v-else>
                     <Selection
@@ -83,14 +83,12 @@
                     />
                 </template>
 
-                <template v-if='steps.upload_steps.length > 0'>
-                    <div class='border border--gray-light round mb12 col col--12'>
-                        <UploadedGraph
-                            :steps='steps'
-                            @steps='linear = $event'
-                        />
-                    </div>
-                </template>
+                <div v-if='upload_id' class='border border--gray-light round mb12 ml12 col col--12'>
+                    <UploadedGraph
+                        :steps='steps'
+                        @steps='linear = $event'
+                    />
+                </div>
 
                 <div class='col col--12 py12'>
                     <template v-if='$route.params.collectionid'>
@@ -192,13 +190,17 @@ export default {
                 name: '',
                 cron: '1 12 ? * MON-FRI *',
                 source_id: null,
-                paused: false
+                paused: false,
+                config: {}
             }
         };
     },
     watch: {
         'collection.cron': function() {
             this.setHuman()
+        },
+        upload_id: function() {
+            this.getUploadSteps();
         }
     },
     methods: {
@@ -226,6 +228,13 @@ export default {
             if (!source_id) return;
             try {
                 this.source = await window.std(`/api/source/${source_id}`);
+            } catch (err) {
+                this.$emit('err', err);
+            }
+        },
+        getUploadSteps: async function() {
+            try {
+                this.steps = await window.std(`/api/upload/${this.upload_id}/step`);
             } catch (err) {
                 this.$emit('err', err);
             }
@@ -272,6 +281,7 @@ export default {
 
             if (!this.$route.params.collectionid) {
                 body.source_id = this.collection.source_id;
+                body.config = this.collection.config;
             }
 
             try {
