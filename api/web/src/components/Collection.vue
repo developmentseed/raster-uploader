@@ -72,12 +72,51 @@
                     </template>
                     <template v-else>
                         <Selection
+                            key='sources'
                             :create='true'
                             @create='modal.source=true'
                             :selections='sources.upload_sources'
                             @selection='collection.source_id = $event'
                         />
                     </template>
+                </template>
+
+                <template v-if='$route.params.collectionid'>
+                    <label class='ml12'>Upload Config:</label>
+
+                    <div class='pre col col--12'>TODO</div>
+                </template>
+                <template v-else>
+                    <template v-if='loading.uploads'>
+                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
+                            <Loading desc='Loading Uploads'/>
+                        </div>
+                    </template>
+                    <template v-else-if='sources.total === 0'>
+                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
+                            <None
+                                name='Uploads'
+                                :create='false'
+                            />
+                        </div>
+                    </template>
+                    <template v-else>
+                        <Selection
+                            key='uploads'
+                            :create='false'
+                            :selections='uploads.uploads'
+                            @selection='upload_id = $event'
+                        />
+                    </template>
+                </template>
+
+                <template v-if='steps.upload_steps.length > 0'>
+                    <div class='border border--gray-light round mb12 col col--12'>
+                        <UploadedGraph
+                            :steps='steps'
+                            @steps='linear = $event'
+                        />
+                    </div>
                 </template>
 
                 <div class='col col--12 py12'>
@@ -100,17 +139,17 @@
                 </div>
 
                 <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
-                    <template v-if='loading.uploads'>
+                    <template v-if='loading.collection_uploads'>
                         <Loading desc='Loading Uploads'/>
                     </template>
                     <template v-if='loading.trigger'>
                         <Loading desc='Triggering Collection Run'/>
                     </template>
-                    <template v-else-if='uploads.total === 0'>
+                    <template v-else-if='collection_uploads.total === 0'>
                         <None name='Uploads'/>
                     </template>
                     <template v-else>
-                        <div :key='upload.id' v-for='upload in uploads.uploads' class='col col--12'>
+                        <div :key='upload.id' v-for='upload in collection_uploads.uploads' class='col col--12'>
                             <UploadItem :upload='upload'/>
                         </div>
                     </template>
@@ -133,6 +172,7 @@ import Selection from './util/Selection.vue';
 import None from './util/None.vue';
 import Modal from './util/Modal.vue';
 import UploadSource from './Source.vue';
+import UploadedGraph from './uploaded/Graph.vue';
 import cron from 'cronstrue';
 
 export default {
@@ -143,17 +183,19 @@ export default {
             this.getSource(this.collection.source_id);
             this.setHuman();
 
-            this.getUploads();
+            this.getCollectionUploads();
         } else {
             this.setHuman();
         }
 
+        this.getUploads();
         this.getSources();
     },
     data: function() {
         return {
             loading: {
                 collection: false,
+                collection_uploads: true,
                 uploads: true,
                 sources: true,
                 trigger: false
@@ -169,7 +211,16 @@ export default {
                 total: 0,
                 uploads: []
             },
+            collection_uploads: {
+                total: 0,
+                uploads: []
+            },
+            steps: {
+                total: 0,
+                upload_steps: []
+            },
             source: {},
+            upload_id: false,
             collection: {
                 name: '',
                 cron: '1 12 ? * MON-FRI *',
@@ -227,11 +278,20 @@ export default {
         getUploads: async function() {
             try {
                 this.loading.uploads = true;
-                this.uploads = await window.std(`/api/upload?collection=${this.$route.params.collectionid}`);
+                this.uploads = await window.std(`/api/upload`);
             } catch (err) {
                 this.$emit('err', err);
             }
             this.loading.uploads = false;
+        },
+        getCollectionUploads: async function() {
+            try {
+                this.loading.collection_uploads = true;
+                this.collection_uploads = await window.std(`/api/upload?collection=${this.$route.params.collectionid}`);
+            } catch (err) {
+                this.$emit('err', err);
+            }
+            this.loading.collection_uploads = false;
         },
         getCollection: async function() {
             try {
@@ -287,6 +347,7 @@ export default {
     components: {
         None,
         UploadSource,
+        UploadedGraph,
         Modal,
         Loading,
         UploadItem,
