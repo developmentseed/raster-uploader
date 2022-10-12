@@ -1,7 +1,7 @@
 <template>
     <div class='col col--12'>
         <div class='col col--12 clearfix py6'>
-            <RasterMenu item='Sources'/>
+            Sources
 
             <div class='fr'>
                 <button @click='showSearch = !showSearch' class='btn round btn--stroke color-gray color-blue-on-hover mr12'>
@@ -15,7 +15,9 @@
                 </button>
             </div>
         </div>
-        <div class='border border--gray-light round mb60'>
+        <div class='border border--gray-light round mb60 relative'>
+            <RasterMenu/>
+
             <template v-if='showSearch'>
                 <div class='col col--12 px24 py6'>
                     <div class='relative'>

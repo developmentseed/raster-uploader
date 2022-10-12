@@ -56,28 +56,38 @@
                     </div>
                 </template>
                 <template v-else>
-                    <template v-if='loading.sources'>
-                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
-                            <Loading desc='Loading Upload Sources'/>
-                        </div>
-                    </template>
-                    <template v-else-if='sources.total === 0'>
-                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
-                            <None
-                                name='Upload Sources'
-                                :create='true'
-                                @create='modal.source=true'
-                            />
-                        </div>
-                    </template>
-                    <template v-else>
-                        <Selection
-                            :create='true'
-                            @create='modal.source=true'
-                            :selections='sources.upload_sources'
-                            @selection='collection.source_id = $event'
+                    <Selection
+                        key='upload_sources'
+                        :create='true'
+                        filter_param='filter'
+                        @create='modal.source=true'
+                        :url='source_url'
+                        @selection='collection.source_id = $event'
+                    />
+                </template>
+
+                <template v-if='$route.params.collectionid'>
+                    <label class='ml12'>Upload Config:</label>
+
+                    <div class='pre col col--12'>TODO</div>
+                </template>
+                <template v-else>
+                    <Selection
+                        key='uploads'
+                        :create='false'
+                        filter_param='filter'
+                        :url='upload_url'
+                        @selection='upload_id = $event'
+                    />
+                </template>
+
+                <template v-if='steps.upload_steps.length > 0'>
+                    <div class='border border--gray-light round mb12 col col--12'>
+                        <UploadedGraph
+                            :steps='steps'
+                            @steps='linear = $event'
                         />
-                    </template>
+                    </div>
                 </template>
 
                 <div class='col col--12 py12'>
@@ -100,17 +110,17 @@
                 </div>
 
                 <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
-                    <template v-if='loading.uploads'>
+                    <template v-if='loading.collection_uploads'>
                         <Loading desc='Loading Uploads'/>
                     </template>
                     <template v-if='loading.trigger'>
                         <Loading desc='Triggering Collection Run'/>
                     </template>
-                    <template v-else-if='uploads.total === 0'>
+                    <template v-else-if='collection_uploads.total === 0'>
                         <None name='Uploads'/>
                     </template>
                     <template v-else>
-                        <div :key='upload.id' v-for='upload in uploads.uploads' class='col col--12'>
+                        <div :key='upload.id' v-for='upload in collection_uploads.uploads' class='col col--12'>
                             <UploadItem :upload='upload'/>
                         </div>
                     </template>
@@ -133,6 +143,7 @@ import Selection from './util/Selection.vue';
 import None from './util/None.vue';
 import Modal from './util/Modal.vue';
 import UploadSource from './Source.vue';
+import UploadedGraph from './uploaded/Graph.vue';
 import cron from 'cronstrue';
 
 export default {
@@ -143,19 +154,18 @@ export default {
             this.getSource(this.collection.source_id);
             this.setHuman();
 
-            this.getUploads();
+            this.getCollectionUploads();
         } else {
             this.setHuman();
         }
-
-        this.getSources();
     },
     data: function() {
         return {
+            source_url: new URL("/api/source", window.api),
+            upload_url: new URL("/api/upload", window.api),
             loading: {
                 collection: false,
-                uploads: true,
-                sources: true,
+                collection_uploads: true,
                 trigger: false
             },
             human: '',
@@ -165,11 +175,16 @@ export default {
             modal: {
                 source: false
             },
-            uploads: {
+            collection_uploads: {
                 total: 0,
                 uploads: []
             },
+            steps: {
+                total: 0,
+                upload_steps: []
+            },
             source: {},
+            upload_id: false,
             collection: {
                 name: '',
                 cron: '1 12 ? * MON-FRI *',
@@ -179,9 +194,6 @@ export default {
         };
     },
     watch: {
-        'modal.source': function() {
-            if (this.modal.source === false) this.getSources();
-        },
         'collection.cron': function() {
             this.setHuman()
         }
@@ -215,23 +227,14 @@ export default {
                 this.$emit('err', err);
             }
         },
-        getSources: async function() {
+        getCollectionUploads: async function() {
             try {
-                this.loading.sources = true;
-                this.sources = await window.std(`/api/source`);
+                this.loading.collection_uploads = true;
+                this.collection_uploads = await window.std(`/api/upload?collection=${this.$route.params.collectionid}`);
             } catch (err) {
                 this.$emit('err', err);
             }
-            this.loading.sources = false;
-        },
-        getUploads: async function() {
-            try {
-                this.loading.uploads = true;
-                this.uploads = await window.std(`/api/upload?collection=${this.$route.params.collectionid}`);
-            } catch (err) {
-                this.$emit('err', err);
-            }
-            this.loading.uploads = false;
+            this.loading.collection_uploads = false;
         },
         getCollection: async function() {
             try {
@@ -287,6 +290,7 @@ export default {
     components: {
         None,
         UploadSource,
+        UploadedGraph,
         Modal,
         Loading,
         UploadItem,
