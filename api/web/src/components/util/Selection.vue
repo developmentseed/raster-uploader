@@ -6,7 +6,7 @@
     <template v-if='total === 0'>
         <div class='col col--12 ml12 mt12 border border--gray-light round'>
             <None
-                name='Upload Sources'
+                :name='name'
                 :create='create'
                 @create='$emit("create", $event)'
             />
@@ -19,6 +19,10 @@
 
             <button v-if='create' @click='$emit("create")' class='btn round btn--stroke btn--s mb3 color-gray color-green-on-hover fr'>
                 <svg class='icon'><use href='#icon-plus'/></svg>
+            </button>
+
+            <button v-if='filter_param' @click='filter.shown = !filter.shown' class='btn round btn--stroke btn--s mb3 color-gray color-green-on-hover fr'>
+                <svg class='icon'><use href='#icon-search'/></svg>
             </button>
         </div>
         <div class='col col--12 grid border border--gray-light round'>
@@ -47,9 +51,17 @@ export default {
     name: 'selection',
     props: {
         url: URL,
+        name: {
+            type: String,
+            default: 'Selections'
+        },
         limit: {
             type: Number,
             default: 20
+        },
+        filter_param: {
+            type: String,
+            default: ''
         },
         create: {
             type: Boolean,
@@ -64,6 +76,10 @@ export default {
     data: function() {
         return {
             loading: false,
+            filter: {
+                shown: false,
+                value: ''
+            },
             selection: {
                 id: null
             },
@@ -80,8 +96,14 @@ export default {
         async getList() {
             this.loading = true;
 
+            this.url.searchParams.set('limit', this.limit);
+            if (this.filter_param) {
+                this.url.searchParams.set(this.filter_param, this.filter.value);
+            } else {
+                this.url.searchParams.delete(this.filter_param);
+            }
+
             try {
-                this.url.searchParams.set('limit', this.limit);
                 const list = await window.std(this.url);
 
                 this.total = list.total;
