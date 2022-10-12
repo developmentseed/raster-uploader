@@ -56,29 +56,13 @@
                     </div>
                 </template>
                 <template v-else>
-                    <template v-if='loading.sources'>
-                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
-                            <Loading desc='Loading Upload Sources'/>
-                        </div>
-                    </template>
-                    <template v-else-if='sources.total === 0'>
-                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
-                            <None
-                                name='Upload Sources'
-                                :create='true'
-                                @create='modal.source=true'
-                            />
-                        </div>
-                    </template>
-                    <template v-else>
-                        <Selection
-                            key='sources'
-                            :create='true'
-                            @create='modal.source=true'
-                            :selections='sources.upload_sources'
-                            @selection='collection.source_id = $event'
-                        />
-                    </template>
+                    <Selection
+                        key='upload_sources'
+                        :create='true'
+                        @create='modal.source=true'
+                        :url='source_url'
+                        @selection='collection.source_id = $event'
+                    />
                 </template>
 
                 <template v-if='$route.params.collectionid'>
@@ -87,27 +71,12 @@
                     <div class='pre col col--12'>TODO</div>
                 </template>
                 <template v-else>
-                    <template v-if='loading.uploads'>
-                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
-                            <Loading desc='Loading Uploads'/>
-                        </div>
-                    </template>
-                    <template v-else-if='sources.total === 0'>
-                        <div class='col col--12 ml12 mt12 border border--gray-light round'>
-                            <None
-                                name='Uploads'
-                                :create='false'
-                            />
-                        </div>
-                    </template>
-                    <template v-else>
-                        <Selection
-                            key='uploads'
-                            :create='false'
-                            :selections='uploads.uploads'
-                            @selection='upload_id = $event'
-                        />
-                    </template>
+                    <Selection
+                        key='uploads'
+                        :create='false'
+                        :url='upload_url'
+                        @selection='upload_id = $event'
+                    />
                 </template>
 
                 <template v-if='steps.upload_steps.length > 0'>
@@ -187,17 +156,14 @@ export default {
         } else {
             this.setHuman();
         }
-
-        this.getUploads();
-        this.getSources();
     },
     data: function() {
         return {
+            source_url: new URL("/api/source", window.api),
+            upload_url: new URL("/api/upload", window.api),
             loading: {
                 collection: false,
                 collection_uploads: true,
-                uploads: true,
-                sources: true,
                 trigger: false
             },
             human: '',
@@ -206,10 +172,6 @@ export default {
             },
             modal: {
                 source: false
-            },
-            uploads: {
-                total: 0,
-                uploads: []
             },
             collection_uploads: {
                 total: 0,
@@ -265,24 +227,6 @@ export default {
             } catch (err) {
                 this.$emit('err', err);
             }
-        },
-        getSources: async function() {
-            try {
-                this.loading.sources = true;
-                this.sources = await window.std(`/api/source`);
-            } catch (err) {
-                this.$emit('err', err);
-            }
-            this.loading.sources = false;
-        },
-        getUploads: async function() {
-            try {
-                this.loading.uploads = true;
-                this.uploads = await window.std(`/api/upload`);
-            } catch (err) {
-                this.$emit('err', err);
-            }
-            this.loading.uploads = false;
         },
         getCollectionUploads: async function() {
             try {
