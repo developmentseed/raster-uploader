@@ -1,7 +1,7 @@
 <template>
 <div class='col col--12 grid my12'>
     <div class='col col--12'>
-        <span v-text='"select from the following:"'/>
+        <span>Select from the following:</span>
 
         <button v-if='create' @click='$emit("create")' class='btn round btn--stroke btn--s mb3 color-gray color-green-on-hover fr mx3'>
             <svg class='icon'><use href='#icon-plus'/></svg>
@@ -88,9 +88,7 @@ export default {
                 shown: false,
                 value: ''
             },
-            selection: {
-                id: null
-            },
+            selection: false,
             total: 0,
             selections: []
         };

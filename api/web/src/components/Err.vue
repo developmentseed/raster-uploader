@@ -1,29 +1,36 @@
 <template>
-    <div class='z2 fixed top right bottom left scroll-auto bg-darken50'>
-        <div class='flex flex--center-main pt36'>
-            <div class='flex-child bg-white round relative w600'>
-                <button @click='$emit("err", false)' class='absolute top right px12 py12'>
-                    <svg class='icon link color-darken50'><use xlink:href='#icon-close'></use></svg>
-                </button>
-
-                <div class='flex flex--center-main'>
-                    <div class='flex-child pt12'>
-                        <svg class='icon h60 w60 color-gray'><use href='#icon-alert'/></svg>
-                    </div>
-                </div>
-
-                <div class='txt-l mb12 align-center'>Uh Oh!</div>
-                <div class='txt-m align-center' v-text='err.message'></div>
-
-                <button @click='$emit("err", false)' class='fr mb12 mr12 btn round btn--gray btn--stroke'>Ok</button>
+    <Modal>
+        <div class='col col--12 flex flex--center-main'>
+            <div class='pt12'>
+                <svg class='icon h60 w60 color-gray'><use href='#icon-alert'/></svg>
             </div>
         </div>
-    </div>
+
+        <div class='col col--12 txt-l mb12 align-center'>Uh Oh!</div>
+        <div class='col col--12 txt-m align-center my12' v-text='err.message'></div>
+
+        <div v-if='err.body' class='col col--12 pre pb12 h400' v-text='err.body'></div>
+
+        <div class='col col--12 mt12'>
+            <a href='mailto:info@climbseneca.com'   class='fl btn btn--stroke btn--gray round'>Contact Us</a>
+            <button @click='close' class='fr btn btn--stroke btn--gray round'>Ok</button>
+        </div>
+    </Modal>
 </template>
 
 <script>
+import Modal from './util/Modal.vue';
+
 export default {
     name: 'Err',
-    props: ['err']
+    props: ['err'],
+    methods: {
+        close: function() {
+            this.$emit('close');
+        }
+    },
+    components: {
+        Modal
+    }
 }
 </script>

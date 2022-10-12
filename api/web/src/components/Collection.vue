@@ -194,9 +194,6 @@ export default {
         };
     },
     watch: {
-        'modal.source': function() {
-            if (this.modal.source === false) this.getSources();
-        },
         'collection.cron': function() {
             this.setHuman()
         }
