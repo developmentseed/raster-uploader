@@ -55,7 +55,7 @@
         <Err
             v-if='err'
             :err='err'
-            @err='err = $event'
+            @close='err = $event'
         />
     </div>
 </template>
