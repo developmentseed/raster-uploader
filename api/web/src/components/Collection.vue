@@ -71,7 +71,7 @@
                 <template v-if='$route.params.collectionid'>
                     <label class='ml12'>Upload Config:</label>
 
-                    <div class='pre col col--12' v-text='collection.config'></div>
+                    <div class='ml12 pre col col--12' v-text='collection.config'></div>
                 </template>
                 <template v-else>
                     <Selection
@@ -83,7 +83,7 @@
                     />
                 </template>
 
-                <div v-if='upload_id' class='border border--gray-light round mb12 ml12 col col--12'>
+                <div v-if='upload_id && steps.total' class='border border--gray-light round mb12 ml12 col col--12'>
                     <UploadedGraph
                         :steps='steps'
                         @steps='linear = $event'
