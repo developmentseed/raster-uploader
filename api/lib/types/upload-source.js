@@ -39,7 +39,8 @@ export default class UploadSource extends Generic {
                 FROM
                     upload_sources
                 WHERE
-                    uid = ${query.uid}
+                    name ~ ${query.filter}
+                    AND uid = ${query.uid}
                 ORDER BY
                     id ASC
                 LIMIT
