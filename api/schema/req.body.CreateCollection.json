@@ -5,11 +5,15 @@
         "name",
         "cron",
         "paused",
-        "source_id"
+        "source_id",
+        "config"
     ],
     "properties": {
         "name": {
             "type": "string"
+        },
+        "config": {
+            "type": "object"
         },
         "cron": {
             "type": "string"

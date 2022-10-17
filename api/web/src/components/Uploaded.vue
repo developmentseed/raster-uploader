@@ -8,7 +8,7 @@
     </template>
     <template v-else>
         <div class='col col--12 clearfix py6'>
-            <h2 class='fl cursor-default'>
+            <h2 class='fl cursor-default color-white'>
                 <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/")'>Uploads</span>
                 &gt;
                 <span v-text='upload.id'></span>
@@ -17,28 +17,29 @@
             <div class='fr'>
                 <button @click='upload.starred = !upload.starred' class='mx6 btn btn--stroke round' :class='{
                     "color-blue": upload.starred,
-                    "color-gray-light": !upload.starred,
-                    "color-gray-on-hover": !upload.starred
+                    "color-white": !upload.starred
                 }'>
                     <svg class='icon'><use href='#icon-star'/></svg>
                 </button>
 
-                <button @click='deleteUpload' class='btn round btn--stroke color-gray color-red-on-hover'>
+                <button @click='deleteUpload' class='btn round btn--stroke color-white color-red-on-hover'>
                     <svg class='icon'><use href='#icon-trash'/></svg>
                 </button>
             </div>
         </div>
 
-        <template v-if='steps.upload_steps.length > 0'>
-            <div class='border border--gray-light round mb12 col col--12'>
-                <UploadedGraph
-                    :steps='steps'
-                    @steps='linear = $event'
-                />
-            </div>
-        </template>
+        <div class='border border--gray-light round col col--12 bg-white relative'>
+            <RasterMenu/>
 
-        <div class='border border--gray-light round mb60 col col--12'>
+            <template v-if='steps.upload_steps.length > 0'>
+                <div class='border border--gray-light round mb12 col col--12 bg-white'>
+                    <UploadedGraph
+                        :steps='steps'
+                        @steps='linear = $event'
+                    />
+                </div>
+            </template>
+
             <StepInitial
                 :upload=upload
                 :open='!linear.length'
@@ -107,6 +108,7 @@
 
 <script>
 import Loading from './util/Loading.vue';
+import RasterMenu from './util/Menu.vue';
 import UploadedGraph from './uploaded/Graph.vue';
 import StepSelection from './steps/Selection.vue';
 import StepText from './steps/Text.vue';
@@ -252,6 +254,7 @@ export default {
     },
     components: {
         Loading,
+        RasterMenu,
         UploadedGraph,
         StepSelection,
         StepText,

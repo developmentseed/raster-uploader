@@ -9,7 +9,7 @@
             </div>
 
             <div class='col col--12 flex flex--center-main'>
-                <div class='w240 col col--12 grid grid--gut12'>
+                <div class='w240 col col--12 grid'>
                     <label class='mt12 col col--12'>
                         Username:
                         <span @click='$router.push("/login/register")' class='txt-underline-on-hover fr cursor-pointer'>Need an Account?</span>

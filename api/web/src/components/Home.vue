@@ -1,27 +1,27 @@
 <template>
     <div class='col col--12'>
         <div class='col col--12 clearfix py6 relative'>
-            Uploads
+            <span class='color-white'>Uploads</span>
 
-            <div class='fr'>
+            <div class='fr color-white'>
                 <label class='switch-container px6'>
                     <span class='mr6'>Archived</span>
                     <input v-model='archived' type='checkbox' />
                     <div class='switch'></div>
                 </label>
 
-                <button @click='showSearch = !showSearch' class='btn round btn--stroke color-gray color-blue-on-hover mr12'>
+                <button @click='showSearch = !showSearch' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
                     <svg class='icon'><use href='#icon-search'/></svg>
                 </button>
-                <button @click='refresh' class='btn round btn--stroke color-gray color-blue-on-hover mr12'>
+                <button @click='refresh' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
                     <svg class='icon'><use href='#icon-refresh'/></svg>
                 </button>
-                <button @click='$router.push({ name: "newupload" })' class='btn round btn--stroke color-gray color-green-on-hover'>
+                <button @click='$router.push({ name: "newupload" })' class='btn color-white round btn--stroke color-green-on-hover'>
                     <svg class='icon'><use href='#icon-plus'/></svg>
                 </button>
             </div>
         </div>
-        <div class='border border--gray-light round mb60 relative'>
+        <div class='round relative bg-white pb12'>
             <RasterMenu/>
 
             <template v-if='showSearch'>

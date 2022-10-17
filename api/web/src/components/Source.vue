@@ -1,22 +1,24 @@
 <template>
     <div class="col col--12">
         <div class='col col--12 clearfix py6'>
-            <h2 class='fl cursor-default'>
+            <h2 class='fl cursor-default color-white'>
                 <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/source")'>Sources</span>
                 &gt;
                 <span v-if='$route.params.sourceid' v-text='source.id'/>
                 <span v-else>New</span>
             </h2>
 
-            <button v-if='!modal' @click='$router.go(-1)' class='btn fr round btn--stroke color-gray color-black-on-hover'>
+            <button v-if='!modal' @click='$router.go(-1)' class='btn fr round btn--stroke color-white color-black-on-hover'>
                 <svg class='icon'><use href='#icon-close'/></svg>
             </button>
 
-            <button v-if='$route.params.sourceid' @click='deleteSource' class='mr12 btn fr round btn--stroke color-gray color-red-on-hover'>
+            <button v-if='$route.params.sourceid' @click='deleteSource' class='mr12 btn fr round btn--stroke color-white color-red-on-hover'>
                 <svg class='icon'><use href='#icon-trash'/></svg>
             </button>
         </div>
-        <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
+        <div class='bg-white round col col--12 px12 py12 clearfix relative'>
+            <RasterMenu/>
+
             <template v-if='loading'>
                 <Loading desc='Loading Source'/>
             </template>
@@ -132,6 +134,7 @@
 <script>
 import InputError from './util/InputError.vue';
 import Loading from './util/Loading.vue';
+import RasterMenu from './util/Menu.vue';
 
 export default {
     name: 'UploadSource',
@@ -247,6 +250,7 @@ export default {
     },
     components: {
         InputError,
+        RasterMenu,
         Loading
     }
 }

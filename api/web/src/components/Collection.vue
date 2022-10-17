@@ -1,6 +1,6 @@
 <template>
 <div class="col col--12">
-    <div class='col col--12 clearfix py6'>
+    <div class='col col--12 clearfix py6 color-white'>
         <h2 class='fl cursor-default'>
             <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/collection")'>Collections</span>
             &gt;
@@ -9,11 +9,11 @@
         </h2>
 
         <div class='fr'>
-            <button v-if='$route.params.collectionid' @click='deleteCollection' class='mr12 btn round btn--stroke color-gray color-red-on-hover'>
+            <button v-if='$route.params.collectionid' @click='deleteCollection' class='mr12 btn round btn--stroke color-white color-red-on-hover'>
                 <svg class='icon'><use href='#icon-trash'/></svg>
             </button>
 
-            <button @click='$router.go(-1)' class='btn round btn--stroke color-gray color-black-on-hover'>
+            <button @click='$router.go(-1)' class='btn round btn--stroke color-white color-black-on-hover'>
                 <svg class='icon'><use href='#icon-close'/></svg>
             </button>
 
@@ -26,7 +26,9 @@
             </div>
         </div>
     </div>
-    <div class='border border--gray-light round col col--12 px12 py12 clearfix'>
+    <div class='round col col--12 px12 py12 clearfix relative bg-white'>
+        <RasterMenu/>
+
         <template v-if='loading.collection'>
             <Loading desc='Loading Collection'/>
         </template>
@@ -69,7 +71,7 @@
                 <template v-if='$route.params.collectionid'>
                     <label class='ml12'>Upload Config:</label>
 
-                    <div class='pre col col--12'>TODO</div>
+                    <div class='ml12 pre col col--12' v-text='collection.config'></div>
                 </template>
                 <template v-else>
                     <Selection
@@ -81,14 +83,12 @@
                     />
                 </template>
 
-                <template v-if='steps.upload_steps.length > 0'>
-                    <div class='border border--gray-light round mb12 col col--12'>
-                        <UploadedGraph
-                            :steps='steps'
-                            @steps='linear = $event'
-                        />
-                    </div>
-                </template>
+                <div v-if='upload_id && steps.total' class='border border--gray-light round mb12 ml12 col col--12'>
+                    <UploadedGraph
+                        :steps='steps'
+                        @steps='linear = $event'
+                    />
+                </div>
 
                 <div class='col col--12 py12'>
                     <template v-if='$route.params.collectionid'>
@@ -137,6 +137,7 @@
 
 <script>
 import Loading from './util/Loading.vue';
+import RasterMenu from './util/Menu.vue';
 import UploadItem from './util/UploadItem.vue';
 import InputError from './util/InputError.vue';
 import Selection from './util/Selection.vue';
@@ -179,6 +180,7 @@ export default {
                 total: 0,
                 uploads: []
             },
+            linear: [],
             steps: {
                 total: 0,
                 upload_steps: []
@@ -189,13 +191,24 @@ export default {
                 name: '',
                 cron: '1 12 ? * MON-FRI *',
                 source_id: null,
-                paused: false
+                paused: false,
+                config: {}
             }
         };
     },
     watch: {
         'collection.cron': function() {
             this.setHuman()
+        },
+        upload_id: function() {
+            this.getUploadSteps();
+        },
+        linear: function() {
+            if (!this.linear.length) this.collection.config = {};
+
+            const config = JSON.parse(JSON.stringify(this.linear[this.linear.length - 1].config));
+            delete config.upload;
+            this.collection.config = config;
         }
     },
     methods: {
@@ -223,6 +236,13 @@ export default {
             if (!source_id) return;
             try {
                 this.source = await window.std(`/api/source/${source_id}`);
+            } catch (err) {
+                this.$emit('err', err);
+            }
+        },
+        getUploadSteps: async function() {
+            try {
+                this.steps = await window.std(`/api/upload/${this.upload_id}/step`);
             } catch (err) {
                 this.$emit('err', err);
             }
@@ -269,6 +289,7 @@ export default {
 
             if (!this.$route.params.collectionid) {
                 body.source_id = this.collection.source_id;
+                body.config = this.collection.config;
             }
 
             try {
@@ -295,7 +316,8 @@ export default {
         Loading,
         UploadItem,
         InputError,
-        Selection
+        Selection,
+        RasterMenu
     }
 }
 </script>
