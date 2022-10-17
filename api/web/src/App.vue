@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class='hmin-full flex flex--center-main pb60 color-bg-dark'>
+    <div id="app" class='hmin-full flex flex--center-main pb60 custom-bg-dark'>
         <div class='flex-child wmax600 col col--12'>
             <div class='py36 col col--12 grid'>
                 <div class='col col--4'></div>
@@ -143,9 +143,15 @@ export default {
 
 <style lang="scss">
 
-.color-bg-dark { background-color: #0c1821; }
-.color-bg { background-color: #1b2a41; }
-.color-bg-light { background-color: #324a5f; }
+.custom-bg-dark { background-color: #0c1821; }
+.custom-bg { background-color: #1b2a41; }
+.custom-bg-light { background-color: #324a5f; }
+.custom-color-dark { color: #0c1821; }
+.custom-color { color: #1b2a41; }
+.custom-color-light { color: #324a5f; }
+.custom-border-dark { border-color: #0c1821; }
+.custom-border { border-color: #1b2a41; }
+.custom-border-light { border-color: #324a5f; }
 
 .col--1 { width: 8.3333% !important; }
 .col--2 { width: 16.6666% !important; }
