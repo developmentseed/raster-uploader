@@ -205,7 +205,10 @@ export default {
         },
         linear: function() {
             if (!this.linear.length) this.collection.config = {};
-            this.collection.config = this.linear[this.linear.length - 1];
+
+            const config = JSON.parse(JSON.stringify(this.linear[this.linear.length - 1].config));
+            delete config.upload;
+            this.collection.config = config;
         }
     },
     methods: {
