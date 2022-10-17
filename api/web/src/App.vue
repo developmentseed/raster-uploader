@@ -7,24 +7,20 @@
                     <h1 @click='$router.push({ path: "/" })' class='align-center txt-h3 cursor-default txt-underline-on-hover cursor-pointer color-white'>Raster Uploader</h1>
                 </div>
                 <div v-if='!loading.user && $route.path !== "/login"' class='col col--4'>
-                    <button v-if='user.username' @click='$router.push({ path: "/profile" })' class='color-white dropdown btn fr mr6 mb6 pb3 round btn--stroke color-blue-on-hover'>
+                    <button v-if='user.username' @click='$router.push({ path: "/profile" })' class='color-white dropdown btn fr mr3 mb3 pb3 round btn--stroke color-blue-on-hover'>
+                        <svg class='icon inline'><use href='#icon-user'/></svg>
                         <svg class='icon inline'><use href='#icon-chevron-down'/></svg>
-                        <span v-text='user.username'/>
 
-                        <div class='round dropdown-content color-black' style='top: 24px;'>
-                            <div @click.stop='$router.push({ path: "/profile" })' class='round bg-gray-faint-on-hover'>Profile</div>
-                            <div v-if='user.access === "admin"' @click.stop='$router.push({ path: "/admin" })' class='round bg-gray-faint-on-hover'>Admin</div>
-                            <div @click.stop='getLogout' class='round bg-gray-faint-on-hover'>Logout</div>
+                        <div class='round dropdown-content color-black' style='top: 30px; width: 80px; left: -12px;'>
+                            <div @click.stop='external("/docs")' class='w-full bg-gray-light-on-hover round-t'>API Docs</div>
+                            <div @click.stop='$router.push({ path: "/profile" })' class='w-full bg-gray-light-on-hover'>Profile</div>
+                            <div v-if='user.access === "admin"' @click.stop='$router.push({ path: "/admin" })' class='w-full bg-gray-light-on-hover'>Admin</div>
+                            <div @click.stop='getLogout' class='w-full bg-gray-light-on-hover round-b'>Logout</div>
                         </div>
                     </button>
                     <button v-else @click='$router.push({ path: "/login" })' class='btn color-white fr mr6 mb6 pb3 round btn--stroke color-green-on-hover'>
                         Login
                     </button>
-
-                    <button @click='external("/docs/")' class='btn color-white btn--stroke round fr mr12' style='height: 33px;'>
-                        <svg class='icon'><use href='#icon-book'/></svg>
-                    </button>
-
                 </div>
             </div>
             <template v-if='loading.meta || loading.user'>
@@ -189,7 +185,6 @@ export default {
     position: absolute;
     background-color: #f9f9f9;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    padding: 6px 12px;
     z-index: 1;
 }
 
