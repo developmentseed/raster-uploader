@@ -38,7 +38,7 @@
             </div>
         </template>
 
-        <div class='border border--gray-light round mb60 col col--12'>
+        <div class='border border--gray-light round col col--12'>
             <StepInitial
                 :upload=upload
                 :open='!linear.length'

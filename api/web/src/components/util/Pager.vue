@@ -4,7 +4,7 @@
             <template v-if='parseInt(total) <= parseInt(perpage)'>
                 <button
                     @click='page(0)'
-                    class='btn btn--s round'
+                    class='btn btn--s round color-bg'
                 >
                     <svg class='fl icon' style='margin-top: 4px;'><use xlink:href='#icon-home'/></svg>
                     Home
@@ -13,7 +13,7 @@
             <template v-else>
                 <button
                     @click='page(0)'
-                    class='btn btn--s btn--pill btn--pill-hl'
+                    class='btn btn--s btn--pill btn--pill-hl color-bg'
                     :class='{ "btn--stroke": current !== 0 }'
                 >
                     <svg class='fl icon' style='margin-top: 4px;'><use xlink:href='#icon-home'/></svg>
@@ -29,7 +29,7 @@
                         :key=i
                         v-for='i in middle'
                         @click='page(i)'
-                        class='btn btn--s btn--pill btn--pill-hc'
+                        class='btn btn--s btn--pill btn--pill-hc color-bg'
                         v-text='i + 1'
                         :class='{ "btn--stroke": current !== i }'
                     >
@@ -41,7 +41,7 @@
                 </template>
                 <button
                     @click='page(end - 1)'
-                    class='btn btn--s btn--pill btn--pill-hr'
+                    class='btn btn--s btn--pill btn--pill-hr color-bg'
                     v-text='end'
                     :class='{ "btn--stroke": current !== end - 1 }'
                 ></button>

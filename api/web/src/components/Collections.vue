@@ -15,7 +15,7 @@
                 </button>
             </div>
         </div>
-        <div class='border border--gray-light round mb60 relative'>
+        <div class='border border--gray-light round relative'>
             <RasterMenu/>
 
             <template v-if='showSearch'>

@@ -1,13 +1,13 @@
 <template>
-    <div id="app" class='h-full flex flex--center-main bg-blue-dark'>
+    <div id="app" class='hmin-full flex flex--center-main pb60 color-bg-dark'>
         <div class='flex-child wmax600 col col--12'>
             <div class='py36 col col--12 grid'>
                 <div class='col col--4'></div>
                 <div class='col col--4'>
-                    <h1 @click='$router.push({ path: "/" })' class='align-center txt-h3 cursor-default txt-underline-on-hover cursor-pointer'>Raster Uploader</h1>
+                    <h1 @click='$router.push({ path: "/" })' class='align-center txt-h3 cursor-default txt-underline-on-hover cursor-pointer color-white'>Raster Uploader</h1>
                 </div>
                 <div v-if='!loading.user && $route.path !== "/login"' class='col col--4'>
-                    <button v-if='user.username' @click='$router.push({ path: "/profile" })' class='dropdown btn fr mr6 mb6 pb3 round btn--stroke color-gray color-blue-on-hover'>
+                    <button v-if='user.username' @click='$router.push({ path: "/profile" })' class='color-white dropdown btn fr mr6 mb6 pb3 round btn--stroke color-blue-on-hover'>
                         <svg class='icon inline'><use href='#icon-chevron-down'/></svg>
                         <span v-text='user.username'/>
 
@@ -17,11 +17,11 @@
                             <div @click.stop='getLogout' class='round bg-gray-faint-on-hover'>Logout</div>
                         </div>
                     </button>
-                    <button v-else @click='$router.push({ path: "/login" })' class='btn fr mr6 mb6 pb3 round btn--stroke color-gray color-green-on-hover'>
+                    <button v-else @click='$router.push({ path: "/login" })' class='btn color-white fr mr6 mb6 pb3 round btn--stroke color-green-on-hover'>
                         Login
                     </button>
 
-                    <button @click='external("/docs/")' class='btn btn--stroke round color-gray fr mr12' style='height: 33px;'>
+                    <button @click='external("/docs/")' class='btn color-white btn--stroke round fr mr12' style='height: 33px;'>
                         <svg class='icon'><use href='#icon-book'/></svg>
                     </button>
 
@@ -44,6 +44,7 @@
             </template>
             <template v-else>
                 <router-view
+                    class='bg-white round px12 pb12'
                     :user='user'
                     :meta='meta'
                     @err='err = $event'
@@ -145,6 +146,10 @@ export default {
 </script>
 
 <style lang="scss">
+
+.color-bg-dark { background-color: #0c1821; }
+.color-bg { background-color: #1b2a41; }
+.color-bg-light { background-color: #324a5f; }
 
 .col--1 { width: 8.3333% !important; }
 .col--2 { width: 16.6666% !important; }

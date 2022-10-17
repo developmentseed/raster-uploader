@@ -7,7 +7,7 @@
                 <span>New Upload</span>
             </h2>
         </div>
-        <div class='round mb60 col col--12 grid border border--gray-light py12 px12 relative'>
+        <div class='round col col--12 grid border border--gray-light py12 px12 relative'>
             <RasterMenu/>
 
             <UploadSettings
