@@ -1,5 +1,5 @@
 <template>
-    <div class='col col--12 grid pt24'>
+    <div class='col col--12 grid pt12 px12'>
         <div class='col col--12 grid border-b border--gray-light pt24'>
             <div class='col col--12'>
                 <h2 class='txt-h4 ml12 pb12 fl'>

@@ -1,6 +1,6 @@
 <template>
-    <div class='col col--12 grid pt24'>
-        <div class='col col--12 grid border-b border--gray-light pt24'>
+    <div class='col col--12 grid px12'>
+        <div class='col col--12 grid border-b border--gray-light pt12'>
             <div class='col col--12'>
                 <h2 class='txt-h4 ml12 pb12 fl'>
                     <span class='bg-red-faint color-red round inline-block px6 py3 txt-xs txt-bold'>Admin</span>
