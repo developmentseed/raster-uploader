@@ -40,7 +40,7 @@
             </template>
             <template v-else>
                 <router-view
-                    class='bg-white round px12 pb12'
+                    class='px12 pb12'
                     :user='user'
                     :meta='meta'
                     @err='err = $event'

@@ -1,5 +1,5 @@
 <template>
-<div class='w-full'>
+<div class='w-full bg-white'>
     <div class='flex flex--center-main w-full py24'>
         <div class='loading'></div>
     </div>

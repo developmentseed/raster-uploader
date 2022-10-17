@@ -1,21 +1,21 @@
 <template>
     <div class='col col--12'>
-        <div class='col col--12 clearfix py6'>
+        <div class='col col--12 clearfix py6 color-white'>
             Collections
 
             <div class='fr'>
-                <button @click='showSearch = !showSearch' class='btn round btn--stroke color-gray color-blue-on-hover mr12'>
+                <button @click='showSearch = !showSearch' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
                     <svg class='icon'><use href='#icon-search'/></svg>
                 </button>
-                <button @click='refresh' class='btn round btn--stroke color-gray color-blue-on-hover mr12'>
+                <button @click='refresh' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
                     <svg class='icon'><use href='#icon-refresh'/></svg>
                 </button>
-                <button @click='$router.push({ name: "newcollection" })' class='btn round btn--stroke color-gray color-green-on-hover'>
+                <button @click='$router.push({ name: "newcollection" })' class='btn round color-white btn--stroke color-green-on-hover'>
                     <svg class='icon'><use href='#icon-plus'/></svg>
                 </button>
             </div>
         </div>
-        <div class='border border--gray-light round relative'>
+        <div class='round relative bg-white pb12'>
             <RasterMenu/>
 
             <template v-if='showSearch'>

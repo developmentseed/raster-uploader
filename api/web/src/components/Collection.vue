@@ -1,6 +1,6 @@
 <template>
 <div class="col col--12">
-    <div class='col col--12 clearfix py6'>
+    <div class='col col--12 clearfix py6 color-white'>
         <h2 class='fl cursor-default'>
             <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/collection")'>Collections</span>
             &gt;
@@ -9,11 +9,11 @@
         </h2>
 
         <div class='fr'>
-            <button v-if='$route.params.collectionid' @click='deleteCollection' class='mr12 btn round btn--stroke color-gray color-red-on-hover'>
+            <button v-if='$route.params.collectionid' @click='deleteCollection' class='mr12 btn round btn--stroke color-white color-red-on-hover'>
                 <svg class='icon'><use href='#icon-trash'/></svg>
             </button>
 
-            <button @click='$router.go(-1)' class='btn round btn--stroke color-gray color-black-on-hover'>
+            <button @click='$router.go(-1)' class='btn round btn--stroke color-white color-black-on-hover'>
                 <svg class='icon'><use href='#icon-close'/></svg>
             </button>
 
@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    <div class='border border--gray-light round col col--12 px12 py12 clearfix relative'>
+    <div class='round col col--12 px12 py12 clearfix relative bg-white'>
         <RasterMenu/>
 
         <template v-if='loading.collection'>
