@@ -1,5 +1,5 @@
 <template>
-    <div id="app" class='flex flex--center-main'>
+    <div id="app" class='h-full flex flex--center-main bg-blue-dark'>
         <div class='flex-child wmax600 col col--12'>
             <div class='py36 col col--12 grid'>
                 <div class='col col--4'></div>
