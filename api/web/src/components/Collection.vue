@@ -180,6 +180,7 @@ export default {
                 total: 0,
                 uploads: []
             },
+            linear: [],
             steps: {
                 total: 0,
                 upload_steps: []
@@ -201,6 +202,10 @@ export default {
         },
         upload_id: function() {
             this.getUploadSteps();
+        },
+        linear: function() {
+            if (!this.linear.length) this.collection.config = {};
+            this.collection.config = this.linear[this.linear.length - 1];
         }
     },
     methods: {
