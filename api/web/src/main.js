@@ -45,8 +45,11 @@ const router = new VueRouter.createRouter({
 
 window.api = window.location.origin
 
+import StdButton from './components/std/Button.vue';
+
 const app = createApp(App);
 app.config.devtools = true
 app.use(router);
 app.use(FloatingVue);
+app.component('StdButton', StdButton);
 app.mount('#app');

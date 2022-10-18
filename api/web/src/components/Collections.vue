@@ -4,15 +4,9 @@
             Collections
 
             <div class='fr'>
-                <button @click='showSearch = !showSearch' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
-                    <svg class='icon'><use href='#icon-search'/></svg>
-                </button>
-                <button @click='refresh' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
-                    <svg class='icon'><use href='#icon-refresh'/></svg>
-                </button>
-                <button @click='$router.push({ name: "newcollection" })' class='btn round color-white btn--stroke color-green-on-hover'>
-                    <svg class='icon'><use href='#icon-plus'/></svg>
-                </button>
+                <StdButton v-tooltip='"Search Collections"' @click='showSearch = !showSearch' icon='search'/>
+                <StdButton v-tooltip='"Refresh Collections"' @click='refresh' icon='refresh'/>
+                <StdButton v-tooltip='"Create Collection"' @click='$router.push({ name: "newcollection" })' hover='green' icon='plus'/>
             </div>
         </div>
         <div class='round relative bg-white pb12'>
