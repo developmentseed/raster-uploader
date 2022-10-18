@@ -30,3 +30,4 @@ services:
             - DATADIR=/opt/postgres/data
         volumes:
             - ./postgis-data:/opt/postgres/data
+
