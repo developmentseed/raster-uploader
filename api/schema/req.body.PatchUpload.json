@@ -8,6 +8,9 @@
         "status": {
             "$ref": "./util/status.json"
         },
+        "archived": {
+            "type": "boolean"
+        },
         "name": {
             "type": "string"
         },

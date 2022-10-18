@@ -30,9 +30,52 @@ test('GET: api/upload', async (t) => {
     t.end();
 });
 
-test('GET: api/upload/1', async (t) => {
+test('GET: api/upload/1 - uploads not found', async (t) => {
     try {
         const res = await flight.fetch('/api/upload/1', {
+            auth: {
+                bearer: flight.token.ingalls
+            }
+        }, false);
+
+        t.deepEquals(res.body, {
+            status: 404,
+            message: 'uploads not found',
+            messages: []
+        });
+    } catch (err) {
+        t.error(err, 'no error');
+    }
+
+    t.end();
+});
+
+test('DELETE: api/upload/1 - uploads not found', async (t) => {
+    try {
+        const res = await flight.fetch('/api/upload/1', {
+            method: 'DELETE',
+            auth: {
+                bearer: flight.token.ingalls
+            }
+        }, false);
+
+        t.deepEquals(res.body, {
+            status: 404,
+            message: 'uploads not found',
+            messages: []
+        });
+    } catch (err) {
+        t.error(err, 'no error');
+    }
+
+    t.end();
+});
+
+test('PATCH: api/upload/1 - uploads not found', async (t) => {
+    try {
+        const res = await flight.fetch('/api/upload/1', {
+            method: 'PATCH',
+            body: {},
             auth: {
                 bearer: flight.token.ingalls
             }
@@ -169,7 +212,6 @@ test('GET: api/upload', async (t) => {
             total: 1,
             uploads: [{
                 id: 1,
-                uid: 1,
                 size: 321,
                 status: 'Pending',
                 name: 'blob',
@@ -178,6 +220,88 @@ test('GET: api/upload', async (t) => {
                 starred: false,
                 collection_id: null
             }]
+        });
+    } catch (err) {
+        t.error(err, 'no error');
+    }
+
+    t.end();
+});
+
+test('GET: api/upload/1', async (t) => {
+    try {
+        const res = await flight.fetch('/api/upload/1', {
+            auth: {
+                bearer: flight.token.ingalls
+            }
+        }, t);
+
+        t.ok(res.body.created);
+        delete res.body.created;
+        t.ok(res.body.updated);
+        delete res.body.updated;
+
+        t.deepEquals(res.body, {
+            id: 1,
+            uid: 1,
+            size: 321,
+            status: 'Pending',
+            name: 'blob',
+            obtain: false,
+            uploaded: true,
+            starred: false,
+            collection_id: null,
+            archived: false,
+            config: {
+                cog: {
+                    overview: null,
+                    blocksize: 512,
+                    compression: 'deflate'
+                }
+            }
+        });
+    } catch (err) {
+        t.error(err, 'no error');
+    }
+
+    t.end();
+});
+
+test('PATCH: api/upload/1', async (t) => {
+    try {
+        const res = await flight.fetch('/api/upload/1', {
+            method: 'PATCH',
+            auth: {
+                bearer: flight.token.ingalls
+            },
+            body: {
+                archived: true
+            }
+        }, t);
+
+        t.ok(res.body.created);
+        delete res.body.created;
+        t.ok(res.body.updated);
+        delete res.body.updated;
+
+        t.deepEquals(res.body, {
+            id: 1,
+            uid: 1,
+            size: 321,
+            status: 'Pending',
+            name: 'blob',
+            obtain: false,
+            uploaded: true,
+            starred: false,
+            collection_id: null,
+            archived: true,
+            config: {
+                cog: {
+                    overview: null,
+                    blocksize: 512,
+                    compression: 'deflate'
+                }
+            }
         });
     } catch (err) {
         t.error(err, 'no error');
