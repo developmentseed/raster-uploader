@@ -6,10 +6,13 @@ import assert from 'assert';
 import glob from 'glob';
 import $RefParser from 'json-schema-ref-parser';
 import Ajv from 'ajv';
+import addFormats from 'ajv-formats';
 
 const ajv = new Ajv({
     allErrors: true
 });
+
+addFormats(ajv);
 
 for (const source of glob.sync('../schema/**/*.json')) {
     test(`schema/${path.parse(source).base}`, async () => {
