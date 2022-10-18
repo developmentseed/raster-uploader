@@ -6,6 +6,10 @@
                 &gt;
                 <span>New Upload</span>
             </h2>
+
+            <div class='fr'>
+                <StdButton @click='$router.go(-1)' icon='close'/>
+            </div>
         </div>
         <div class='bg-white round col col--12 grid py12 px12 relative'>
             <RasterMenu/>

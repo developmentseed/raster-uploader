@@ -8,13 +8,10 @@
                 <span v-else>New</span>
             </h2>
 
-            <button @click='$router.go(-1)' class='btn fr round btn--stroke color-white color-black-on-hover'>
-                <svg class='icon'><use href='#icon-close'/></svg>
-            </button>
-
-            <button v-if='$route.params.basemapid' @click='deleteBaseMap' class='mr12 btn fr round btn--stroke color-white color-red-on-hover'>
-                <svg class='icon'><use href='#icon-trash'/></svg>
-            </button>
+            <div class='fr'>
+                <StdButton v-if='$route.params.basemapid' @click='deleteCollection' hover='red' icon='trash'/>
+                <StdButton @click='$router.go(-1)' icon='close'/>
+            </div>
         </div>
         <div class='round bg-white col col--12 px12 py12 clearfix relative'>
             <RasterMenu/>
