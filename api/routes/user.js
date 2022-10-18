@@ -3,6 +3,7 @@ import User from '../lib/types/user.js';
 import Auth from '../lib/auth.js';
 import Login from '../lib/login.js';
 import Email from '../lib/email.js';
+import bcrypt from 'bcrypt';
 
 export default async function router(schema, config) {
     const email = new Email(config);
@@ -41,12 +42,11 @@ export default async function router(schema, config) {
                 delete req.body.access;
             }
 
-            const usr = await User.generate(config.pool, {
-                ...req.body,
-                // Generate a temporary random password - can't actually be used as the user still has
-                // to verify email (unless the server is in auto-validate mode)
-                password: req.body.password || (Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8))
-            });
+            // Generate a temporary random password - can't actually be used as the user still has
+            // to verify email (unless the server is in auto-validate mode)
+            req.body.password = await bcrypt.hash(req.body.password || (Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8)), 10);
+
+            const usr = await User.generate(config.pool, req.body);
 
             let token;
             if (has_password) {
