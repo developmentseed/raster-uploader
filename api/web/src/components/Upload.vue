@@ -79,11 +79,6 @@ export default {
             }
         }
     },
-    methods: {
-        external: function(url) {
-            window.open(url, '_blank');
-        }
-    },
     components: {
         RasterMenu,
         UploadSettings,
