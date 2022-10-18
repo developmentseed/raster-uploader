@@ -545,7 +545,7 @@ test('POST: api/user (duplicate)', async (t) => {
 
         t.deepEquals(res.body, {
             status: 400,
-            message: 'User already exists',
+            message: 'users already exists',
             messages: []
         }, 'user');
 
