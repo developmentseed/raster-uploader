@@ -1,13 +1,13 @@
 <template>
     <div class='col col--12 grid pt12'>
-        <div class='col col--12 clearfix py6'>
+        <div class='col col--12 clearfix py6 color-white'>
             <h2 class='fl cursor-default'>
                 <span class='cursor-pointer txt-underline-on-hover' @click='$router.push("/")'>Uploads</span>
                 &gt;
                 <span>New Upload</span>
             </h2>
         </div>
-        <div class='round col col--12 grid border border--gray-light py12 px12 relative'>
+        <div class='bg-white round col col--12 grid py12 px12 relative'>
             <RasterMenu/>
 
             <UploadSettings
