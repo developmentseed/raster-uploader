@@ -20,14 +20,45 @@
             "default": ""
         },
         "secrets": {
-            "type": "object"
+            "oneOf": [{
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "aws_access_key_id",
+                    "aws_secret_access_key"
+                ],
+                "properties": {
+                    "aws_access_key_id": {
+                        "type": "string"
+                    },
+                    "aws_secret_access_key": {
+                        "type": "string"
+                    }
+                }
+            },{
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "headers"
+                ],
+                "properties": {
+                    "headers": {
+                        "type": "object",
+                        "patternProperties": {
+                            ".*": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }]
         },
         "type": {
             "type": "string",
             "enum": [
                 "http",
                 "s3"
-            ]   
+            ]
         }
     }
 }

@@ -144,6 +144,7 @@ def handler(event, context):
                             )
 
         elif event["config"].get("type") == "http":
+            # TODO: USE SECRET HEADERS
             res = requests.get(event["config"].get("url"), stream=True)
             res.raise_for_status()
 

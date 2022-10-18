@@ -95,6 +95,16 @@ test('PATCH: api/source/1 - no source found', async (t) => {
 
 test('POST: api/source', async (t) => {
     try {
+        AWS.stub('SecretsManager', 'createSecret', async function(params) {
+            t.equals(params.Name, 'test-source-1');
+            t.equals(params.Description, 'test Source: 1');
+            t.deepEquals(JSON.parse(params.SecretString), {
+
+            });
+
+            return this.request.promise.returns(Promise.resolve({}));
+        });
+
         const res = await flight.fetch('/api/source', {
             method: 'POST',
             auth: {
@@ -106,7 +116,8 @@ test('POST: api/source', async (t) => {
                 glob: '**/*.tiff',
                 type: 's3',
                 secrets: {
-
+                    aws_access_key_id: '123',
+                    aws_secret_access_key: '123'
                 }
             }
         }, t);
@@ -118,13 +129,17 @@ test('POST: api/source', async (t) => {
 
         t.deepEquals(res.body, {
             id: 1,
+            name: 'Test Source',
+            url: 's3://bucket/',
             uid: 1,
-            name: 'Test Basemap',
-            url: 'https://example.com/{z}/{x}/{y}.png'
+            type: 's3',
+            glob: '**/*.tiff'
         });
     } catch (err) {
         t.error(err, 'no error');
     }
+
+    AWS.SecretsManager.restore();
 
     t.end();
 });
@@ -137,18 +152,19 @@ test('GET: api/source', async (t) => {
             }
         }, t);
 
-        t.ok(res.body.source[0].created);
-        delete res.body.source[0].created;
-        t.ok(res.body.source[0].updated);
-        delete res.body.source[0].updated;
+        t.ok(res.body.upload_sources[0].created);
+        delete res.body.upload_sources[0].created;
+        t.ok(res.body.upload_sources[0].updated);
+        delete res.body.upload_sources[0].updated;
 
         t.deepEquals(res.body, {
             total: 1,
-            source: [{
+            upload_sources: [{
                 id: 1,
+                name: 'Test Source',
+                url: 's3://bucket/',
                 uid: 1,
-                name: 'Test Basemap',
-                url: 'https://example.com/{z}/{x}/{y}.png'
+                type: 's3'
             }]
         });
     } catch (err) {
@@ -166,8 +182,7 @@ test('PATCH: api/source/1', async (t) => {
                 bearer: flight.token.ingalls
             },
             body: {
-                name: 'Test (Updated) Basemap',
-                url: 'https://example2.com/{z}/{x}/{y}.png'
+                name: 'Test (Updated) Source',
             }
         }, t);
 
@@ -178,9 +193,11 @@ test('PATCH: api/source/1', async (t) => {
 
         t.deepEquals(res.body, {
             id: 1,
+            name: 'Test (Updated) Source',
+            url: 's3://bucket/',
             uid: 1,
-            name: 'Test (Updated) Basemap',
-            url: 'https://example2.com/{z}/{x}/{y}.png'
+            type: 's3',
+            glob: '**/*.tiff'
         });
     } catch (err) {
         t.error(err, 'no error');
@@ -191,21 +208,28 @@ test('PATCH: api/source/1', async (t) => {
 
 test('DELETE: api/source/1', async (t) => {
     try {
+        AWS.stub('SecretsManager', 'deleteSecret', async function(params) {
+            t.equals(params.SecretId, 'test-source-1');
+
+            return this.request.promise.returns(Promise.resolve({}));
+        });
+
         const res = await flight.fetch('/api/source/1', {
             method: 'DELETE',
             auth: {
                 bearer: flight.token.ingalls
-            },
+            }
         }, t);
 
         t.deepEquals(res.body, {
             status: 200,
-            message: 'Deleted BaseMap'
+            message: 'Deleted Upload Source'
         });
     } catch (err) {
         t.error(err, 'no error');
     }
 
+    AWS.SecretsManager.restore();
     t.end();
 });
 

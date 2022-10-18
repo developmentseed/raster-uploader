@@ -1,9 +1,5 @@
 import test from 'tape';
 import Flight from './flight.js';
-import AWS from '@mapbox/mock-aws-sdk-js';
-import fs from 'fs';
-import fsp from 'fs/promises';
-import { pipeline } from 'stream/promises';
 
 const flight = new Flight();
 
@@ -190,7 +186,7 @@ test('DELETE: api/basemap/1', async (t) => {
             method: 'DELETE',
             auth: {
                 bearer: flight.token.ingalls
-            },
+            }
         }, t);
 
         t.deepEquals(res.body, {
