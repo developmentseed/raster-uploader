@@ -20,7 +20,7 @@
             "default": ""
         },
         "secrets": {
-            "oneOf": [{
+            "anyOf": [{
                 "type": "object",
                 "additionalProperties": false,
                 "required": [

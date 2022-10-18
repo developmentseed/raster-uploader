@@ -1,9 +1,6 @@
 import test from 'tape';
 import Flight from './flight.js';
 import AWS from '@mapbox/mock-aws-sdk-js';
-import fs from 'fs';
-import fsp from 'fs/promises';
-import { pipeline } from 'stream/promises';
 
 const flight = new Flight();
 
@@ -99,7 +96,8 @@ test('POST: api/source', async (t) => {
             t.equals(params.Name, 'test-source-1');
             t.equals(params.Description, 'test Source: 1');
             t.deepEquals(JSON.parse(params.SecretString), {
-
+                aws_access_key_id: '123',
+                aws_secret_access_key: '123'
             });
 
             return this.request.promise.returns(Promise.resolve({}));
@@ -182,7 +180,52 @@ test('PATCH: api/source/1', async (t) => {
                 bearer: flight.token.ingalls
             },
             body: {
-                name: 'Test (Updated) Source',
+                name: 'Test (Updated) Source'
+            }
+        }, t);
+
+        t.ok(res.body.created);
+        delete res.body.created;
+        t.ok(res.body.updated);
+        delete res.body.updated;
+
+        t.deepEquals(res.body, {
+            id: 1,
+            name: 'Test (Updated) Source',
+            url: 's3://bucket/',
+            uid: 1,
+            type: 's3',
+            glob: '**/*.tiff'
+        });
+    } catch (err) {
+        t.error(err, 'no error');
+    }
+
+    t.end();
+});
+
+test('PATCH: api/source/1 - new secret', async (t) => {
+    try {
+        AWS.stub('SecretsManager', 'putSecretValue', async function(params) {
+            t.equals(params.SecretId, 'test-source-1');
+            t.deepEquals(JSON.parse(params.SecretString), {
+                aws_access_key_id: '321',
+                aws_secret_access_key: '321'
+            });
+
+            return this.request.promise.returns(Promise.resolve({}));
+        });
+
+        const res = await flight.fetch('/api/source/1', {
+            method: 'PATCH',
+            auth: {
+                bearer: flight.token.ingalls
+            },
+            body: {
+                secrets: {
+                    aws_access_key_id: '321',
+                    aws_secret_access_key: '321'
+                }
             }
         }, t);
 
