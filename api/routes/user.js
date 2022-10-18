@@ -37,6 +37,10 @@ export default async function router(schema, config) {
         try {
             const has_password = !!req.body.password;
 
+            if (req.auth.access !== 'admin') {
+                delete req.body.access;
+            }
+
             const usr = await User.generate(config.pool, {
                 ...req.body,
                 // Generate a temporary random password - can't actually be used as the user still has

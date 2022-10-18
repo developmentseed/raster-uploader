@@ -110,33 +110,4 @@ export default class User extends Generic {
 
         return this;
     }
-
-    static async generate(pool, user) {
-        if (!user.username) throw new Err(400, null, 'username required');
-        if (!user.email) throw new Err(400, null, 'email required');
-        if (!user.password) throw new Err(400, null, 'password required');
-
-        try {
-            const pgres = await pool.query(sql`
-                INSERT INTO users (
-                    username,
-                    email,
-                    password,
-                    access
-                ) VALUES (
-                    ${user.username},
-                    ${user.email},
-                    ${await bcrypt.hash(user.password, 10)},
-                    'user'
-                ) RETURNING *
-            `);
-
-            return this.deserialize(pool, pgres);
-        } catch (err) {
-            if (err.originalError && err.originalError.code && err.originalError.code === '23505') {
-                throw new Err(400, err, 'User already exists');
-            }
-            throw new Err(500, err, 'Failed to register user');
-        }
-    }
 }

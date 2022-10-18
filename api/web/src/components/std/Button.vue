@@ -6,6 +6,8 @@
     <template v-if='text'>
         <span v-text='text'/>
     </template>
+
+    <slot/>
 </button>
 </template>
 
