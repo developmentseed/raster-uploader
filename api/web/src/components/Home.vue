@@ -10,15 +10,9 @@
                     <div class='switch'></div>
                 </label>
 
-                <button @click='showSearch = !showSearch' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
-                    <svg class='icon'><use href='#icon-search'/></svg>
-                </button>
-                <button @click='refresh' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
-                    <svg class='icon'><use href='#icon-refresh'/></svg>
-                </button>
-                <button @click='$router.push({ name: "newupload" })' class='btn color-white round btn--stroke color-green-on-hover'>
-                    <svg class='icon'><use href='#icon-plus'/></svg>
-                </button>
+                <StdButton v-tooltip='"Search Uploads"' @click='showSearch = !showSearch' icon='search'/>
+                <StdButton v-tooltip='"Refresh Uploads"' @click='refresh' icon='refresh'/>
+                <StdButton v-tooltip='"Create Upload"' @click='$router.push({ name: "newupload" })' hover='green' icon='plus'/>
             </div>
         </div>
         <div class='round relative bg-white pb12'>

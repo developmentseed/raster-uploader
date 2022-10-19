@@ -4,15 +4,9 @@
             <span class='color-white'>Basemaps</span>
 
             <div class='fr'>
-                <button @click='showSearch = !showSearch' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
-                    <svg class='icon'><use href='#icon-search'/></svg>
-                </button>
-                <button @click='refresh' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
-                    <svg class='icon'><use href='#icon-refresh'/></svg>
-                </button>
-                <button @click='$router.push({ name: "newbasemap" })' class='btn round btn--stroke color-white color-green-on-hover'>
-                    <svg class='icon'><use href='#icon-plus'/></svg>
-                </button>
+                <StdButton v-tooltip='"Search Basemaps"' @click='showSearch = !showSearch' icon='search'/>
+                <StdButton v-tooltip='"Refresh Basemaps"' @click='refresh' icon='refresh'/>
+                <StdButton v-tooltip='"Create Basemap"' @click='$router.push({ name: "newbasemap" })' hover='green' icon='plus'/>
             </div>
         </div>
         <div class='bg-white round relative pb12'>

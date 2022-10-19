@@ -9,13 +9,8 @@
         </h2>
 
         <div class='fr'>
-            <button v-if='$route.params.collectionid' @click='deleteCollection' class='mr12 btn round btn--stroke color-white color-red-on-hover'>
-                <svg class='icon'><use href='#icon-trash'/></svg>
-            </button>
-
-            <button @click='$router.go(-1)' class='btn round btn--stroke color-white color-black-on-hover'>
-                <svg class='icon'><use href='#icon-close'/></svg>
-            </button>
+            <StdButton v-if='$route.params.collectionid' @click='deleteCollection' hover='red' icon='trash'/>
+            <StdButton @click='$router.go(-1)' icon='close'/>
 
             <div class='mr12 fl'>
                 <span class='mx3'>Paused</span>

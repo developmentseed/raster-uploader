@@ -73,6 +73,9 @@ export default {
     methods: {
         emit_settings: function() {
             this.$emit('settings', this.defaults);
+        },
+        external: function(url) {
+            window.open(url, '_blank');
         }
     }
 }

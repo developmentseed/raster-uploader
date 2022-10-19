@@ -6,6 +6,9 @@
     ],
     "additionalProperties": false,
     "properties": {
+        "access": {
+            "$ref": "./util/access.json"
+        },
         "username": {
             "type": "string",
             "minLength": 2,

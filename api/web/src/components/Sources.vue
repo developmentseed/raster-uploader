@@ -4,15 +4,9 @@
             <span class='color-white'>Sources</span>
 
             <div class='fr'>
-                <button @click='showSearch = !showSearch' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
-                    <svg class='icon'><use href='#icon-search'/></svg>
-                </button>
-                <button @click='refresh' class='btn round btn--stroke color-white color-blue-on-hover mr12'>
-                    <svg class='icon'><use href='#icon-refresh'/></svg>
-                </button>
-                <button @click='$router.push({ name: "newsource" })' class='btn round btn--stroke color-white color-green-on-hover'>
-                    <svg class='icon'><use href='#icon-plus'/></svg>
-                </button>
+                <StdButton v-tooltip='"Search Sources"' @click='showSearch = !showSearch' icon='search'/>
+                <StdButton v-tooltip='"Refresh Sources"' @click='refresh' icon='refresh'/>
+                <StdButton v-tooltip='"Create Source"' @click='$router.push({ name: "newsource" })' hover='green' icon='plus'/>
             </div>
         </div>
         <div class='bg-white round relative pb12'>

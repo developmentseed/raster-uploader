@@ -159,7 +159,7 @@ export default async function server(config) {
                 return Err.respond(new Err(401, err, 'Invalid Token'), res);
             }
         } else {
-            req.user = false;
+            req.auth = false;
         }
 
         return next();
