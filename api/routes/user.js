@@ -39,7 +39,7 @@ export default async function router(schema, config) {
         try {
             const has_password = !!req.body.password;
 
-            if (!(await Settings.from(config.pool, 'user::registration')).value && req.user.access !== 'admin') {
+            if (!(await Settings.from(config.pool, 'user::registration')).value && req.auth.access !== 'admin') {
                 throw new Err(400, null, 'User Registration has been disabled');
             }
 
