@@ -2,7 +2,7 @@ import Err from '@openaddresses/batch-error';
 import User from '../lib/types/user.js';
 import Auth from '../lib/auth.js';
 import Login from '../lib/login.js';
-import Settings from './lib/settings.js';
+import Settings from '../lib/settings.js';
 import Email from '../lib/email.js';
 import bcrypt from 'bcrypt';
 
