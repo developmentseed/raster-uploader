@@ -2,6 +2,7 @@ import Err from '@openaddresses/batch-error';
 import User from '../lib/types/user.js';
 import Auth from '../lib/auth.js';
 import Login from '../lib/login.js';
+import Settings from './lib/settings.js';
 import Email from '../lib/email.js';
 import bcrypt from 'bcrypt';
 
@@ -38,15 +39,32 @@ export default async function router(schema, config) {
         try {
             const has_password = !!req.body.password;
 
+            if (!(await Settings.from(config.pool, 'user::registration')).value && req.user.access !== 'admin') {
+                throw new Err(400, null, 'User Registration has been disabled');
+            }
+
+            const domains = (await Settings.from(config.pool, 'user::domains')).value;
+
+            if (domains.length) {
+                let matched = false;
+                for (const domain of domains) {
+                    if (req.body.email.endsWith(domain)) matched = true;
+                }
+
+                if (!matched) throw new Err(400, null, 'User Registration is restricted by email domain');
+            }
+
             if (req.auth.access !== 'admin') {
                 delete req.body.access;
             }
 
             // Generate a temporary random password - can't actually be used as the user still has
             // to verify email (unless the server is in auto-validate mode)
-            req.body.password = await bcrypt.hash(req.body.password || (Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8)), 10);
 
-            const usr = await User.generate(config.pool, req.body);
+            const usr = await User.generate(config.pool, {
+                ...req.body,
+                password: await bcrypt.hash(req.body.password || (Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8)), 10)
+            });
 
             let token;
             if (has_password) {
