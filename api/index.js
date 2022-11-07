@@ -166,6 +166,7 @@ export default async function server(config) {
     });
 
     await schema.api();
+
     await schema.load(
         new URL('./routes/', import.meta.url),
         config,
