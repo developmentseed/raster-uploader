@@ -38,6 +38,7 @@ export default class Config {
         const config = new Config();
 
         config.sqs = {};
+        config.meta = args.meta || {};
 
         config.silent = args.silent;
         config.email = args.email || false;

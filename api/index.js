@@ -13,6 +13,7 @@ import minimist from 'minimist';
 import User from './lib/types/user.js';
 import Token from './lib/types/token.js';
 import Config from './lib/config.js';
+import Settings from './lib/settings.js';
 
 const pkg = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url)));
 const args = minimist(process.argv, {
@@ -48,6 +49,15 @@ export default async function server(config) {
             dir: new URL('./schema', import.meta.url)
         }
     });
+
+    if (config.meta) {
+        for (const meta in config.meta) {
+            await Settings.generate(config.pool, {
+                key: meta,
+                value: config.meta[meta]
+            });
+        }
+    }
 
     const app = express();
 
@@ -166,6 +176,7 @@ export default async function server(config) {
     });
 
     await schema.api();
+
     await schema.load(
         new URL('./routes/', import.meta.url),
         config,
