@@ -58,7 +58,7 @@ import RasterMenu from './util/Menu.vue';
 
 export default {
     name: 'Home',
-    props: ['meta'],
+    props: ['meta', 'user'],
     data: function() {
         return {
             page: 0,
@@ -73,6 +73,8 @@ export default {
     },
     mounted: function() {
         this.refresh();
+
+        if (!this.user || !this.user.access) return this.$router.push('/login');
 
         window.addEventListener('keydown', (e) => {
             if (e.keyCode === 114 || (e.ctrlKey && e.keyCode === 70)) {
