@@ -3,7 +3,7 @@
         <div class='col col--12 flex flex--center-main color-white'>
             <h3 class='flex-child txt-h4 py6'>Forgot Password</h3>
         </div>
-        <div class='bg-white round px12 py12 col col--12 flex flex--center-main'>
+        <div class='bg-white round px12 py12 col col--12'>
             <template v-if='loading'>
                 <Loading desc='Sending Password Reset Email'/>
             </template>
@@ -25,7 +25,9 @@
                     <div>Password Reset Email Sent</div>
                 </div>
 
-                <button @click='$router.push("/login")' class='mt12 w-full color-gray color-green-on-hover btn btn--stroke round'>Home</button>
+                <div class='col col--12'>
+                    <button @click='$router.push("/login")' class='mt12 w-full color-gray color-green-on-hover btn btn--stroke round'>Home</button>
+                </div>
             </template>
         </div>
     </div>
