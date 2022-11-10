@@ -86,7 +86,6 @@ export default {
         refresh: async function(token) {
             if (token) localStorage.token = token;
 
-            //await this.getMeta();
             this.loading.meta = false; //temp
             await this.getUser();
         },
@@ -102,23 +101,6 @@ export default {
                 this.err = err;
             }
         },
-        getLogin: async function() {
-            try {
-                this.auth = await window.std('/api/login');
-            } catch (err) {
-                delete localStorage.token;
-                this.$router.push('/login');
-            }
-        },
-        getMeta: async function() {
-            try {
-                this.loading.meta = true;
-                this.meta = await window.std('/api/');
-                this.loading.meta = false;
-            } catch (err) {
-                this.err = err;
-            }
-        },
         getUser: async function() {
             try {
                 this.loading.user = true;
@@ -128,7 +110,7 @@ export default {
                 this.loading.user = false;
 
                 if (err.message === 'Authentication Required') {
-                    return this.$router.push('/login');
+                    if (this.$route.path.split('/')[1] !== 'login') this.$router.push('/login');
                 }
                 console.error(err);
             }
