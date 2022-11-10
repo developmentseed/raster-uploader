@@ -42,7 +42,7 @@ export default class Email {
                     button: {
                         color: 'green',
                         text: 'Verify Email',
-                        link: `${this.config.Frontend}/#/login/verify?token=${user.token}`
+                        link: `${this.config.Frontend}/login/verify?token=${user.token}`
                     }
                 },
                 outro: ''
@@ -66,7 +66,7 @@ export default class Email {
                     button: {
                         color: 'green',
                         text: 'Password Reset',
-                        link: `${this.config.Frontend}/#/login/reset?token=${user.token}`
+                        link: `${this.config.Frontend}/login/reset?token=${user.token}`
                     }
                 },
                 outro: ''

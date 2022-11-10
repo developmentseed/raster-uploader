@@ -9,7 +9,7 @@ RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata \
     && apt-get install -y nginx curl python3 build-essential
 
-RUN export NODEV='18.7.0' \
+RUN export NODEV='19.0.1' \
     && curl "https://nodejs.org/dist/v${NODEV}/node-v${NODEV}-linux-x64.tar.gz" | tar -xzv \
     && cp ./node-v${NODEV}-linux-x64/bin/node /usr/bin/ \
     && ./node-v${NODEV}-linux-x64/bin/npm install -g npm
@@ -24,7 +24,7 @@ RUN npm install \
 
 RUN cd web \
     && npm install \
-    && NODE_OPTIONS=--openssl-legacy-provider npm run prod \
+    && npm run prod \
     && cd ..
 
 CMD service nginx restart \
