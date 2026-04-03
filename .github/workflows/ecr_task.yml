@@ -22,7 +22,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
               with:
                   ref: ${{github.event.pull_request.head.sha || github.sha}}
 
@@ -30,7 +30,7 @@ jobs:
               run: docker build -t task-${{matrix.task}} tasks/${{matrix.task}}
 
             - name: Configure AWS Credentials
-              uses: aws-actions/configure-aws-credentials@v1
+              uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # v1
               with:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -38,7 +38,7 @@ jobs:
 
             - name: Login to Amazon ECR
               id: login-ecr
-              uses: aws-actions/amazon-ecr-login@v1
+              uses: aws-actions/amazon-ecr-login@5a88a04c91d5c6f97aae0d9be790e64d9b1d47b7 # v1
 
             - name: Docker Tag API
               run: docker tag task-${{matrix.task}} ${{secrets.AWS_ACCOUNT_ID}}.dkr.ecr.us-east-1.amazonaws.com/raster-uploader:task-${{matrix.task}}-${{github.event.pull_request.head.sha || github.sha}}
